@@ -355,7 +355,96 @@
             font-weight: 600;
             margin-left: 0.5rem;
         }
+
+        .manual-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .manual-toggle input[type="checkbox"] {
+            width: auto;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .manual-toggle label {
+            margin-bottom: 0;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .scanner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .scanner-overlay.active {
+            display: flex;
+        }
+
+        .scanner-header {
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .scanner-header h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .scanner-header p {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        #scanner-container {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .scanner-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .scanner-buttons .btn {
+            flex: 1;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #a52828;
+        }
     </style>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
     <header>
@@ -614,6 +703,27 @@
                 <div id="gps-coordinates" class="gps-display">
                     No location data yet. Click button to capture GPS.
                 </div>
+
+                <!-- NEW: Manual coordinate entry -->
+                <div class="manual-toggle">
+                    <input type="checkbox" id="manual-coords-toggle" onchange="toggleManualCoords()">
+                    <label for="manual-coords-toggle">
+                        ⌚ Enter coordinates manually (GPS watch / external device)
+                    </label>
+                </div>
+                <div id="manual-coords-fields" style="display: none;">
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" id="manual-lat" placeholder="e.g. 59.858562" step="0.000001" min="-90" max="90" oninput="updateFromManualCoords()">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" id="manual-lon" placeholder="e.g. 17.632710" step="0.000001" min="-180" max="180" oninput="updateFromManualCoords()">
+                        </div>
+                    </div>
+                    <div class="help-text">Enter decimal degrees from your GPS watch or external GPS device. Accuracy will be recorded as "manual entry".</div>
+                </div>
             </div>
             
             <div class="input-group">
@@ -644,6 +754,26 @@
                     <option value="other">Other</option>
                 </select>
             </div>
+
+            <!-- NEW: Weather conditions dropdown -->
+            <div class="form-group">
+                <label>Weather Conditions</label>
+                <select id="weather">
+                    <option value="">Select...</option>
+                    <option value="sunny">☀️ Sunny / Clear</option>
+                    <option value="partly-cloudy">⛅ Partly Cloudy</option>
+                    <option value="cloudy">☁️ Cloudy / Overcast</option>
+                    <option value="rainy">🌧️ Rainy</option>
+                    <option value="drizzle">🌦️ Drizzle</option>
+                    <option value="heavy-rain">⛈️ Heavy Rain / Thunderstorm</option>
+                    <option value="snowy">🌨️ Snowy</option>
+                    <option value="foggy">🌫️ Foggy / Misty</option>
+                    <option value="windy">💨 Windy</option>
+                    <option value="hail">🧊 Hail</option>
+                    <option value="sleet">🌧️ Sleet</option>
+                    <option value="frost">❄️ Frost</option>
+                </select>
+            </div>
             
             <div class="input-group">
                 <div class="form-group">
@@ -667,7 +797,7 @@
             
             <div class="form-group">
                 <label>Field Notes</label>
-                <textarea id="notes" placeholder="Observations, associated species, weather conditions, sample quality, etc."></textarea>
+                <textarea id="notes" placeholder="Observations, associated species, sample quality, etc."></textarea>
             </div>
         </div>
         
@@ -702,6 +832,19 @@
         </div>
     </div>
     
+    <!-- Barcode Scanner Overlay -->
+    <div class="scanner-overlay" id="scanner-overlay">
+        <div class="scanner-header">
+            <h3>📷 Scan Barcode</h3>
+            <p>Point your camera at a barcode or QR code</p>
+        </div>
+        <div id="scanner-container"></div>
+        <div class="scanner-buttons">
+            <button class="btn btn-danger" onclick="stopScanner()">✕ Cancel</button>
+            <button class="btn btn-secondary" onclick="manualBarcodeEntry()" style="background: white;">✏️ Enter Manually</button>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
     
@@ -830,12 +973,10 @@
             const lifeStageSelect = document.getElementById('life-stage');
             const tissueTypeSelect = document.getElementById('tissue-type');
             
-            // Clear current options
             lifeStageSelect.innerHTML = '<option value="">Select...</option>';
             tissueTypeSelect.innerHTML = '<option value="">Select...</option>';
             
             if (kingdom && taxonomyData[kingdom]) {
-                // Populate life stages
                 taxonomyData[kingdom].lifeStages.forEach(stage => {
                     const option = document.createElement('option');
                     option.value = stage.value;
@@ -843,7 +984,6 @@
                     lifeStageSelect.appendChild(option);
                 });
                 
-                // Populate tissue types
                 taxonomyData[kingdom].tissueTypes.forEach(tissue => {
                     const option = document.createElement('option');
                     option.value = tissue.value;
@@ -862,27 +1002,55 @@
             if (category === 'organism') {
                 taxonomySection.style.display = 'block';
                 environmentalSection.style.display = 'none';
-                
-                // Make organism fields required
                 document.getElementById('kingdom').setAttribute('required', 'required');
                 document.getElementById('species').setAttribute('required', 'required');
-                
-                // Remove environmental required fields
                 document.getElementById('env-sample-type').removeAttribute('required');
             } else if (category === 'environmental') {
                 taxonomySection.style.display = 'none';
                 environmentalSection.style.display = 'block';
-                
-                // Remove organism required fields
                 document.getElementById('kingdom').removeAttribute('required');
                 document.getElementById('species').removeAttribute('required');
-                
-                // Make environmental fields required
                 document.getElementById('env-sample-type').setAttribute('required', 'required');
             } else {
-                // No category selected
                 taxonomySection.style.display = 'none';
                 environmentalSection.style.display = 'none';
+            }
+        }
+        
+        // NEW: Toggle manual coordinate entry
+        function toggleManualCoords() {
+            const toggle = document.getElementById('manual-coords-toggle');
+            const fields = document.getElementById('manual-coords-fields');
+            fields.style.display = toggle.checked ? 'block' : 'none';
+            
+            if (!toggle.checked) {
+                document.getElementById('manual-lat').value = '';
+                document.getElementById('manual-lon').value = '';
+            }
+        }
+        
+        // NEW: Update location from manual coordinate entry
+        function updateFromManualCoords() {
+            const lat = parseFloat(document.getElementById('manual-lat').value);
+            const lon = parseFloat(document.getElementById('manual-lon').value);
+            
+            if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                currentLocation = {
+                    latitude: lat,
+                    longitude: lon,
+                    accuracy: 'manual'
+                };
+                
+                document.getElementById('gps-coordinates').innerHTML = `
+                    <strong>Latitude:</strong> ${lat.toFixed(6)}°<br>
+                    <strong>Longitude:</strong> ${lon.toFixed(6)}°<br>
+                    <strong>Source:</strong> Manual entry (GPS watch / external device)
+                `;
+                
+                const gpsStatus = document.getElementById('gps-status');
+                const gpsStatusText = document.getElementById('gps-status-text');
+                gpsStatus.classList.add('active');
+                gpsStatusText.textContent = 'GPS: Manual';
             }
         }
         
@@ -898,6 +1066,10 @@
             
             gpsStatus.classList.remove('active');
             gpsStatusText.textContent = 'GPS: Acquiring...';
+            
+            // Uncheck manual entry if it was checked
+            document.getElementById('manual-coords-toggle').checked = false;
+            document.getElementById('manual-coords-fields').style.display = 'none';
             
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -923,10 +1095,14 @@
         // Display GPS coordinates
         function displayGPSCoordinates() {
             if (currentLocation) {
+                const accuracyText = currentLocation.accuracy === 'manual' 
+                    ? '<strong>Source:</strong> Manual entry (GPS watch / external device)'
+                    : `<strong>Accuracy:</strong> ±${currentLocation.accuracy.toFixed(1)}m`;
+                    
                 document.getElementById('gps-coordinates').innerHTML = `
                     <strong>Latitude:</strong> ${currentLocation.latitude.toFixed(6)}°<br>
                     <strong>Longitude:</strong> ${currentLocation.longitude.toFixed(6)}°<br>
-                    <strong>Accuracy:</strong> ±${currentLocation.accuracy.toFixed(1)}m
+                    ${accuracyText}
                 `;
             }
         }
@@ -943,10 +1119,10 @@
             
             displayGPSCoordinates();
             
-            // Also fill in related environmental data
             if (lastSample.altitude) document.getElementById('altitude').value = lastSample.altitude;
             if (lastSample.depth) document.getElementById('depth').value = lastSample.depth;
             if (lastSample.habitat) document.getElementById('habitat').value = lastSample.habitat;
+            if (lastSample.weather) document.getElementById('weather').value = lastSample.weather;
             if (lastSample.temperature) document.getElementById('temperature').value = lastSample.temperature;
             if (lastSample.ph) document.getElementById('ph').value = lastSample.ph;
             
@@ -963,11 +1139,59 @@
             }
         }
         
-        // Barcode Scanner (uses camera)
+        // Barcode Scanner
+        let html5QrCode = null;
+        
         async function scanBarcode() {
-            // Note: Real barcode scanning would require a library like QuaggaJS or ZXing
-            // For now, this is a placeholder that prompts for manual entry
-            const barcode = prompt('Enter barcode manually (camera scanning requires additional setup):');
+            const overlay = document.getElementById('scanner-overlay');
+            overlay.classList.add('active');
+            
+            try {
+                html5QrCode = new Html5Qrcode("scanner-container");
+                
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 },
+                        aspectRatio: 1.0
+                    },
+                    (decodedText) => {
+                        // Success - barcode found
+                        document.getElementById('sample-id').value = decodedText;
+                        showToast('Barcode scanned: ' + decodedText, 'success');
+                        stopScanner();
+                    },
+                    (errorMessage) => {
+                        // Scan in progress, no match yet - this is normal
+                    }
+                );
+            } catch (err) {
+                console.error('Scanner error:', err);
+                stopScanner();
+                // Fallback to manual entry if camera fails
+                manualBarcodeEntry();
+            }
+        }
+        
+        function stopScanner() {
+            const overlay = document.getElementById('scanner-overlay');
+            
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    overlay.classList.remove('active');
+                }).catch(() => {
+                    overlay.classList.remove('active');
+                });
+            } else {
+                overlay.classList.remove('active');
+            }
+        }
+        
+        function manualBarcodeEntry() {
+            stopScanner();
+            const barcode = prompt('Enter barcode manually:');
             if (barcode) {
                 document.getElementById('sample-id').value = barcode;
             }
@@ -977,10 +1201,8 @@
         function saveSample() {
             const category = document.getElementById('sample-category').value;
             
-            // Base required fields
             const requiredFields = ['sample-id', 'collector', 'date', 'sample-category'];
             
-            // Add category-specific required fields
             if (category === 'organism') {
                 requiredFields.push('kingdom', 'species');
             } else if (category === 'environmental') {
@@ -1009,7 +1231,6 @@
                 return;
             }
             
-            // Build sample object with all fields
             const sample = {
                 id: document.getElementById('sample-id').value,
                 collector: document.getElementById('collector').value,
@@ -1044,6 +1265,7 @@
                 altitude: document.getElementById('altitude').value,
                 depth: document.getElementById('depth').value,
                 habitat: document.getElementById('habitat').value,
+                weather: document.getElementById('weather').value,
                 temperature: document.getElementById('temperature').value,
                 ph: document.getElementById('ph').value,
                 notes: document.getElementById('notes').value,
@@ -1053,7 +1275,6 @@
             samples.push(sample);
             localStorage.setItem('samples', JSON.stringify(samples));
             
-            // Update lastSample reference
             lastSample = sample;
             updateLastLocationButton();
             
@@ -1094,9 +1315,16 @@
             document.getElementById('altitude').value = '';
             document.getElementById('depth').value = '';
             document.getElementById('habitat').value = '';
+            document.getElementById('weather').value = '';
             document.getElementById('temperature').value = '';
             document.getElementById('ph').value = '';
             document.getElementById('notes').value = '';
+            
+            // Manual coordinates
+            document.getElementById('manual-lat').value = '';
+            document.getElementById('manual-lon').value = '';
+            document.getElementById('manual-coords-toggle').checked = false;
+            document.getElementById('manual-coords-fields').style.display = 'none';
             
             // Reset life stage and tissue type dropdowns
             updateTaxonomyFields();
@@ -1109,7 +1337,6 @@
             document.getElementById('sample-category').value = currentCategory;
             document.getElementById('date').valueAsDate = new Date();
             
-            // Maintain form visibility based on category
             updateFormFields();
         }
         
@@ -1179,8 +1406,8 @@
                 'Filtration Details', 'Deployment Duration', 'Sample/Core Depth (m)', 
                 'Salinity (ppt)', 'Dissolved Oxygen (mg/L)', 'Turbidity',
                 // Shared location fields
-                'Latitude', 'Longitude', 'GPS Accuracy (m)', 'Altitude (m)', 'Water Depth (m)',
-                'Habitat Type', 'Temperature (°C)', 'pH', 'Notes', 'Timestamp'
+                'Latitude', 'Longitude', 'GPS Accuracy', 'Altitude (m)', 'Water Depth (m)',
+                'Habitat Type', 'Weather Conditions', 'Temperature (°C)', 'pH', 'Notes', 'Timestamp'
             ];
             
             const rows = samples.map(s => [
@@ -1194,7 +1421,7 @@
                 s.salinity || '', s.dissolvedOxygen || '', s.turbidity || '',
                 // Shared location fields
                 s.latitude, s.longitude, s.accuracy, s.altitude || '', s.depth || '',
-                s.habitat || '', s.temperature || '', s.ph || '', s.notes || '', s.timestamp
+                s.habitat || '', s.weather || '', s.temperature || '', s.ph || '', s.notes || '', s.timestamp
             ]);
             
             let csv = headers.join(',') + '\n';
