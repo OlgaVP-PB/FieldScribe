@@ -1,15 +1,12 @@
 # ✍️ FieldScribe v2.0.0
 
-**Field metadata capture that exports straight into the ERGA sample manifest.**
+**Field metadata capture that exports straight into the ERGA/DToL sample manifest.**
 
-A mobile-first, offline-capable web app for recording biological sample
-metadata in the field, built for the SciLifeLab Planetary Biology Capability in
-collaboration with ERGA. FieldScribe v2.0.0 is a single self-contained
-`index.html` — no backend, no build step, no login — whose CSV export is aligned
-to the **ERGA Sample Manifest v2.5.1** so that field sheets merge into the
-manifest with no manual re-mapping.
+Mobile-first field-metadata capture that exports straight into the ERGA/DToL, BGE-ERGA PopGenomics, and BOLD manifests. Built for SciLifeLab (Planetary Biology Strategic Area) & ERGA/BGE.
+FieldScribe v2.0.0 is a single self-contained `index.html` — no backend, no build step, no login — whose CSV export is aligned
+to the **ERGA Sample Manifest v2.5.1** so that field sheets merge into the manifest with no manual re-mapping.
 
-> **Live (v1):** https://olgavp-pb.github.io/FieldScribe/ · **Repo:**
+> **Live (v2):** https://olgavp-pb.github.io/FieldScribe/ · **Repo:**
 > https://github.com/OlgaVP-PB/FieldScribe
 
 ---
