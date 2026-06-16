@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FieldScribe - Planetary Biology Field Data Collection</title>
+    <title>FieldScribe v2 - Planetary Biology Field Data Collection</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
-        
+
         :root {
             --primary: #1a5f3a;
             --primary-light: #2d8659;
@@ -21,13 +21,9 @@
             --success: #2d8659;
             --shadow: rgba(26, 95, 58, 0.08);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
@@ -35,7 +31,7 @@
             line-height: 1.6;
             padding-bottom: 100px;
         }
-        
+
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
@@ -45,413 +41,221 @@
             top: 0;
             z-index: 100;
         }
-        
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            letter-spacing: -0.02em;
-        }
-        
-        .subtitle {
-            font-size: 0.875rem;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1.5rem 1rem;
-        }
-        
-        .status-bar {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
+
+        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+        .subtitle { font-size: 0.875rem; opacity: 0.9; font-weight: 400; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+        .status-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .status-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            flex: 1;
-            min-width: 140px;
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.875rem; flex: 1; min-width: 140px;
         }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--error);
-        }
-        
-        .status-dot.active {
-            background: var(--success);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--error); }
+        .status-dot.active { background: var(--success); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         .form-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;
             box-shadow: 0 2px 8px var(--shadow);
         }
-        
         .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 1.25rem; padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--border);
         }
-        
-        .section-icon {
-            font-size: 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
+        .section-icon { font-size: 1.5rem; }
+        .section-title { font-size: 1.125rem; font-weight: 700; color: var(--primary); }
+
+        .form-group { margin-bottom: 1.25rem; }
         label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text);
-            font-size: 0.9375rem;
+            display: block; font-weight: 500; margin-bottom: 0.5rem;
+            color: var(--text); font-size: 0.9375rem;
         }
-        
-        .required {
-            color: var(--error);
-            margin-left: 0.25rem;
-        }
-        
+        .required { color: var(--error); margin-left: 0.25rem; }
+
         input, select, textarea {
-            width: 100%;
-            padding: 0.875rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.2s;
-            background: var(--bg);
+            width: 100%; padding: 0.875rem; border: 2px solid var(--border);
+            border-radius: 8px; font-size: 1rem; font-family: inherit;
+            transition: all 0.2s; background: var(--bg);
         }
-        
         input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
+            outline: none; border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(26, 95, 58, 0.1);
         }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .input-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        @media (max-width: 640px) {
-            .input-group {
-                grid-template-columns: 1fr;
-            }
-        }
-        
+        select[multiple] { min-height: 180px; }
+        textarea { resize: vertical; min-height: 80px; }
+
+        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 640px) { .input-group { grid-template-columns: 1fr; } }
+
         .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-height: 52px;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 1.5rem; border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: 600; font-family: inherit;
+            cursor: pointer; transition: all 0.2s; min-height: 52px;
         }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-        
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-accent {
-            background: var(--accent);
-            color: var(--text);
-        }
-        
-        .btn-accent:hover {
-            background: #d99625;
-            transform: translateY(-1px);
-        }
-        
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 12px var(--shadow); }
+        .btn-secondary { background: var(--surface); color: var(--primary); border: 2px solid var(--primary); }
+        .btn-secondary:hover { background: var(--primary); color: white; }
+        .btn-accent { background: var(--accent); color: var(--text); }
+        .btn-accent:hover { background: #d99625; transform: translateY(-1px); }
+        .btn-danger { background: var(--error); color: white; }
+        .btn-danger:hover { background: #a52828; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+
         .gps-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-            padding: 0.75rem;
-            background: var(--bg);
-            border-radius: 6px;
-            border: 1px dashed var(--border);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+            color: var(--text-light); margin-top: 0.5rem; padding: 0.75rem;
+            background: var(--bg); border-radius: 6px; border: 1px dashed var(--border);
         }
-        
-        .help-text {
-            font-size: 0.8125rem;
-            color: var(--text-light);
-            margin-top: 0.375rem;
-        }
-        
-        .barcode-input {
-            display: flex;
-            gap: 0.75rem;
-        }
-        
-        .barcode-input input {
-            flex: 1;
-        }
-        
-        .barcode-input button {
-            flex-shrink: 0;
-            width: 52px;
-            padding: 0;
-        }
-        
-        #samples-list {
-            margin-top: 1.5rem;
-        }
-        
-        .sample-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        
-        .sample-info {
-            flex: 1;
-        }
-        
-        .sample-id {
-            font-weight: 600;
-            color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 0.25rem;
-        }
-        
-        .sample-meta {
-            font-size: 0.8125rem;
-            color: var(--text-light);
-        }
-        
-        .btn-delete {
-            background: none;
-            border: none;
-            color: var(--error);
-            cursor: pointer;
-            padding: 0.5rem;
-            font-size: 1.25rem;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        
-        .btn-delete:hover {
-            opacity: 1;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-light);
-        }
-        
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-        
+        .help-text { font-size: 0.8125rem; color: var(--text-light); margin-top: 0.375rem; }
+
+        .barcode-input { display: flex; gap: 0.75rem; }
+        .barcode-input input { flex: 1; }
+        .barcode-input button { flex-shrink: 0; width: auto; padding: 0 1rem; }
+
         .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--text); color: white; padding: 1rem 1.5rem;
+            border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000; opacity: 0; transition: opacity 0.3s; max-width: 90%; text-align: center;
         }
-        
-        .toast.show {
-            opacity: 1;
-        }
-        
+        .toast.show { opacity: 1; }
+
         .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
+            display: inline-block; padding: 0.25rem 0.75rem; background: var(--primary);
+            color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;
         }
 
-        .manual-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-            margin-bottom: 0.5rem;
+        /* Path picker */
+        .path-grid { display: grid; gap: 1rem; }
+        .path-card {
+            background: var(--surface); border: 2px solid var(--border);
+            border-radius: 12px; padding: 1.5rem; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 8px var(--shadow);
+            text-align: left; position: relative;
+        }
+        .path-card.active:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 16px var(--shadow); }
+        .path-card.disabled { opacity: 0.6; cursor: not-allowed; }
+        .path-card-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+        .path-card-title { font-size: 1.125rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem; }
+        .path-card-desc { font-size: 0.875rem; color: var(--text-light); }
+        .coming-soon {
+            position: absolute; top: 1rem; right: 1rem; background: var(--accent);
+            color: var(--text); padding: 0.2rem 0.6rem; border-radius: 12px;
+            font-size: 0.7rem; font-weight: 600;
         }
 
-        .manual-toggle input[type="checkbox"] {
-            width: auto;
-            padding: 0;
-            margin: 0;
-            cursor: pointer;
+        /* Toggle switches */
+        .toggle-row {
+            display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 8px; margin-bottom: 1rem; cursor: pointer;
+        }
+        .toggle-row input[type="checkbox"] { width: auto; cursor: pointer; }
+        .toggle-row label { margin: 0; font-weight: 500; cursor: pointer; }
+
+        .info-icon {
+            display: inline-block; width: 16px; height: 16px; line-height: 16px;
+            text-align: center; border-radius: 50%; background: var(--border);
+            color: var(--primary); font-size: 0.7rem; font-weight: 700; cursor: help;
+            margin-left: 0.3rem; vertical-align: middle;
         }
 
-        .manual-toggle label {
-            margin-bottom: 0;
-            font-size: 0.875rem;
-            color: var(--text-light);
-            cursor: pointer;
-            font-weight: 400;
+        /* Tube cards */
+        .tube-card {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem;
+            position: relative;
         }
-
-        .scanner-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .scanner-overlay.active {
-            display: flex;
-        }
-
-        .scanner-header {
-            color: white;
-            text-align: center;
+        .tube-card-head {
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 1rem;
-            width: 100%;
-            max-width: 500px;
+        }
+        .tube-card-title { font-weight: 700; color: var(--primary); font-family: 'JetBrains Mono', monospace; }
+        .btn-delete {
+            background: none; border: none; color: var(--error); cursor: pointer;
+            padding: 0.4rem; font-size: 1.1rem; opacity: 0.7; min-height: auto; width: auto;
+        }
+        .btn-delete:hover { opacity: 1; }
+
+        .specimen-card {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem;
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .specimen-info { flex: 1; }
+        .specimen-id { font-weight: 600; color: var(--primary); font-family: 'JetBrains Mono', monospace; margin-bottom: 0.25rem; }
+        .specimen-meta { font-size: 0.8125rem; color: var(--text-light); }
+        .specimen-actions { display: flex; gap: 0.25rem; }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-light); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+
+        .advanced-toggle {
+            cursor: pointer; color: var(--primary); font-weight: 600;
+            font-size: 0.9rem; user-select: none; padding: 0.5rem 0;
         }
 
-        .scanner-header h3 {
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
+        .footer {
+            text-align: center; color: var(--text-light); font-size: 0.8rem;
+            padding: 2rem 1rem 1rem; font-family: 'JetBrains Mono', monospace;
         }
 
-        .scanner-header p {
-            font-size: 0.875rem;
-            opacity: 0.7;
+        .hidden { display: none !important; }
+        /* ---- organism-part checklist ---- */
+        .op-checklist {
+            border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+            max-height: 240px; overflow-y: auto; padding: 0.25rem;
         }
+        .op-group-label {
+            font-weight: 700; font-style: italic; color: var(--primary-dark);
+            padding: 0.5rem 0.6rem 0.25rem; font-size: 0.85rem; position: sticky; top: 0; background: var(--surface);
+        }
+        .op-item {
+            display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.6rem;
+            border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+        }
+        .op-item:active { background: var(--bg); }
+        .op-item input[type=checkbox] { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--primary); }
+        .op-item:has(input:checked) { background: rgba(45,134,89,0.10); font-weight: 600; }
 
-        #scanner-container {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            overflow: hidden;
+        /* ---- barcode scanner ---- */
+        .tube-id-row { display: flex; gap: 0.5rem; align-items: stretch; }
+        .tube-id-row input { flex: 1; }
+        .btn-scan {
+            flex: 0 0 auto; background: var(--primary); color: #fff; border: none;
+            border-radius: 10px; padding: 0 0.9rem; font-size: 1.2rem; cursor: pointer;
         }
-
-        .scanner-buttons {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            width: 100%;
-            max-width: 500px;
+        .btn-scan:active { background: var(--primary-dark); }
+        .scanner-overlay {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center;
         }
-
-        .scanner-buttons .btn {
-            flex: 1;
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #a52828;
-        }
+        .scanner-overlay.show { display: flex; }
+        .scanner-box { width: min(92vw, 420px); background: var(--surface); border-radius: 14px; padding: 1rem; }
+        .scanner-box h3 { margin-bottom: 0.5rem; font-size: 1.05rem; }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; }
+        .scanner-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .scanner-actions button { flex: 1; padding: 0.7rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; }
+        .scanner-cancel { background: var(--border); color: var(--text); }
+        .scanner-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 0.4rem; }
     </style>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
     <header>
         <h1>✍️ FieldScribe</h1>
-        <div class="subtitle">Field Data Collection for Planetary Biology</div>
+        <div class="subtitle">Field Data Collection for Planetary Biology · ERGA</div>
     </header>
-    
+
     <div class="container">
         <!-- Status Bar -->
         <div class="status-bar">
@@ -464,991 +268,1374 @@
                 <span>Offline Ready</span>
             </div>
         </div>
-        
-        <!-- Sample Category Selection -->
-        <div class="form-section">
-            <div class="section-header">
-                <span class="section-icon">🎯</span>
-                <h2 class="section-title">Sample Category</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>What are you collecting?<span class="required">*</span></label>
-                <select id="sample-category" onchange="updateFormFields()" required>
-                    <option value="">Select sample type...</option>
-                    <option value="organism">Organism/Specimen</option>
-                    <option value="environmental">Environmental Sample</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Sample Form -->
-        <div class="form-section">
-            <div class="section-header">
-                <span class="section-icon">📋</span>
-                <h2 class="section-title">Sample Information</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>Sample ID / Barcode<span class="required">*</span></label>
-                <div class="barcode-input">
-                    <input type="text" id="sample-id" placeholder="Enter or scan barcode" required>
-                    <button class="btn btn-accent" onclick="scanBarcode()">📷</button>
+
+        <!-- ============ PATH PICKER ============ -->
+        <div id="view-picker">
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">🧭</span>
+                    <h2 class="section-title">Choose a collection path</h2>
                 </div>
-                <div class="help-text">Use barcode scanner or enter manually</div>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Collector Name<span class="required">*</span></label>
-                    <input type="text" id="collector" placeholder="Your name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Collection Date<span class="required">*</span></label>
-                    <input type="date" id="date" required>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Taxonomy Section (Organisms Only) -->
-        <div class="form-section" id="taxonomy-section" style="display: none;">
-            <div class="section-header">
-                <span class="section-icon">🔬</span>
-                <h2 class="section-title">Taxonomy</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>Kingdom<span class="required">*</span></label>
-                <select id="kingdom" onchange="updateTaxonomyFields()">
-                    <option value="">Select kingdom...</option>
-                    <option value="animalia">Animalia (Animals)</option>
-                    <option value="plantae">Plantae (Plants)</option>
-                    <option value="fungi">Fungi</option>
-                    <option value="protista">Protista</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Scientific Name<span class="required">*</span></label>
-                <input type="text" id="species" placeholder="Genus species">
-                <div class="help-text">Use binomial nomenclature (e.g., Homo sapiens)</div>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>NCBI Taxonomy ID</label>
-                    <input type="text" id="taxid" placeholder="e.g., 9606">
-                    <div class="help-text">
-                        <a href="https://www.ncbi.nlm.nih.gov/taxonomy" target="_blank" style="color: var(--primary); text-decoration: none;">
-                            🔗 Look up TaxID
-                        </a>
+                <div class="path-grid">
+                    <div class="path-card active" onclick="enterSpecimen()">
+                        <span class="path-card-icon">🦋</span>
+                        <div class="path-card-title">Specimen sampling</div>
+                        <div class="path-card-desc">individuals → tubes; any non-eDNA purpose</div>
+                    </div>
+                    <div class="path-card disabled">
+                        <span class="coming-soon">Coming soon</span>
+                        <span class="path-card-icon">🌊</span>
+                        <div class="path-card-title">eDNA / environmental</div>
+                        <div class="path-card-desc">Water, soil, sediment, air filters. Environmental DNA workflows.</div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Common Name</label>
-                    <input type="text" id="common-name" placeholder="e.g., Human">
+            </div>
+            <div class="form-section" id="picker-saved-section" style="display:none;">
+                <div class="section-header">
+                    <span class="section-icon">📦</span>
+                    <h2 class="section-title">Saved specimens</h2>
+                    <span class="badge" id="picker-specimen-count">0</span>
+                </div>
+                <div id="picker-specimens-list"></div>
+                <div class="help-text" style="margin-top:1rem; margin-bottom:0.5rem;">Choose an export standard:</div>
+                <div class="btn-group" style="margin-top:0;">
+                    <button class="btn btn-primary" onclick="exportData()" id="picker-export-btn">
+                        📊 ERGA manifest (CSV)
+                    </button>
+                    <button class="btn btn-accent" onclick="exportBOLD()" id="picker-export-bold-btn">
+                        🧬 BOLD / iBOL (Excel)
+                    </button>
                 </div>
             </div>
-            
+        </div>
+
+        <!-- ============ SPECIMEN SAMPLING FLOW (individuals → tubes) ============ -->
+        <div id="view-specimen" class="hidden">
+            <div class="form-section" style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem;">
+                <button class="btn btn-secondary" onclick="backToPicker()" style="min-height:auto; padding:0.5rem 1rem;">← Paths</button>
+                <strong style="color:var(--primary);" id="specimen-flow-title">New sampling session</strong>
+            </div>
+
+            <div class="form-section" style="border-left:4px solid var(--accent);">
+                <div class="help-text" style="font-size:0.875rem;">
+                    🦋 <strong>Specimen sampling.</strong> Record 1+ <strong>individuals</strong>, each split into 1+ <strong>tubes</strong>.
+                    One individual with many tubes = a reference-genome specimen split across tubes (tubes share its SPECIMEN_ID).
+                    Many individuals with one tube each = a population (distinct SPECIMEN_IDs). Purpose is set per tube.
+                </div>
+            </div>
+
+            <!-- Taxonomy -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">🔬</span>
+                    <h2 class="section-title">Taxonomy</h2>
+                </div>
+                <div class="form-group">
+                    <label>Scientific name<span class="required">*</span></label>
+                    <div class="tube-id-row">
+                        <input type="text" id="f-scientific-name" placeholder="Genus species" oninput="window.__taxResolved=''" onblur="lookupTaxonomy()">
+                        <button type="button" class="btn-scan" id="f-tax-lookup-btn" title="Look up TaxID + taxonomy online" onclick="lookupTaxonomy()">🔎</button>
+                    </div>
+                    <div class="help-text">Binomial nomenclature, e.g. Salmo salar. Maps to SCIENTIFIC_NAME. Tap 🔎 (or just move on) to auto-fill TaxID, phylum→genus from NCBI/GBIF when online.</div>
+                    <div class="help-text" id="f-tax-status" style="min-height:1em;"></div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Phylum</label>
+                        <input type="text" id="f-phylum" placeholder="e.g. Chordata">
+                        <div class="help-text">Required by BOLD / iBOL export. Optional for ERGA.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <input type="text" id="f-class" placeholder="e.g. Actinopterygii">
+                        <div class="help-text">For BOLD / iBOL export.</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Order / group</label>
+                        <input type="text" id="f-order" placeholder="e.g. Salmoniformes">
+                        <div class="help-text">Taxonomic order or higher group.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Family</label>
+                        <input type="text" id="f-family" placeholder="e.g. Salmonidae">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Genus</label>
+                        <input type="text" id="f-genus" placeholder="e.g. Salmo">
+                    </div>
+                    <div class="form-group">
+                        <label>Common name</label>
+                        <input type="text" id="f-common-name" placeholder="e.g. Atlantic salmon">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>NCBI Taxon ID</label>
+                    <input type="text" id="f-taxon-id" placeholder="e.g. 8030">
+                    <div class="help-text">Look up on NCBI later if unknown — leave blank if uncertain.</div>
+                </div>
+                <div class="help-text">Sex and life stage are set per individual on the cards below.</div>
+            </div>
+
+            <!-- Collection -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">📍</span>
+                    <h2 class="section-title">Collection</h2>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Collected by<span class="required">*</span></label>
+                        <input type="text" id="f-collected-by" placeholder="Full name">
+                        <div class="help-text">Name of the person who collected the specimen.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Collector affiliation</label>
+                        <input type="text" id="f-collector-affiliation" placeholder="Institution">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Collector ORCID</label>
+                        <input type="text" id="f-collector-orcid" placeholder="0000-0000-0000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label>Institution storing</label>
+                        <input type="text" id="f-institution-storing" placeholder="Voucher-holding institution">
+                        <div class="help-text">Institution holding the voucher (for BOLD). Falls back to collector affiliation if empty.</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Date of collection<span class="required">*</span></label>
+                        <input type="date" id="f-date">
+                        <div class="help-text">YYYY-MM-DD. Defaults to today.</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Time of collection</label>
+                        <input type="time" id="f-time">
+                        <div class="help-text">Optional, local time.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Collection location<span class="required">*</span></label>
+                        <input type="text" id="f-location" placeholder="Country / region / site">
+                        <div class="help-text">Type levels separated by a slash, e.g. "Sweden / Uppsala / Fyrisån" (most general → most specific). Maps to COLLECTION_LOCATION.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>GPS coordinates<span class="required">*</span></label>
+                    <div class="btn-group" style="margin-top:0; margin-bottom:0.5rem;">
+                        <button class="btn btn-secondary" onclick="getLocation()" style="width:100%;">📡 Capture GPS</button>
+                        <button class="btn btn-accent" onclick="useLastLocation()" id="use-last-location-btn" style="width:100%;" disabled>⚡ Use last</button>
+                    </div>
+                    <div id="gps-coordinates" class="gps-display">No location yet. Capture GPS or enter manually below.</div>
+                    <div class="toggle-row" style="margin-top:0.75rem;">
+                        <input type="checkbox" id="manual-coords-toggle" onchange="toggleManualCoords()">
+                        <label for="manual-coords-toggle">⌚ Enter coordinates manually</label>
+                    </div>
+                    <div id="manual-coords-fields" class="hidden">
+                        <div class="input-group">
+                            <div class="form-group">
+                                <label>Decimal latitude</label>
+                                <input type="number" id="manual-lat" placeholder="59.858562" step="0.000001" min="-90" max="90" oninput="updateFromManualCoords()">
+                            </div>
+                            <div class="form-group">
+                                <label>Decimal longitude</label>
+                                <input type="number" id="manual-lon" placeholder="17.632710" step="0.000001" min="-180" max="180" oninput="updateFromManualCoords()">
+                            </div>
+                        </div>
+                        <div class="help-text">Decimal degrees. Maps to DECIMAL_LATITUDE / DECIMAL_LONGITUDE.</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Elevation (m)</label>
+                        <input type="text" id="f-elevation" placeholder="e.g. 25">
+                        <div class="help-text">Metres above sea level.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Depth (m)</label>
+                        <input type="text" id="f-depth" placeholder="e.g. 1.5">
+                        <div class="help-text">For aquatic / subsurface samples.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Habitat</label>
+                    <input type="text" id="f-habitat" placeholder="e.g. river riffle, boreal forest floor">
+                    <div class="help-text">Free-text habitat description.</div>
+                </div>
+                <div class="form-group">
+                    <label>Description of collection method</label>
+                    <textarea id="f-method" placeholder="e.g. electrofishing; hand net; pitfall trap"></textarea>
+                    <div class="help-text">How the specimen was obtained. Maps to DESCRIPTION_OF_COLLECTION_METHOD.</div>
+                </div>
+
+                <!-- Transect disclosure -->
+                <div class="toggle-row">
+                    <input type="checkbox" id="transect-toggle" onchange="toggleTransect()">
+                    <label for="transect-toggle">📏 Collected along a transect?</label>
+                </div>
+                <div id="transect-fields" class="hidden">
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label>Latitude start</label>
+                            <input type="number" id="f-lat-start" step="0.000001" placeholder="decimal">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude start</label>
+                            <input type="number" id="f-lon-start" step="0.000001" placeholder="decimal">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label>Latitude end</label>
+                            <input type="number" id="f-lat-end" step="0.000001" placeholder="decimal">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude end</label>
+                            <input type="number" id="f-lon-end" step="0.000001" placeholder="decimal">
+                        </div>
+                    </div>
+                    <div class="help-text">When off, transect fields export as NOT_COLLECTED and the single GPS point is used.</div>
+                </div>
+
+                <!-- Original location disclosure -->
+                <div class="toggle-row">
+                    <input type="checkbox" id="origin-toggle" onchange="toggleOrigin()">
+                    <label for="origin-toggle">🏛️ Specimen from a zoo / garden / culture with a different origin?</label>
+                </div>
+                <div id="origin-fields" class="hidden">
+                    <div class="form-group">
+                        <label>Collection / institution name</label>
+                        <input type="text" id="f-orig-collection" placeholder="e.g. London Zoo, Millennium Seed Bank, DSMZ culture collection">
+                        <div class="help-text">The zoo / garden / culture collection currently holding the specimen. Added to COLLECTION_LOCATION as the most specific site.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Original collection date</label>
+                        <input type="date" id="f-orig-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Original geographic location</label>
+                        <input type="text" id="f-orig-location" placeholder="Where it was originally collected, e.g. Kenya / Rift Valley / Lake Nakuru">
+                    </div>
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label>Original decimal latitude</label>
+                            <input type="number" id="f-orig-lat" step="0.000001">
+                        </div>
+                        <div class="form-group">
+                            <label>Original decimal longitude</label>
+                            <input type="number" id="f-orig-lon" step="0.000001">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Individuals → tubes -->
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">🧬</span>
+                    <h2 class="section-title">Individuals</h2>
+                </div>
+                <div class="form-group">
+                    <label>Base ID<span class="required">*</span></label>
+                    <input type="text" id="f-base-id" placeholder="e.g. SALMO-2026-001" oninput="renumberIndividuals()">
+                    <div class="help-text">Seeds each individual's SPECIMEN_ID (_001, _002, …) and each tube's COLLECTOR_SAMPLE_ID (-01, -02, …).</div>
+                </div>
+
+                <div id="individuals-container"></div>
+
+                <button class="btn btn-secondary" id="add-individual-btn" onclick="addIndividual()" style="width:100%;">➕ Add individual</button>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetSpecimenForm(true)">🔄 Clear</button>
+                <button class="btn btn-primary" onclick="saveSpecimen()">💾 Save session</button>
+            </div>
+        </div>
+
+
+        <!-- Saved specimens list (shown inside specimen view too) -->
+        <div class="form-section" id="saved-section" style="margin-top:2rem;">
+            <div class="section-header">
+                <span class="section-icon">📦</span>
+                <h2 class="section-title">Saved specimens</h2>
+                <span class="badge" id="specimen-count">0</span>
+            </div>
+            <div id="specimens-list"></div>
+            <div class="help-text" style="margin-top:1rem; margin-bottom:0.5rem;">Choose an export standard:</div>
+            <div class="btn-group" style="margin-top:0;">
+                <button class="btn btn-primary" onclick="exportData()" id="export-btn" disabled>
+                    📊 ERGA manifest (CSV)
+                </button>
+                <button class="btn btn-accent" onclick="exportBOLD()" id="export-bold-btn" disabled>
+                    🧬 BOLD / iBOL (Excel)
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">FieldScribe v<span id="app-ver"></span> · ERGA manifest v<span id="manifest-ver"></span></div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Barcode scanner modal -->
+    <div id="scanner-overlay" class="scanner-overlay">
+        <div class="scanner-box">
+            <h3>Scan tube barcode</h3>
+            <div id="reader"></div>
+            <div class="scanner-hint">Point the camera at the tube's barcode or QR code.</div>
+            <div class="scanner-actions">
+                <button class="scanner-cancel" id="scanner-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera barcode scanner (loads when online; field falls back to manual typing offline) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" onerror="window.__scannerLibFailed=true"></script>
+
+    <!-- SheetJS for BOLD/iBOL .xlsx export (loads when online; offline falls back to CSV) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" onerror="window.__xlsxLibFailed=true"></script>
+
+    <script>
+    /* =================== EMBEDDED SCHEMA =================== */
+    const APP_VERSION = "2.0.0";
+    const MANIFEST_VERSION = "2.5.1";
+    const MANIFEST_SCHEMA = {"manifest_version":"2.5.1","column_count":91,"columns":["TUBE_OR_WELL_ID","SPECIMEN_ID","PURPOSE_OF_SPECIMEN","SAMPLE_COORDINATOR","SAMPLE_COORDINATOR_AFFILIATION","SAMPLE_COORDINATOR_ORCID_ID","ORDER_OR_GROUP","FAMILY","GENUS","TAXON_ID","SCIENTIFIC_NAME","TAXON_REMARKS","INFRASPECIFIC_EPITHET","CULTURE_OR_STRAIN_ID","COMMON_NAME","LIFESTAGE","SEX","ORGANISM_PART","SYMBIONT","RELATIONSHIP","GAL","GAL_SAMPLE_ID","COLLECTOR_SAMPLE_ID","COLLECTED_BY","COLLECTOR_AFFILIATION","COLLECTOR_ORCID_ID","DATE_OF_COLLECTION","TIME_OF_COLLECTION","COLLECTION_LOCATION","DECIMAL_LATITUDE","DECIMAL_LONGITUDE","LATITUDE_START","LONGITUDE_START","LATITUDE_END","LONGITUDE_END","HABITAT","DEPTH","ELEVATION","ORIGINAL_COLLECTION_DATE","ORIGINAL_GEOGRAPHIC_LOCATION","ORIGINAL_DECIMAL_LATITUDE","ORIGINAL_DECIMAL_LONGITUDE","DESCRIPTION_OF_COLLECTION_METHOD","DIFFICULT_OR_HIGH_PRIORITY_SAMPLE","IDENTIFIED_BY","IDENTIFIER_AFFILIATION","IDENTIFIED_HOW","SPECIMEN_IDENTITY_RISK","MIXED_SAMPLE_RISK","PRESERVED_BY","PRESERVER_AFFILIATION","PRESERVATION_APPROACH","PRESERVATIVE_SOLUTION","TIME_ELAPSED_FROM_COLLECTION_TO_PRESERVATION","DATE_OF_PRESERVATION","SIZE_OF_TISSUE_IN_TUBE","TISSUE_REMOVED_FOR_BARCODING","TUBE_OR_WELL_ID_FOR_BARCODING","TISSUE_FOR_BARCODING","BARCODE_PLATE_PRESERVATIVE","BARCODING_STATUS","TISSUE_REMOVED_FOR_BIOBANKING","TISSUE_VOUCHER_ID_FOR_BIOBANKING","PROXY_TISSUE_VOUCHER_ID_FOR_BIOBANKING","TISSUE_FOR_BIOBANKING","BIOBANKED_TISSUE_PRESERVATIVE","DNA_REMOVED_FOR_BIOBANKING","DNA_VOUCHER_ID_FOR_BIOBANKING","VOUCHER_ID","PROXY_VOUCHER_ID","VOUCHER_LINK","PROXY_VOUCHER_LINK","VOUCHER_INSTITUTION","REGULATORY_COMPLIANCE","ASSOCIATED_TRADITIONAL_KNOWLEDGE_OR_BIOCULTURAL_RIGHTS_APPLICABLE","INDIGENOUS_RIGHTS_DEF","ASSOCIATED_TRADITIONAL_KNOWLEDGE_OR_BIOCULTURAL_PROJECT_ID","ASSOCIATED_TRADITIONAL_KNOWLEDGE_CONTACT","ETHICS_PERMITS_REQUIRED","ETHICS_PERMITS_DEF","ETHICS_PERMITS_FILENAME","SAMPLING_PERMITS_REQUIRED","SAMPLING_PERMITS_DEF","SAMPLING_PERMITS_FILENAME","NAGOYA_PERMITS_REQUIRED","NAGOYA_PERMITS_DEF","NAGOYA_PERMITS_FILENAME","HAZARD_GROUP","PRIMARY_BIOGENOME_PROJECT","ASSOCIATED_PROJECT_ACCESSIONS","OTHER_INFORMATION"],"controlled_vocabularies":{"PURPOSE_OF_SPECIMEN":["REFERENCE_GENOME","DNA_BARCODING_ONLY","RNA_SEQUENCING","R&D","RESEQUENCING","NOT_PROVIDED"],"LIFESTAGE":["adult","juvenile","pupa","larva","zygote","embryo","egg","---terms for plants, fungi, and macroalgae---","sporophyte","gametophyte","spore-bearing structure","vegetative structure","---terms for protists---","vegetative cell","---terms for any---","not collected","not applicable","not provided"],"SEX":["--terms for any--","FEMALE","MALE","HERMAPHRODITE_MONOECIOUS","NOT_COLLECTED","NOT_APPLICABLE","NOT _PROVIDED","--terms for fungi--","ASEXUAL_MORPH","SEXUAL_MORPH"],"ORGANISM_PART":["---terms for animals---","WHOLE_ORGANISM","HEAD","THORAX","ABDOMEN","CEPHALOTHORAX","BRAIN","EYE","FAT_BODY","INTESTINE","BODYWALL","TERMINAL_BODY","ANTERIOR_BODY","MID_BODY","POSTERIOR_BODY","HEPATOPANCREAS","LEG","BLOOD","LUNG","HEART","KIDNEY","LIVER","ENDOCRINE_TISSUE","SPLEEN","STOMACH","PANCREAS","MUSCLE","MODULAR_COLONY","TENTACLE","FIN","SKIN","SCAT","EGGSHELL","SCALES","MOLLUSC_FOOT","HAIR","GILL_ANIMAL","**OTHER_SOMATIC_ANIMAL_TISSUE**","OVIDUCT","GONAD","OVARY_ANIMAL","TESTIS","SPERM_SEMINAL_FLUID","EGG","**OTHER_REPRODUCTIVE_ANIMAL_TISSUE**","---terms for plants---","WHOLE_PLANT","SEEDLING","SEED","LEAF","FLOWER","BLADE","STEM","PETIOLE","SHOOT","BUD","THALLUS_PLANT","BRACT","ROOT","**OTHER_PLANT_TISSUE**","---terms for fungi---","MYCELIUM","MYCORRHIZA","SPORE_BEARING_STRUCTURE","HOLDFAST_FUNGI","STIPE","CAP","GILL_FUNGI","THALLUS_FUNGI","SPORE","**OTHER_FUNGAL_TISSUE**","---terms for any---","NOT_COLLECTED","NOT_APPLICABLE","NOT_PROVIDED","UNICELLULAR_ORGANISMS_IN_CULTURE","MULTICELLULAR_ORGANISMS_IN_CULTURE"],"SYMBIONT":["TARGET","SYMBIONT"],"GAL":["Centro Nacional de Análisis Genómico","DNA Sequencing and Genomics Laboratory, Helsinki Genomics Core Facility","Earlham Institute","Functional Genomics Center Zurich","Genoscope","Hansen Lab, Denmark","Lausanne Genomic Technologies Facility","Leibniz Institute for the Analysis of Biodiversity Change, Museum Koenig, Bonn","NGS Bern","NGS Competence Center Tübingen","Neuromics Support Facility, UAntwerp, VIB","Norwegian Sequencing Centre","Sanger Institute","SciLifeLab","Svardal Lab, Antwerp","University of Bari","University of Florence","West German Genome Centre","industry partner","other ERGA associated GAL","not provided"],"DIFFICULT_OR_HIGH_PRIORITY_SAMPLE":["HIGH_PRIORITY","DIFFICULT","NOT_APPLICABLE","NOT_PROVIDED","NOT_COLLECTED","FULL_CURATION"],"SPECIMEN_ID_RISK":["Y","N"],"MIXED_SAMPLE_RISK":["Y","N"],"SIZE_OF_TISSUE_IN_TUBE":["VS","S","M","L","SINGLE_CELL","NOT_COLLECTED","NOT_APPLICABLE","NOT_PROVIDED"],"TISSUE_REMOVED_FOR_BARCODING":["Y","N"],"TISSUE_FOR_BARCODING":["---terms for animals---","WHOLE_ORGANISM","HEAD","THORAX","ABDOMEN","CEPHALOTHORAX","BRAIN","EYE","FAT_BODY","INTESTINE","BODYWALL","TERMINAL_BODY","ANTERIOR_BODY","MID_BODY","POSTERIOR_BODY","HEPATOPANCREAS","LEG","BLOOD","LUNG","HEART","KIDNEY","LIVER","ENDOCRINE_TISSUE","SPLEEN","STOMACH","PANCREAS","MUSCLE","MODULAR_COLONY","TENTACLE","FIN","SKIN","SCAT","EGGSHELL","SCALES","MOLLUSC_FOOT","HAIR","GILL_ANIMAL","**OTHER_SOMATIC_ANIMAL_TISSUE**","OVIDUCT","GONAD","OVARY_ANIMAL","TESTIS","SPERM_SEMINAL_FLUID","EGG","**OTHER_REPRODUCTIVE_ANIMAL_TISSUE**","---terms for plants---","WHOLE_PLANT","SEEDLING","SEED","LEAF","FLOWER","BLADE","STEM","PETIOLE","SHOOT","BUD","THALLUS_PLANT","BRACT","ROOT","**OTHER_PLANT_TISSUE**","---terms for fungi---","MYCELIUM","MYCORRHIZA","SPORE_BEARING_STRUCTURE","HOLDFAST_FUNGI","STIPE","CAP","GILL_FUNGI","THALLUS_FUNGI","SPORE","**OTHER_FUNGAL_TISSUE**","---terms for any---","NOT_COLLECTED","NOT_APPLICABLE","NOT_PROVIDED","DNA_EXTRACT","UNICELLULAR_ORGANISMS_IN_CULTURE","MULTICELLULAR_ORGANISMS_IN_CULTURE"],"BARCODING_STATUS":["DNA_BARCODING_COMPLETED","DNA_BARCODING_TO_BE_PERFORMED_GAL","DNA_BARCODING_EXEMPT","DNA_BARCODING_FAILED"],"TISSUE_REMOVED_FOR_BIOBANKING":["Y","N"],"TISSUE_FOR_BIOBANKING":["---terms for animals---","WHOLE_ORGANISM","HEAD","THORAX","ABDOMEN","CEPHALOTHORAX","BRAIN","EYE","FAT_BODY","INTESTINE","BODYWALL","TERMINAL_BODY","ANTERIOR_BODY","MID_BODY","POSTERIOR_BODY","HEPATOPANCREAS","LEG","BLOOD","LUNG","HEART","KIDNEY","LIVER","ENDOCRINE_TISSUE","SPLEEN","STOMACH","PANCREAS","MUSCLE","MODULAR_COLONY","TENTACLE","FIN","SKIN","SCAT","EGGSHELL","SCALES","MOLLUSC_FOOT","HAIR","GILL_ANIMAL","**OTHER_SOMATIC_ANIMAL_TISSUE**","OVIDUCT","GONAD","OVARY_ANIMAL","TESTIS","SPERM_SEMINAL_FLUID","EGG","**OTHER_REPRODUCTIVE_ANIMAL_TISSUE**","---terms for plants---","WHOLE_PLANT","SEEDLING","SEED","LEAF","FLOWER","BLADE","STEM","PETIOLE","SHOOT","BUD","THALLUS_PLANT","BRACT","ROOT","**OTHER_PLANT_TISSUE**","---terms for fungi---","MYCELIUM","MYCORRHIZA","SPORE_BEARING_STRUCTURE","HOLDFAST_FUNGI","STIPE","CAP","GILL_FUNGI","THALLUS_FUNGI","SPORE","**OTHER_FUNGAL_TISSUE**","---terms for any---","NOT_COLLECTED","NOT_APPLICABLE","NOT_PROVIDED","DNA_EXTRACT","UNICELLULAR_ORGANISMS_IN_CULTURE","MULTICELLULAR_ORGANISMS_IN_CULTURE"],"DNA_REMOVED_FOR_BIOBANKING":["Y","N"],"HAZARD_GROUP":["1.0","2.0","3.0","4.0"],"REGULATORY_COMPLIANCE":["Y","N","NOT_APPLICABLE"],"INDIGENOUS_RIGHTS_APPLICABLE":["Y","N"],"ASSOCIATED_TRADITIONAL_KNOWLEDGE_APPLICABLE":["Y","N"],"ETHICS_PERMITS_REQUIRED":["Y","N"],"SAMPLING_PERMITS_REQUIRED":["Y","N"],"NAGOYA_PERMITS_REQUIRED":["Y","N"],"PRIMARY_BIOGENOME_PROJECT":["ERGA-Pilot","ERGA-BGE","ERGA-associated","ERGA-Community"]},"organism_part_definitions":{"ORGANISM_PART":"DEFINITION","WHOLE_ORGANISM":"the whole organism (please comment in OTHER_INFORMATION [column BZ] if, for example, wings or genettalia were removed for identification, or appendages or other sample taken for DNA barcoding)","HEAD":"the head of arthropods (and of other animals where distinct; use ANTERIOR_BODY where this is not the case)","THORAX":"the thorax of arthropods","ABDOMEN":"the abdomen of arthropods","CEPHALOTHORAX":"the chephalothorax of chelicerate arthropods","BRAIN":"dissected brain or brain tissue","EYE":"dissected eye or eye tissue","FAT_BODY":"dissected fat body or fat body tissue","INTESTINE":"any part of the digestive intestine, specifically excluding STOMACH in vertebrates; may include accessory glandular tissue","BODYWALL":"the body wall of non-vertebrate animals (incorporating ectodermal and mesodermal components, but excluding intestine)","TERMINAL_BODY":"the very terminal body of non-vertebrate animals, likely not including intestine","ANTERIOR_BODY":"the anterior whole body of non-vertebrate animals, likely including anterior nervous system, oropharyngeal apparatus, and anterior intestine","MID_BODY":"the mid whole body of non-vertebrate animals, likely including intestine","POSTERIOR_BODY":"the posterior whole body of non-vertebrate animals, likely including intestine","HEPATOPANCREAS":"the hepatopancreas of molluscs","LEG":"any locomotory appendage of tetrapods or arthropods","BLOOD":"the blood of animals (vertebrate blood and the haemocoel fluid of animals with open circulations)","LUNG":"the lung of vertebrates","HEART":"the heart of vertebrates","KIDNEY":"the kidney of vertebrates","LIVER":"the liver of vertebrates","ENDOCRINE_TISSUE":"endocrine tissue of vertebrates","SPLEEN":"the spleen of vertebrates","STOMACH":"the stomach of vertebrates (use INTESTINE for non vertebrate intestinal tissue)","PANCREAS":"the pancreas of vertebrates","MUSCLE":"isolated muscle or dissected muscle tissue","MODULAR_COLONY":"a sample including multiple individual organisms (zooids) from a modular colony","TENTACLE":"a tentacle from cnidarians and some spiralian animals","FIN":"the fin of non-tertrapod vertebrates","SKIN":"dissected ectodermal tissue (including dermis and subdermis in vertebrates)","SCAT":"faecal matter from animals (largely vertebrates)","EGGSHELL":"the eggshell of birds or reptiles","SCALES":"dissected scales of bony fish","MOLLUSC_FOOT":"the locomotory foot of molluscs","HAIR":"the hair and follicular tissue of mammals","GILL_ANIMAL":"the respiratory gill of aquatic vertebrates, and of other animals","**OTHER_SOMATIC_ANIMAL_TISSUE**":"(use this term if the animal organ, tissue or body part you have sampled is not covered by the other somatic tissue terms above. Please describe the organism part in the OTHER_INFORMATION field [column BZ])","OVIDUCT":"oviduct of mammals","GONAD":"animal gonadal tissue or whole organ (also use for gonad of hermaphroditic animals where testicular and ovarian function is not clearly distinguished)","OVARY_ANIMAL":"animal ovary (female gonad) tissue or whole organ","TESTIS":"animal testis (male gonad) tissue or whole organ","SPERM_SEMINAL_FLUID":"animal sperm in seminal fluid from a male animal","EGG":"the eggs  from a single female animal (fertilised or unfertilised, as laid by or taken from the ovary or egg sac of)","**OTHER_REPRODUCTIVE_ANIMAL_TISSUE**":"(use this term if the animal reproductive organ, tissue or body part you have sampled is not covered by the other reproductive tissue terms above. Please describe the organism part in the OTHER_INFORMATION field [column BZ])","WHOLE_PLANT":"entire mature sporophyte or gametophyte, including above- and below-ground parts where appropriate","SEEDLING":"entire, or above-ground part of, juvenile plant that has been raised from seed or spores (not from cuttings or division)","SEED":"embryonic plant sporophyte, taxonomically restricted to the Spermatophyta","LEAF":"planar plant appendage, of sporophytic or gametophytic origin, that is attached to a stem; usually photosynthetic","FLOWER":"seed-bearing part of an angiosperm, comprising reproductive organs (stamens and/or carpels) typically surrounded by corolla (petals) and  calyx (sepals); will contain sporophytic and gametophytic tissue","BLADE":"for macroalgae, a flattened structure that resembles a leaf","STEM":"a primary plant axis that develops organs like buds and shoots","PETIOLE":"part of a vascular plant leaf that subtends the flattened lamina","SHOOT":"a stem including its appendages, e.g. leaves, buds, flowers","BUD":"a compact growth on a vascular plant that can develop into a leaf, flower, or shoot","THALLUS_PLANT":"in plants and 'plant-like' organisms (e.g. macroalgae), a planar vegetative body that is not differentiated into leaf, stem and root, but may have scales and rhizoids attached","BRACT":"modified leaf or scale, typically small","**OTHER_PLANT_TISSUE**":"(use this term if the plant organ, tissue or organism part you have sampled is not covered by the other plant organ and tissue terms above. Please describe the tissue or organism part in the OTHER_INFORMATION field [column BZ])","MYCELIUM":"mass of branching hyphae (fungal filaments), vegetative part","MYCORRHIZA":"fungal filaments surrounding plant roots or root cells, or growing inside them","SPORE_BEARING_STRUCTURE":"anatomical structure that produces new spores, reproductive structure","HOLDFAST_FUNGI":"central peg or anchor structure to attach to substrate","STIPE":"stem or stalk-like feature supporting the cap","CAP":"or pileus, top part of spore-bearing structure that carries fertiles tissue (hymenium)","GILL_FUNGI":"or lamellae, are plate-like or blade-like structures bearing the hymenium in the underside of the cap","THALLUS_FUNGI":"nonreproductive tissues, or vegetative body parts","SPORE":"unit of sexual or asexual reproduction, often single-celled","**OTHER_FUNGAL_TISSUE**":"(use this term if the fungal organ, tissue or organism part you have sampled is not covered by the other fungal organ and tissue terms above. Please describe the tissue or organism part in the OTHER_INFORMATION field [column BZ])","NOT_COLLECTED":"the information was not collected and is not available","NOT_APPLICABLE":"the data type is not applicable to this sample","NOT_PROVIDED":"the information was collected but is not provided at this time","UNICELLULAR_ORGANISMS_IN_CULTURE":"single-celled eukaryotes grown in culture","MULTICELLULAR_ORGANISMS_IN_CULTURE":"multicellular eukaryotic organisms grown in culture"}};
+
+    /* UI-only PURPOSE choice that maps to an ERGA term + appends to OTHER_INFORMATION */
+    const HIC_UI_VALUE = "__HIC__";
+
+    /* =================== STATE =================== */
+    /* Normalize any old-format record to the unified shape:
+       { pathType:'specimen', ...shared..., baseId, individuals:[ { specimenId, sex, lifestage,
+         tubes:[ { tubeId, collectorSampleId, organismPart:[], purpose } ] } ] } */
+    function normalizeRecord(s) {
+        if (!s || typeof s !== 'object') return s;
+        // Already unified
+        if (s.pathType === 'specimen' && Array.isArray(s.individuals) &&
+            s.individuals.every(ind => Array.isArray(ind.tubes))) {
+            return s;
+        }
+        if (s.pathType === 'population') {
+            // Each old individual -> an individual with a single tube
+            const individuals = (s.individuals || []).map(ind => ({
+                specimenId: ind.specimenId || '',
+                sex: ind.sex || '',
+                lifestage: ind.lifestage || '',
+                tubes: [{
+                    tubeId: ind.tubeId || '',
+                    collectorSampleId: ind.collectorSampleId || ind.specimenId || '',
+                    organismPart: ind.organismPart || [],
+                    purpose: 'RESEQUENCING'
+                }]
+            }));
+            const out = Object.assign({}, s, { pathType: 'specimen', individuals: individuals });
+            delete out.tubes;
+            return out;
+        }
+        // Old single-specimen record: tubes at top level, shared SPECIMEN_ID = baseId
+        if (Array.isArray(s.tubes)) {
+            const tubes = s.tubes.map(t => ({
+                tubeId: t.tubeId || '',
+                collectorSampleId: t.collectorSampleId || '',
+                organismPart: t.organismPart || [],
+                purpose: t.purpose || ''
+            }));
+            const out = Object.assign({}, s, {
+                pathType: 'specimen',
+                individuals: [{
+                    specimenId: s.baseId || '',
+                    sex: s.sex || '',
+                    lifestage: s.lifestage || '',
+                    tubes: tubes
+                }]
+            });
+            delete out.tubes;
+            return out;
+        }
+        // Unknown shape — coerce to an empty unified record so nothing crashes.
+        return Object.assign({}, s, {
+            pathType: 'specimen',
+            individuals: Array.isArray(s.individuals) ? s.individuals : []
+        });
+    }
+
+    let specimens = (JSON.parse(localStorage.getItem('fs_v2_specimens')) || []).map(normalizeRecord);
+    let currentLocation = null;
+    let editingIndex = -1;   // -1 = new
+    let individualCounter = 0;
+    let tubeCounter = 0;
+    let lastSpecimen = specimens.length ? specimens[specimens.length - 1] : null;
+
+    /* =================== HELPERS =================== */
+    function isSeparator(v) { return v.startsWith('---') || v.startsWith('--') || v.startsWith('**'); }
+
+    // Build a <select> from a vocab list, grouping separator rows as optgroups.
+    function buildSelect(selectEl, vocab, includeBlank) {
+        selectEl.innerHTML = '';
+        if (includeBlank) {
+            const o = document.createElement('option');
+            o.value = ''; o.textContent = 'Select…';
+            selectEl.appendChild(o);
+        }
+        let group = null;
+        vocab.forEach(v => {
+            if (isSeparator(v)) {
+                group = document.createElement('optgroup');
+                group.label = v.replace(/-/g, '').replace(/\*/g, '').trim();
+                selectEl.appendChild(group);
+            } else {
+                const o = document.createElement('option');
+                o.value = v; o.textContent = v;
+                (group || selectEl).appendChild(o);
+            }
+        });
+    }
+
+    /* =================== INIT =================== */
+    document.getElementById('app-ver').textContent = APP_VERSION;
+    document.getElementById('manifest-ver').textContent = MANIFEST_VERSION;
+    document.getElementById('f-date').valueAsDate = new Date();
+
+    if (lastSpecimen) document.getElementById('f-collected-by').value = lastSpecimen.collectedBy || '';
+    updateLastLocationButton();
+    updateSpecimensList();
+    showView('picker');
+
+    /* =================== VIEW SWITCH =================== */
+    function showView(view) {
+        document.getElementById('view-picker').classList.toggle('hidden', view !== 'picker');
+        document.getElementById('view-specimen').classList.toggle('hidden', view !== 'specimen');
+        const savedSection = document.getElementById('saved-section');
+        savedSection.style.display = (view === 'specimen') ? 'block' : 'none';
+        document.querySelector('.footer').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function enterSpecimen() {
+        editingIndex = -1;
+        resetSpecimenForm(false);
+        document.getElementById('specimen-flow-title').textContent = 'New sampling session';
+        showView('specimen');
+    }
+
+    function backToPicker() {
+        showView('picker');
+        updateSpecimensList();
+    }
+
+    /* =================== DISCLOSURES =================== */
+    function toggleTransect() {
+        document.getElementById('transect-fields').classList.toggle('hidden', !document.getElementById('transect-toggle').checked);
+    }
+    function toggleOrigin() {
+        document.getElementById('origin-fields').classList.toggle('hidden', !document.getElementById('origin-toggle').checked);
+    }
+
+    /* =================== GPS (reused from v1) =================== */
+    function toggleManualCoords() {
+        const on = document.getElementById('manual-coords-toggle').checked;
+        document.getElementById('manual-coords-fields').classList.toggle('hidden', !on);
+        if (!on) { document.getElementById('manual-lat').value = ''; document.getElementById('manual-lon').value = ''; }
+    }
+    function updateFromManualCoords() {
+        const lat = parseFloat(document.getElementById('manual-lat').value);
+        const lon = parseFloat(document.getElementById('manual-lon').value);
+        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+            currentLocation = { latitude: lat, longitude: lon, accuracy: 'manual' };
+            displayGPSCoordinates();
+            const s = document.getElementById('gps-status'), t = document.getElementById('gps-status-text');
+            s.classList.add('active'); t.textContent = 'GPS: Manual';
+        }
+    }
+    function getLocation() {
+        if (!navigator.geolocation) { showToast('GPS not supported on this device'); return; }
+        const s = document.getElementById('gps-status'), t = document.getElementById('gps-status-text');
+        s.classList.remove('active'); t.textContent = 'GPS: Acquiring...';
+        document.getElementById('manual-coords-toggle').checked = false;
+        document.getElementById('manual-coords-fields').classList.add('hidden');
+        navigator.geolocation.getCurrentPosition(
+            (p) => {
+                currentLocation = { latitude: p.coords.latitude, longitude: p.coords.longitude, accuracy: p.coords.accuracy };
+                displayGPSCoordinates();
+                s.classList.add('active'); t.textContent = 'GPS: Active';
+                showToast('GPS location captured!');
+            },
+            (err) => { showToast('GPS error: ' + err.message); t.textContent = 'GPS: Error'; }
+        );
+    }
+    function displayGPSCoordinates() {
+        if (!currentLocation) return;
+        const acc = currentLocation.accuracy === 'manual'
+            ? '<strong>Source:</strong> Manual entry'
+            : `<strong>Accuracy:</strong> ±${currentLocation.accuracy.toFixed(1)}m`;
+        const html =
+            `<strong>Latitude:</strong> ${currentLocation.latitude.toFixed(6)}°<br>` +
+            `<strong>Longitude:</strong> ${currentLocation.longitude.toFixed(6)}°<br>${acc}`;
+        const el = document.getElementById('gps-coordinates'); if (el) el.innerHTML = html;
+    }
+    function useLastLocation() {
+        if (!lastSpecimen) return;
+        currentLocation = { latitude: lastSpecimen.latitude, longitude: lastSpecimen.longitude, accuracy: lastSpecimen.accuracy };
+        displayGPSCoordinates();
+        if (lastSpecimen.location) document.getElementById('f-location').value = lastSpecimen.location;
+        if (lastSpecimen.habitat) document.getElementById('f-habitat').value = lastSpecimen.habitat;
+        if (lastSpecimen.elevation) document.getElementById('f-elevation').value = lastSpecimen.elevation;
+        document.getElementById('f-collected-by').value = lastSpecimen.collectedBy || document.getElementById('f-collected-by').value;
+        if (lastSpecimen.collectorAffiliation) document.getElementById('f-collector-affiliation').value = lastSpecimen.collectorAffiliation;
+        showToast('Location & collector copied from last record!');
+    }
+    function updateLastLocationButton() {
+        const btn = document.getElementById('use-last-location-btn');
+        btn.disabled = !(lastSpecimen && lastSpecimen.latitude && lastSpecimen.longitude);
+    }
+
+    /* =================== INDIVIDUALS → TUBES (render) =================== */
+    function specimenBaseId() { return document.getElementById('f-base-id').value.trim(); }
+
+    function orgPartChecklistHtml() {
+        const op = MANIFEST_SCHEMA.controlled_vocabularies.ORGANISM_PART;
+        const defs = MANIFEST_SCHEMA.organism_part_definitions;
+        let opHtml = '';
+        op.forEach(v => {
+            if (isSeparator(v)) {
+                opHtml += `<div class="op-group-label">${v.replace(/-/g,'').replace(/\*/g,'').trim()}</div>`;
+            } else {
+                const title = (defs[v] || '').replace(/"/g, '&quot;');
+                opHtml += `<label class="op-item" title="${title}"><input type="checkbox" value="${v}"><span>${v}</span></label>`;
+            }
+        });
+        return opHtml;
+    }
+    function purposeOptionsHtml() {
+        const purpose = MANIFEST_SCHEMA.controlled_vocabularies.PURPOSE_OF_SPECIMEN;
+        let html = '<option value="">Select…</option>';
+        purpose.forEach(v => html += `<option value="${v}">${v}</option>`);
+        html += `<option value="${HIC_UI_VALUE}">Hi-C (→ REFERENCE_GENOME + note)</option>`;
+        return html;
+    }
+    function vocabSelectOptions(vocab) {
+        let html = '<option value="">Select…</option>';
+        vocab.forEach(v => {
+            if (isSeparator(v)) {
+                html += `<optgroup label="${v.replace(/-/g,'').replace(/\*/g,'').trim()}"></optgroup>`;
+            } else {
+                html += `<option value="${v}">${v}</option>`;
+            }
+        });
+        return html;
+    }
+
+    /* a tube card inside a given individual card */
+    function addTube(indCard, data) {
+        data = data || {};
+        const idx = tubeCounter++;
+        const tubesContainer = indCard.querySelector('.tubes-container');
+        const card = document.createElement('div');
+        card.className = 'tube-card';
+        card.style.background = 'var(--surface)';
+        card.dataset.idx = idx;
+        card.innerHTML = `
+            <div class="tube-card-head">
+                <span class="tube-card-title tube-label">Tube</span>
+                <button class="btn-delete tube-del" title="Remove tube">🗑️</button>
+            </div>
+            <div class="form-group">
+                <label>Tube / well ID</label>
+                <div class="tube-id-row">
+                    <input type="text" class="t-tube-id" placeholder="Scan or type tube barcode">
+                    <button type="button" class="btn-scan t-scan" title="Scan barcode with camera">📷</button>
+                </div>
+                <div class="help-text">Tap 📷 to scan the barcode, or type it. Maps to TUBE_OR_WELL_ID.</div>
+            </div>
+            <div class="form-group">
+                <label>Collector sample ID</label>
+                <input type="text" class="t-collector-sample-id" placeholder="auto">
+                <div class="help-text">Auto-generated from the Specimen ID (-01, -02, …); editable. Maps to COLLECTOR_SAMPLE_ID.</div>
+            </div>
+            <div class="form-group">
+                <label>Organism part <span class="info-icon" title="Tick one or more tissues. Hover an item for its ERGA definition. Combined with ' | '.">i</span></label>
+                <div class="t-organism-part op-checklist">${orgPartChecklistHtml()}</div>
+                <div class="help-text">Tap to tick one or more tissues. Hover items for definitions. Exported pipe-separated.</div>
+            </div>
+            <div class="form-group">
+                <label>Purpose of specimen</label>
+                <select class="t-purpose">${purposeOptionsHtml()}</select>
+                <div class="help-text">REFERENCE_GENOME (incl. Hi-C) routes to the ERGA/DToL file; all other purposes to PopGenomics. Hi-C maps to REFERENCE_GENOME and adds a note.</div>
+            </div>
+        `;
+        tubesContainer.appendChild(card);
+
+        card.querySelector('.t-scan').addEventListener('click', () => openScanner(card.querySelector('.t-tube-id')));
+        card.querySelector('.tube-del').addEventListener('click', () => {
+            if (tubesContainer.querySelectorAll('.tube-card').length <= 1) { showToast('Each individual needs at least one tube.'); return; }
+            card.remove(); renumberIndividuals();
+        });
+
+        if (data.tubeId !== undefined) card.querySelector('.t-tube-id').value = data.tubeId || '';
+        if (data.collectorSampleId) {
+            const el = card.querySelector('.t-collector-sample-id');
+            el.value = data.collectorSampleId; el.dataset.touched = '1';
+        }
+        if (data.purpose !== undefined) card.querySelector('.t-purpose').value = data.purpose || '';
+        if (data.organismPart) {
+            card.querySelectorAll('.t-organism-part input[type=checkbox]').forEach(cb => {
+                if (data.organismPart.indexOf(cb.value) !== -1) cb.checked = true;
+            });
+        }
+        renumberIndividuals();
+        return card;
+    }
+
+    /* an individual card, with its own tubes sub-list */
+    function addIndividual(data) {
+        data = data || {};
+        const idx = individualCounter++;
+        const container = document.getElementById('individuals-container');
+        const card = document.createElement('div');
+        card.className = 'tube-card';
+        card.style.borderColor = 'var(--primary-light)';
+        card.dataset.idx = idx;
+
+        const sexVocab = MANIFEST_SCHEMA.controlled_vocabularies.SEX;
+        const lifeVocab = MANIFEST_SCHEMA.controlled_vocabularies.LIFESTAGE;
+
+        card.innerHTML = `
+            <div class="tube-card-head">
+                <span class="tube-card-title ind-label">Individual</span>
+                <button class="btn-delete ind-del" title="Remove individual">🗑️</button>
+            </div>
+            <div class="form-group">
+                <label>Specimen ID</label>
+                <input type="text" class="i-specimen-id" placeholder="auto">
+                <div class="help-text">Auto-numbered from base ID (_001, _002, …); editable. All tubes below share this SPECIMEN_ID.</div>
+            </div>
             <div class="input-group">
                 <div class="form-group">
                     <label>Sex</label>
-                    <select id="sex">
-                        <option value="">Select...</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="hermaphrodite">Hermaphrodite</option>
-                        <option value="monoecious">Monoecious (plants)</option>
-                        <option value="dioecious">Dioecious (plants)</option>
-                        <option value="not-applicable">Not applicable</option>
-                        <option value="unknown">Unknown</option>
-                    </select>
+                    <select class="i-sex">${vocabSelectOptions(sexVocab)}</select>
+                    <div class="help-text">Per individual.</div>
                 </div>
-                
                 <div class="form-group">
-                    <label>Life Stage</label>
-                    <select id="life-stage">
-                        <option value="">Select kingdom first...</option>
-                    </select>
+                    <label>Life stage</label>
+                    <select class="i-lifestage">${vocabSelectOptions(lifeVocab)}</select>
+                    <div class="help-text">Per individual.</div>
                 </div>
             </div>
-            
             <div class="form-group">
-                <label>Tissue/Sample Type</label>
-                <select id="tissue-type">
-                    <option value="">Select kingdom first...</option>
-                </select>
-                <div class="help-text">Type of tissue or material collected</div>
+                <label>🧪 Tubes (subsamples)</label>
+                <div class="tubes-container"></div>
+                <button type="button" class="btn btn-secondary add-tube-btn" style="width:100%;">➕ Add tube (subsample)</button>
             </div>
-        </div>
-        
-        <!-- Environmental Sample Section -->
-        <div class="form-section" id="environmental-section" style="display: none;">
-            <div class="section-header">
-                <span class="section-icon">🌊</span>
-                <h2 class="section-title">Environmental Sample Details</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>Environmental Sample Type<span class="required">*</span></label>
-                <select id="env-sample-type">
-                    <option value="">Select type...</option>
-                    <option value="water-freshwater">Water (Freshwater)</option>
-                    <option value="water-marine">Water (Marine)</option>
-                    <option value="water-brackish">Water (Brackish)</option>
-                    <option value="soil">Soil</option>
-                    <option value="sediment">Sediment</option>
-                    <option value="air-filter">Air Filter</option>
-                    <option value="malaise-trap">Malaise Trap</option>
-                    <option value="spider-web">Spider Web</option>
-                    <option value="plant-debris">Plant Debris/Litter</option>
-                    <option value="snow-ice">Snow/Ice</option>
-                    <option value="other-env">Other Environmental</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Collection Method</label>
-                <select id="collection-method">
-                    <option value="">Select...</option>
-                    <option value="grab-sample">Grab Sample</option>
-                    <option value="core">Core Sample</option>
-                    <option value="net-tow">Net Tow</option>
-                    <option value="filtration">Filtration</option>
-                    <option value="trap">Trap</option>
-                    <option value="pumped">Pumped</option>
-                    <option value="sieved">Sieved</option>
-                    <option value="scraping">Scraping</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Sample Volume/Mass</label>
-                    <input type="number" id="sample-quantity" placeholder="Amount" step="0.01">
-                </div>
-                
-                <div class="form-group">
-                    <label>Unit</label>
-                    <select id="sample-unit">
-                        <option value="">Select...</option>
-                        <option value="L">Liters (L)</option>
-                        <option value="mL">Milliliters (mL)</option>
-                        <option value="m3">Cubic meters (m³)</option>
-                        <option value="kg">Kilograms (kg)</option>
-                        <option value="g">Grams (g)</option>
-                        <option value="mg">Milligrams (mg)</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Filtration Details</label>
-                    <input type="text" id="filtration-details" placeholder="Filter size, type (e.g., 0.22 µm PVDF)">
-                    <div class="help-text">If applicable</div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Deployment Duration</label>
-                    <input type="text" id="deployment-duration" placeholder="e.g., 24 hours, 7 days">
-                    <div class="help-text">For traps/filters</div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Sample/Core Depth (m)</label>
-                <input type="number" id="sample-depth" placeholder="Depth of sample/core" step="0.01">
-                <div class="help-text">For soil cores, sediment, or subsurface samples</div>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Salinity (ppt)</label>
-                    <input type="number" id="salinity" placeholder="Parts per thousand" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>Dissolved Oxygen (mg/L)</label>
-                    <input type="number" id="dissolved-oxygen" placeholder="mg/L" step="0.1">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Turbidity/Clarity</label>
-                <input type="text" id="turbidity" placeholder="NTU or visual description">
-            </div>
-        </div>
-        
-        <!-- Location Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span class="section-icon">📍</span>
-                <h2 class="section-title">Location & Environment</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>GPS Coordinates<span class="required">*</span></label>
-                <div class="btn-group" style="margin-bottom: 0.5rem;">
-                    <button class="btn btn-secondary" onclick="getLocation()" style="width: 100%;">
-                        📡 Capture GPS Location
-                    </button>
-                    <button class="btn btn-accent" onclick="useLastLocation()" id="use-last-location-btn" style="width: 100%;" disabled>
-                        ⚡ Use Last Location
-                    </button>
-                </div>
-                <div id="gps-coordinates" class="gps-display">
-                    No location data yet. Click button to capture GPS.
-                </div>
+        `;
+        container.appendChild(card);
 
-                <!-- NEW: Manual coordinate entry -->
-                <div class="manual-toggle">
-                    <input type="checkbox" id="manual-coords-toggle" onchange="toggleManualCoords()">
-                    <label for="manual-coords-toggle">
-                        ⌚ Enter coordinates manually (GPS watch / external device)
-                    </label>
-                </div>
-                <div id="manual-coords-fields" style="display: none;">
-                    <div class="input-group">
-                        <div class="form-group">
-                            <label>Latitude</label>
-                            <input type="number" id="manual-lat" placeholder="e.g. 59.858562" step="0.000001" min="-90" max="90" oninput="updateFromManualCoords()">
-                        </div>
-                        <div class="form-group">
-                            <label>Longitude</label>
-                            <input type="number" id="manual-lon" placeholder="e.g. 17.632710" step="0.000001" min="-180" max="180" oninput="updateFromManualCoords()">
-                        </div>
-                    </div>
-                    <div class="help-text">Enter decimal degrees from your GPS watch or external GPS device. Accuracy will be recorded as "manual entry".</div>
-                </div>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Altitude (m)</label>
-                    <input type="number" id="altitude" placeholder="meters above sea level" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>Depth (m)</label>
-                    <input type="number" id="depth" placeholder="for aquatic samples" step="0.1">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Habitat / Ecosystem Type</label>
-                <select id="habitat">
-                    <option value="">Select...</option>
-                    <option value="forest">Forest</option>
-                    <option value="grassland">Grassland</option>
-                    <option value="wetland">Wetland</option>
-                    <option value="marine">Marine</option>
-                    <option value="freshwater">Freshwater</option>
-                    <option value="desert">Desert</option>
-                    <option value="tundra">Tundra</option>
-                    <option value="urban">Urban</option>
-                    <option value="agricultural">Agricultural</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
+        card.querySelector('.add-tube-btn').addEventListener('click', () => addTube(card));
+        card.querySelector('.ind-del').addEventListener('click', () => {
+            if (container.querySelectorAll(':scope > .tube-card').length <= 1) { showToast('At least one individual required.'); return; }
+            card.remove(); renumberIndividuals();
+        });
 
-            <!-- NEW: Weather conditions dropdown -->
-            <div class="form-group">
-                <label>Weather Conditions</label>
-                <select id="weather">
-                    <option value="">Select...</option>
-                    <option value="sunny">☀️ Sunny / Clear</option>
-                    <option value="partly-cloudy">⛅ Partly Cloudy</option>
-                    <option value="cloudy">☁️ Cloudy / Overcast</option>
-                    <option value="rainy">🌧️ Rainy</option>
-                    <option value="drizzle">🌦️ Drizzle</option>
-                    <option value="heavy-rain">⛈️ Heavy Rain / Thunderstorm</option>
-                    <option value="snowy">🌨️ Snowy</option>
-                    <option value="foggy">🌫️ Foggy / Misty</option>
-                    <option value="windy">💨 Windy</option>
-                    <option value="hail">🧊 Hail</option>
-                    <option value="sleet">🌧️ Sleet</option>
-                    <option value="frost">❄️ Frost</option>
-                </select>
-            </div>
-            
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Temperature (°C)</label>
-                    <input type="number" id="temperature" placeholder="ambient temp" step="0.1">
-                </div>
-                
-                <div class="form-group">
-                    <label>pH</label>
-                    <input type="number" id="ph" placeholder="0-14" step="0.1" min="0" max="14">
-                </div>
-            </div>
-        </div>
-        
-        <!-- Additional Notes -->
-        <div class="form-section">
-            <div class="section-header">
-                <span class="section-icon">📝</span>
-                <h2 class="section-title">Additional Notes</h2>
-            </div>
-            
-            <div class="form-group">
-                <label>Field Notes</label>
-                <textarea id="notes" placeholder="Observations, associated species, sample quality, etc."></textarea>
-            </div>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="btn-group">
-            <button class="btn btn-secondary" onclick="clearForm()">
-                🔄 Clear Form
-            </button>
-            <button class="btn btn-primary" onclick="saveSample()">
-                💾 Save Sample
-            </button>
-        </div>
-        
-        <!-- Saved Samples -->
-        <div class="form-section" style="margin-top: 2rem;">
-            <div class="section-header">
-                <span class="section-icon">📦</span>
-                <h2 class="section-title">Saved Samples</h2>
-                <span class="badge" id="sample-count">0</span>
-            </div>
-            
-            <div id="samples-list">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📭</div>
-                    <div>No samples collected yet</div>
-                </div>
-            </div>
-            
-            <button class="btn btn-primary" onclick="exportData()" style="width: 100%; margin-top: 1rem;" id="export-btn" disabled>
-                📊 Export to CSV
-            </button>
-        </div>
-    </div>
-    
-    <!-- Barcode Scanner Overlay -->
-    <div class="scanner-overlay" id="scanner-overlay">
-        <div class="scanner-header">
-            <h3>📷 Scan Barcode</h3>
-            <p>Point your camera at a barcode or QR code</p>
-        </div>
-        <div id="scanner-container"></div>
-        <div class="scanner-buttons">
-            <button class="btn btn-danger" onclick="stopScanner()">✕ Cancel</button>
-            <button class="btn btn-secondary" onclick="manualBarcodeEntry()" style="background: white;">✏️ Enter Manually</button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-    
-    <script>
-        // Initialize
-        let samples = JSON.parse(localStorage.getItem('samples')) || [];
-        let currentLocation = null;
-        let lastSample = null;
-        
-        // Set today's date and auto-fill from last sample
-        document.getElementById('date').valueAsDate = new Date();
-        
-        // Load last sample data for auto-fill
-        if (samples.length > 0) {
-            lastSample = samples[samples.length - 1];
-            document.getElementById('collector').value = lastSample.collector;
+        if (data.specimenId) {
+            const el = card.querySelector('.i-specimen-id');
+            el.value = data.specimenId; el.dataset.touched = '1';
         }
-        
-        // Update display
-        updateSamplesList();
-        updateLastLocationButton();
-        
-        // Taxonomy data by kingdom
-        const taxonomyData = {
-            animalia: {
-                lifeStages: [
-                    { value: 'zygote', label: 'Zygote' },
-                    { value: 'embryo', label: 'Embryo' },
-                    { value: 'larva', label: 'Larva' },
-                    { value: 'pupa', label: 'Pupa' },
-                    { value: 'juvenile', label: 'Juvenile' },
-                    { value: 'subadult', label: 'Subadult' },
-                    { value: 'adult', label: 'Adult' },
-                    { value: 'senescent', label: 'Senescent' },
-                    { value: 'unknown', label: 'Unknown' }
-                ],
-                tissueTypes: [
-                    { value: 'whole-organism', label: 'Whole organism' },
-                    { value: 'blood', label: 'Blood' },
-                    { value: 'muscle', label: 'Muscle' },
-                    { value: 'liver', label: 'Liver' },
-                    { value: 'kidney', label: 'Kidney' },
-                    { value: 'heart', label: 'Heart' },
-                    { value: 'brain', label: 'Brain' },
-                    { value: 'skin', label: 'Skin' },
-                    { value: 'bone', label: 'Bone' },
-                    { value: 'gill', label: 'Gill' },
-                    { value: 'fin', label: 'Fin' },
-                    { value: 'wing', label: 'Wing' },
-                    { value: 'gonads', label: 'Gonads' },
-                    { value: 'digestive', label: 'Digestive tissue' },
-                    { value: 'other', label: 'Other' }
-                ]
-            },
-            plantae: {
-                lifeStages: [
-                    { value: 'seed', label: 'Seed' },
-                    { value: 'germinating', label: 'Germinating' },
-                    { value: 'seedling', label: 'Seedling' },
-                    { value: 'vegetative', label: 'Vegetative' },
-                    { value: 'budding', label: 'Budding' },
-                    { value: 'flowering', label: 'Flowering' },
-                    { value: 'fruiting', label: 'Fruiting' },
-                    { value: 'senescent', label: 'Senescent' },
-                    { value: 'dormant', label: 'Dormant' },
-                    { value: 'unknown', label: 'Unknown' }
-                ],
-                tissueTypes: [
-                    { value: 'whole-plant', label: 'Whole plant' },
-                    { value: 'leaf', label: 'Leaf' },
-                    { value: 'root', label: 'Root' },
-                    { value: 'stem', label: 'Stem' },
-                    { value: 'bark', label: 'Bark' },
-                    { value: 'flower', label: 'Flower' },
-                    { value: 'fruit', label: 'Fruit' },
-                    { value: 'seed', label: 'Seed' },
-                    { value: 'pollen', label: 'Pollen' },
-                    { value: 'bud', label: 'Bud' },
-                    { value: 'meristem', label: 'Meristem' },
-                    { value: 'cambium', label: 'Cambium' },
-                    { value: 'other', label: 'Other' }
-                ]
-            },
-            fungi: {
-                lifeStages: [
-                    { value: 'spore', label: 'Spore' },
-                    { value: 'germinating', label: 'Germinating' },
-                    { value: 'mycelium', label: 'Mycelium' },
-                    { value: 'budding', label: 'Budding' },
-                    { value: 'fruiting-body', label: 'Fruiting body' },
-                    { value: 'mature', label: 'Mature' },
-                    { value: 'senescent', label: 'Senescent' },
-                    { value: 'unknown', label: 'Unknown' }
-                ],
-                tissueTypes: [
-                    { value: 'whole-organism', label: 'Whole organism' },
-                    { value: 'mycelium', label: 'Mycelium' },
-                    { value: 'fruiting-body', label: 'Fruiting body (sporocarp)' },
-                    { value: 'spores', label: 'Spores' },
-                    { value: 'hyphae', label: 'Hyphae' },
-                    { value: 'sclerotium', label: 'Sclerotium' },
-                    { value: 'other', label: 'Other' }
-                ]
-            },
-            protista: {
-                lifeStages: [
-                    { value: 'trophozoite', label: 'Trophozoite' },
-                    { value: 'cyst', label: 'Cyst' },
-                    { value: 'vegetative', label: 'Vegetative' },
-                    { value: 'reproductive', label: 'Reproductive' },
-                    { value: 'colonial', label: 'Colonial' },
-                    { value: 'unknown', label: 'Unknown' }
-                ],
-                tissueTypes: [
-                    { value: 'whole-organism', label: 'Whole organism' },
-                    { value: 'culture', label: 'Culture' },
-                    { value: 'environmental-sample', label: 'Environmental sample' },
-                    { value: 'other', label: 'Other' }
-                ]
+        if (data.sex !== undefined) card.querySelector('.i-sex').value = data.sex || '';
+        if (data.lifestage !== undefined) card.querySelector('.i-lifestage').value = data.lifestage || '';
+
+        const tubes = (data.tubes && data.tubes.length) ? data.tubes : [{}];
+        tubes.forEach(t => addTube(card, t));
+
+        renumberIndividuals();
+        return card;
+    }
+
+    function renumberIndividuals() {
+        const base = specimenBaseId();
+        const indCards = document.querySelectorAll('#individuals-container > .tube-card');
+        indCards.forEach((indCard, i) => {
+            const n = String(i + 1).padStart(3, '0');
+            indCard.querySelector('.ind-label').textContent = 'Individual ' + n;
+            const sid = indCard.querySelector('.i-specimen-id');
+            const autoId = base ? `${base}_${n}` : '';
+            if (!sid.dataset.touched) { sid.value = autoId; sid.placeholder = autoId || 'auto'; }
+            const specId = sid.value.trim();
+            const tubeCards = indCard.querySelectorAll('.tubes-container .tube-card');
+            tubeCards.forEach((tc, j) => {
+                const tn = String(j + 1).padStart(2, '0');
+                tc.querySelector('.tube-label').textContent = 'Tube ' + tn;
+                const csi = tc.querySelector('.t-collector-sample-id');
+                if (!csi.dataset.touched) {
+                    const auto = specId ? `${specId}-${tn}` : '';
+                    csi.value = auto; csi.placeholder = auto || 'auto';
+                }
+            });
+        });
+    }
+
+    // mark manually-edited IDs so auto-fill stops; re-mirror untouched tube IDs when a specimen ID changes
+    document.getElementById('individuals-container').addEventListener('input', (e) => {
+        if (e.target.classList.contains('i-specimen-id')) {
+            e.target.dataset.touched = '1';
+            const indCard = e.target.closest('#individuals-container > .tube-card') ||
+                            e.target.parentElement.closest('.tube-card');
+            const specId = e.target.value.trim();
+            indCard.querySelectorAll('.tubes-container .tube-card').forEach((tc, j) => {
+                const tn = String(j + 1).padStart(2, '0');
+                const csi = tc.querySelector('.t-collector-sample-id');
+                if (!csi.dataset.touched) { csi.value = specId ? `${specId}-${tn}` : ''; }
+            });
+        }
+        if (e.target.classList.contains('t-collector-sample-id')) e.target.dataset.touched = '1';
+    });
+
+    /* =================== SAVE / EDIT / DELETE =================== */
+    function collectIndividuals() {
+        const list = [];
+        document.querySelectorAll('#individuals-container > .tube-card').forEach(indCard => {
+            const tubes = [];
+            indCard.querySelectorAll('.tubes-container .tube-card').forEach(tc => {
+                const parts = Array.from(tc.querySelectorAll('.t-organism-part input[type=checkbox]:checked')).map(o => o.value);
+                tubes.push({
+                    tubeId: tc.querySelector('.t-tube-id').value.trim(),
+                    collectorSampleId: tc.querySelector('.t-collector-sample-id').value.trim(),
+                    organismPart: parts,
+                    purpose: tc.querySelector('.t-purpose').value
+                });
+            });
+            list.push({
+                specimenId: indCard.querySelector('.i-specimen-id').value.trim(),
+                sex: indCard.querySelector('.i-sex').value,
+                lifestage: indCard.querySelector('.i-lifestage').value,
+                tubes: tubes
+            });
+        });
+        return list;
+    }
+
+    function saveSpecimen() {
+        const sciName = document.getElementById('f-scientific-name').value.trim();
+        const collectedBy = document.getElementById('f-collected-by').value.trim();
+        const date = document.getElementById('f-date').value;
+        const location = document.getElementById('f-location').value.trim();
+        const baseId = specimenBaseId();
+
+        let ok = true;
+        [['f-scientific-name', sciName], ['f-collected-by', collectedBy], ['f-date', date],
+         ['f-location', location], ['f-base-id', baseId]].forEach(([id, val]) => {
+            const el = document.getElementById(id);
+            el.style.borderColor = val ? 'var(--border)' : 'var(--error)';
+            if (!val) ok = false;
+        });
+        if (!currentLocation) { showToast('Please capture or enter GPS coordinates'); return; }
+        if (!ok) { showToast('Please fill in all required fields'); return; }
+
+        const individuals = collectIndividuals();
+        if (individuals.length === 0) { showToast('Add at least one individual'); return; }
+        // fill in any missing IDs deterministically
+        individuals.forEach((ind, i) => {
+            const n = String(i + 1).padStart(3, '0');
+            if (!ind.specimenId) ind.specimenId = `${baseId}_${n}`;
+            (ind.tubes || []).forEach((t, j) => {
+                if (!t.collectorSampleId) t.collectorSampleId = `${ind.specimenId}-${String(j + 1).padStart(2, '0')}`;
+            });
+            if (!ind.tubes || ind.tubes.length === 0) {
+                ind.tubes = [{ tubeId: '', collectorSampleId: `${ind.specimenId}-01`, organismPart: [], purpose: '' }];
             }
+        });
+
+        const record = {
+            pathType: 'specimen',
+            // taxonomy (shared)
+            scientificName: sciName,
+            phylum: document.getElementById('f-phylum').value.trim(),
+            class: document.getElementById('f-class').value.trim(),
+            order: document.getElementById('f-order').value.trim(),
+            family: document.getElementById('f-family').value.trim(),
+            genus: document.getElementById('f-genus').value.trim(),
+            commonName: document.getElementById('f-common-name').value.trim(),
+            taxonId: document.getElementById('f-taxon-id').value.trim(),
+            // collection (shared)
+            collectedBy: collectedBy,
+            collectorAffiliation: document.getElementById('f-collector-affiliation').value.trim(),
+            collectorOrcid: document.getElementById('f-collector-orcid').value.trim(),
+            institutionStoring: document.getElementById('f-institution-storing').value.trim(),
+            date: date,
+            time: document.getElementById('f-time').value,
+            location: location,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            accuracy: currentLocation.accuracy,
+            habitat: document.getElementById('f-habitat').value.trim(),
+            depth: document.getElementById('f-depth').value.trim(),
+            elevation: document.getElementById('f-elevation').value.trim(),
+            method: document.getElementById('f-method').value.trim(),
+            // transect
+            transect: document.getElementById('transect-toggle').checked,
+            latStart: document.getElementById('f-lat-start').value,
+            lonStart: document.getElementById('f-lon-start').value,
+            latEnd: document.getElementById('f-lat-end').value,
+            lonEnd: document.getElementById('f-lon-end').value,
+            // origin
+            hasOrigin: document.getElementById('origin-toggle').checked,
+            collectionName: document.getElementById('f-orig-collection').value.trim(),
+            origDate: document.getElementById('f-orig-date').value,
+            origLocation: document.getElementById('f-orig-location').value.trim(),
+            origLat: document.getElementById('f-orig-lat').value,
+            origLon: document.getElementById('f-orig-lon').value,
+            // individuals → tubes
+            baseId: baseId,
+            individuals: individuals,
+            timestamp: new Date().toISOString()
         };
-        
-        // Update taxonomy fields based on kingdom selection
-        function updateTaxonomyFields() {
-            const kingdom = document.getElementById('kingdom').value;
-            const lifeStageSelect = document.getElementById('life-stage');
-            const tissueTypeSelect = document.getElementById('tissue-type');
-            
-            lifeStageSelect.innerHTML = '<option value="">Select...</option>';
-            tissueTypeSelect.innerHTML = '<option value="">Select...</option>';
-            
-            if (kingdom && taxonomyData[kingdom]) {
-                taxonomyData[kingdom].lifeStages.forEach(stage => {
-                    const option = document.createElement('option');
-                    option.value = stage.value;
-                    option.textContent = stage.label;
-                    lifeStageSelect.appendChild(option);
-                });
-                
-                taxonomyData[kingdom].tissueTypes.forEach(tissue => {
-                    const option = document.createElement('option');
-                    option.value = tissue.value;
-                    option.textContent = tissue.label;
-                    tissueTypeSelect.appendChild(option);
-                });
-            }
+
+        if (editingIndex >= 0) {
+            specimens[editingIndex] = record;
+            showToast('Sampling session updated!');
+        } else {
+            specimens.push(record);
+            showToast('Sampling session saved! 🎉');
         }
-        
-        // Update form fields based on sample category
-        function updateFormFields() {
-            const category = document.getElementById('sample-category').value;
-            const taxonomySection = document.getElementById('taxonomy-section');
-            const environmentalSection = document.getElementById('environmental-section');
-            
-            if (category === 'organism') {
-                taxonomySection.style.display = 'block';
-                environmentalSection.style.display = 'none';
-                document.getElementById('kingdom').setAttribute('required', 'required');
-                document.getElementById('species').setAttribute('required', 'required');
-                document.getElementById('env-sample-type').removeAttribute('required');
-            } else if (category === 'environmental') {
-                taxonomySection.style.display = 'none';
-                environmentalSection.style.display = 'block';
-                document.getElementById('kingdom').removeAttribute('required');
-                document.getElementById('species').removeAttribute('required');
-                document.getElementById('env-sample-type').setAttribute('required', 'required');
-            } else {
-                taxonomySection.style.display = 'none';
-                environmentalSection.style.display = 'none';
-            }
-        }
-        
-        // NEW: Toggle manual coordinate entry
-        function toggleManualCoords() {
-            const toggle = document.getElementById('manual-coords-toggle');
-            const fields = document.getElementById('manual-coords-fields');
-            fields.style.display = toggle.checked ? 'block' : 'none';
-            
-            if (!toggle.checked) {
-                document.getElementById('manual-lat').value = '';
-                document.getElementById('manual-lon').value = '';
-            }
-        }
-        
-        // NEW: Update location from manual coordinate entry
-        function updateFromManualCoords() {
-            const lat = parseFloat(document.getElementById('manual-lat').value);
-            const lon = parseFloat(document.getElementById('manual-lon').value);
-            
-            if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                currentLocation = {
-                    latitude: lat,
-                    longitude: lon,
-                    accuracy: 'manual'
-                };
-                
-                document.getElementById('gps-coordinates').innerHTML = `
-                    <strong>Latitude:</strong> ${lat.toFixed(6)}°<br>
-                    <strong>Longitude:</strong> ${lon.toFixed(6)}°<br>
-                    <strong>Source:</strong> Manual entry (GPS watch / external device)
-                `;
-                
-                const gpsStatus = document.getElementById('gps-status');
-                const gpsStatusText = document.getElementById('gps-status-text');
-                gpsStatus.classList.add('active');
-                gpsStatusText.textContent = 'GPS: Manual';
-            }
-        }
-        
-        // GPS Functions
-        async function getLocation() {
-            if (!navigator.geolocation) {
-                showToast('GPS not supported on this device', 'error');
-                return;
-            }
-            
-            const gpsStatus = document.getElementById('gps-status');
-            const gpsStatusText = document.getElementById('gps-status-text');
-            
-            gpsStatus.classList.remove('active');
-            gpsStatusText.textContent = 'GPS: Acquiring...';
-            
-            // Uncheck manual entry if it was checked
-            document.getElementById('manual-coords-toggle').checked = false;
-            document.getElementById('manual-coords-fields').style.display = 'none';
-            
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    currentLocation = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        accuracy: position.coords.accuracy
-                    };
-                    
-                    displayGPSCoordinates();
-                    
-                    gpsStatus.classList.add('active');
-                    gpsStatusText.textContent = 'GPS: Active';
-                    showToast('GPS location captured successfully!', 'success');
-                },
-                (error) => {
-                    showToast('GPS error: ' + error.message, 'error');
-                    gpsStatusText.textContent = 'GPS: Error';
-                }
-            );
-        }
-        
-        // Display GPS coordinates
-        function displayGPSCoordinates() {
-            if (currentLocation) {
-                const accuracyText = currentLocation.accuracy === 'manual' 
-                    ? '<strong>Source:</strong> Manual entry (GPS watch / external device)'
-                    : `<strong>Accuracy:</strong> ±${currentLocation.accuracy.toFixed(1)}m`;
-                    
-                document.getElementById('gps-coordinates').innerHTML = `
-                    <strong>Latitude:</strong> ${currentLocation.latitude.toFixed(6)}°<br>
-                    <strong>Longitude:</strong> ${currentLocation.longitude.toFixed(6)}°<br>
-                    ${accuracyText}
-                `;
-            }
-        }
-        
-        // Use last sample's location
-        function useLastLocation() {
-            if (!lastSample) return;
-            
-            currentLocation = {
-                latitude: lastSample.latitude,
-                longitude: lastSample.longitude,
-                accuracy: lastSample.accuracy
-            };
-            
-            displayGPSCoordinates();
-            
-            if (lastSample.altitude) document.getElementById('altitude').value = lastSample.altitude;
-            if (lastSample.depth) document.getElementById('depth').value = lastSample.depth;
-            if (lastSample.habitat) document.getElementById('habitat').value = lastSample.habitat;
-            if (lastSample.weather) document.getElementById('weather').value = lastSample.weather;
-            if (lastSample.temperature) document.getElementById('temperature').value = lastSample.temperature;
-            if (lastSample.ph) document.getElementById('ph').value = lastSample.ph;
-            
-            showToast('Location and environmental data copied from last sample!', 'success');
-        }
-        
-        // Enable/disable "Use Last Location" button
-        function updateLastLocationButton() {
-            const btn = document.getElementById('use-last-location-btn');
-            if (lastSample && lastSample.latitude && lastSample.longitude) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
-        }
-        
-        // Barcode Scanner
-        let html5QrCode = null;
-        
-        async function scanBarcode() {
-            const overlay = document.getElementById('scanner-overlay');
-            overlay.classList.add('active');
-            
-            try {
-                html5QrCode = new Html5Qrcode("scanner-container");
-                
-                await html5QrCode.start(
-                    { facingMode: "environment" },
-                    {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 },
-                        aspectRatio: 1.0
-                    },
-                    (decodedText) => {
-                        // Success - barcode found
-                        document.getElementById('sample-id').value = decodedText;
-                        showToast('Barcode scanned: ' + decodedText, 'success');
-                        stopScanner();
-                    },
-                    (errorMessage) => {
-                        // Scan in progress, no match yet - this is normal
-                    }
-                );
-            } catch (err) {
-                console.error('Scanner error:', err);
-                stopScanner();
-                // Fallback to manual entry if camera fails
-                manualBarcodeEntry();
-            }
-        }
-        
-        function stopScanner() {
-            const overlay = document.getElementById('scanner-overlay');
-            
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    overlay.classList.remove('active');
-                }).catch(() => {
-                    overlay.classList.remove('active');
-                });
-            } else {
-                overlay.classList.remove('active');
-            }
-        }
-        
-        function manualBarcodeEntry() {
-            stopScanner();
-            const barcode = prompt('Enter barcode manually:');
-            if (barcode) {
-                document.getElementById('sample-id').value = barcode;
-            }
-        }
-        
-        // Save Sample
-        function saveSample() {
-            const category = document.getElementById('sample-category').value;
-            
-            const requiredFields = ['sample-id', 'collector', 'date', 'sample-category'];
-            
-            if (category === 'organism') {
-                requiredFields.push('kingdom', 'species');
-            } else if (category === 'environmental') {
-                requiredFields.push('env-sample-type');
-            }
-            
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                const input = document.getElementById(field);
-                if (!input.value.trim()) {
-                    input.style.borderColor = 'var(--error)';
-                    isValid = false;
-                } else {
-                    input.style.borderColor = 'var(--border)';
-                }
-            });
-            
-            if (!currentLocation) {
-                showToast('Please capture GPS location before saving', 'error');
-                return;
-            }
-            
-            if (!isValid) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            const sample = {
-                id: document.getElementById('sample-id').value,
-                collector: document.getElementById('collector').value,
-                date: document.getElementById('date').value,
-                category: category,
-                
-                // Organism fields
-                kingdom: category === 'organism' ? document.getElementById('kingdom').value : '',
-                species: category === 'organism' ? document.getElementById('species').value : '',
-                taxid: category === 'organism' ? document.getElementById('taxid').value : '',
-                commonName: category === 'organism' ? document.getElementById('common-name').value : '',
-                sex: category === 'organism' ? document.getElementById('sex').value : '',
-                lifeStage: category === 'organism' ? document.getElementById('life-stage').value : '',
-                tissueType: category === 'organism' ? document.getElementById('tissue-type').value : '',
-                
-                // Environmental fields
-                envSampleType: category === 'environmental' ? document.getElementById('env-sample-type').value : '',
-                collectionMethod: category === 'environmental' ? document.getElementById('collection-method').value : '',
-                sampleQuantity: category === 'environmental' ? document.getElementById('sample-quantity').value : '',
-                sampleUnit: category === 'environmental' ? document.getElementById('sample-unit').value : '',
-                filtrationDetails: category === 'environmental' ? document.getElementById('filtration-details').value : '',
-                deploymentDuration: category === 'environmental' ? document.getElementById('deployment-duration').value : '',
-                sampleDepth: category === 'environmental' ? document.getElementById('sample-depth').value : '',
-                salinity: category === 'environmental' ? document.getElementById('salinity').value : '',
-                dissolvedOxygen: category === 'environmental' ? document.getElementById('dissolved-oxygen').value : '',
-                turbidity: category === 'environmental' ? document.getElementById('turbidity').value : '',
-                
-                // Shared location fields
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude,
-                accuracy: currentLocation.accuracy,
-                altitude: document.getElementById('altitude').value,
-                depth: document.getElementById('depth').value,
-                habitat: document.getElementById('habitat').value,
-                weather: document.getElementById('weather').value,
-                temperature: document.getElementById('temperature').value,
-                ph: document.getElementById('ph').value,
-                notes: document.getElementById('notes').value,
-                timestamp: new Date().toISOString()
-            };
-            
-            samples.push(sample);
-            localStorage.setItem('samples', JSON.stringify(samples));
-            
-            lastSample = sample;
-            updateLastLocationButton();
-            
-            showToast('Sample saved successfully! 🎉', 'success');
-            updateSamplesList();
-            clearForm();
-        }
-        
-        // Clear Form
-        function clearForm() {
-            const currentCollector = document.getElementById('collector').value;
-            const currentCategory = document.getElementById('sample-category').value;
-            
-            document.getElementById('sample-id').value = '';
-            
-            // Organism fields
-            document.getElementById('kingdom').value = '';
-            document.getElementById('species').value = '';
-            document.getElementById('taxid').value = '';
-            document.getElementById('common-name').value = '';
-            document.getElementById('sex').value = '';
-            document.getElementById('life-stage').value = '';
-            document.getElementById('tissue-type').value = '';
-            
-            // Environmental fields
-            document.getElementById('env-sample-type').value = '';
-            document.getElementById('collection-method').value = '';
-            document.getElementById('sample-quantity').value = '';
-            document.getElementById('sample-unit').value = '';
-            document.getElementById('filtration-details').value = '';
-            document.getElementById('deployment-duration').value = '';
-            document.getElementById('sample-depth').value = '';
-            document.getElementById('salinity').value = '';
-            document.getElementById('dissolved-oxygen').value = '';
-            document.getElementById('turbidity').value = '';
-            
-            // Shared fields
-            document.getElementById('altitude').value = '';
-            document.getElementById('depth').value = '';
-            document.getElementById('habitat').value = '';
-            document.getElementById('weather').value = '';
-            document.getElementById('temperature').value = '';
-            document.getElementById('ph').value = '';
-            document.getElementById('notes').value = '';
-            
-            // Manual coordinates
-            document.getElementById('manual-lat').value = '';
-            document.getElementById('manual-lon').value = '';
-            document.getElementById('manual-coords-toggle').checked = false;
-            document.getElementById('manual-coords-fields').style.display = 'none';
-            
-            // Reset life stage and tissue type dropdowns
-            updateTaxonomyFields();
-            
-            currentLocation = null;
-            document.getElementById('gps-coordinates').innerHTML = 'No location data yet. Click button to capture GPS.';
-            
-            // Keep collector name and sample category
-            document.getElementById('collector').value = currentCollector;
-            document.getElementById('sample-category').value = currentCategory;
-            document.getElementById('date').valueAsDate = new Date();
-            
-            updateFormFields();
-        }
-        
-        // Update Samples List
-        function updateSamplesList() {
-            const samplesList = document.getElementById('samples-list');
-            const sampleCount = document.getElementById('sample-count');
-            const exportBtn = document.getElementById('export-btn');
-            
-            sampleCount.textContent = samples.length;
-            
-            if (samples.length === 0) {
-                samplesList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <div>No samples collected yet</div>
-                    </div>
-                `;
-                exportBtn.disabled = true;
-            } else {
-                samplesList.innerHTML = samples.map((sample, index) => {
-                    const categoryLabel = sample.category === 'organism' ? '🔬' : '🌊';
-                    const mainInfo = sample.category === 'organism' 
-                        ? sample.species 
-                        : sample.envSampleType?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    
-                    return `
-                    <div class="sample-card">
-                        <div class="sample-info">
-                            <div class="sample-id">${categoryLabel} ${sample.id}</div>
-                            <div class="sample-meta">
-                                ${mainInfo} • ${sample.date} • ${sample.collector}
-                            </div>
+        localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
+        lastSpecimen = record;
+        editingIndex = -1;
+        updateLastLocationButton();
+        updateSpecimensList();
+        resetSpecimenForm(false);
+        backToPicker();
+    }
+
+    function resetSpecimenForm(keepCommon) {
+        const keepCollector = keepCommon ? document.getElementById('f-collected-by').value : (lastSpecimen ? lastSpecimen.collectedBy : '');
+        const keepAff = keepCommon ? document.getElementById('f-collector-affiliation').value : (lastSpecimen ? lastSpecimen.collectorAffiliation : '');
+        ['f-scientific-name','f-phylum','f-class','f-order','f-family','f-genus','f-common-name','f-taxon-id',
+         'f-collector-orcid','f-institution-storing','f-location','f-habitat','f-depth','f-elevation','f-method',
+         'f-base-id','f-lat-start','f-lon-start','f-lat-end','f-lon-end',
+         'f-orig-collection','f-orig-location','f-orig-lat','f-orig-lon'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('f-time').value = '';
+        document.getElementById('f-orig-date').value = '';
+        document.getElementById('f-date').valueAsDate = new Date();
+        document.getElementById('f-collected-by').value = keepCollector || '';
+        document.getElementById('f-collector-affiliation').value = keepAff || '';
+        document.getElementById('transect-toggle').checked = false; toggleTransect();
+        document.getElementById('origin-toggle').checked = false; toggleOrigin();
+        document.getElementById('individuals-container').innerHTML = '';
+        const taxStatus = document.getElementById('f-tax-status'); if (taxStatus) taxStatus.textContent = '';
+        window.__taxResolved = '';
+        individualCounter = 0;
+        tubeCounter = 0;
+        addIndividual();
+        currentLocation = null;
+        document.getElementById('gps-coordinates').innerHTML = 'No location yet. Capture GPS or enter manually below.';
+        document.getElementById('manual-coords-toggle').checked = false;
+        document.getElementById('manual-coords-fields').classList.add('hidden');
+    }
+
+    function editSpecimen(index) {
+        const s = normalizeRecord(specimens[index]);
+        specimens[index] = s;
+        editingIndex = index;
+        showView('specimen');
+        document.getElementById('specimen-flow-title').textContent = 'Edit sampling session';
+        document.getElementById('f-scientific-name').value = s.scientificName || '';
+        document.getElementById('f-phylum').value = s.phylum || '';
+        document.getElementById('f-class').value = s.class || '';
+        document.getElementById('f-order').value = s.order || '';
+        document.getElementById('f-family').value = s.family || '';
+        document.getElementById('f-genus').value = s.genus || '';
+        document.getElementById('f-common-name').value = s.commonName || '';
+        document.getElementById('f-taxon-id').value = s.taxonId || '';
+        document.getElementById('f-collected-by').value = s.collectedBy || '';
+        document.getElementById('f-collector-affiliation').value = s.collectorAffiliation || '';
+        document.getElementById('f-collector-orcid').value = s.collectorOrcid || '';
+        document.getElementById('f-institution-storing').value = s.institutionStoring || '';
+        document.getElementById('f-date').value = s.date || '';
+        document.getElementById('f-time').value = s.time || '';
+        document.getElementById('f-location').value = s.location || '';
+        document.getElementById('f-habitat').value = s.habitat || '';
+        document.getElementById('f-depth').value = s.depth || '';
+        document.getElementById('f-elevation').value = s.elevation || '';
+        document.getElementById('f-method').value = s.method || '';
+        document.getElementById('f-base-id').value = s.baseId || '';
+        document.getElementById('transect-toggle').checked = !!s.transect; toggleTransect();
+        document.getElementById('f-lat-start').value = s.latStart || '';
+        document.getElementById('f-lon-start').value = s.lonStart || '';
+        document.getElementById('f-lat-end').value = s.latEnd || '';
+        document.getElementById('f-lon-end').value = s.lonEnd || '';
+        document.getElementById('origin-toggle').checked = !!s.hasOrigin; toggleOrigin();
+        document.getElementById('f-orig-collection').value = s.collectionName || '';
+        document.getElementById('f-orig-date').value = s.origDate || '';
+        document.getElementById('f-orig-location').value = s.origLocation || '';
+        document.getElementById('f-orig-lat').value = s.origLat || '';
+        document.getElementById('f-orig-lon').value = s.origLon || '';
+        currentLocation = { latitude: s.latitude, longitude: s.longitude, accuracy: s.accuracy };
+        displayGPSCoordinates();
+        document.getElementById('individuals-container').innerHTML = '';
+        const taxStatus = document.getElementById('f-tax-status'); if (taxStatus) taxStatus.textContent = '';
+        window.__taxResolved = '';
+        individualCounter = 0;
+        tubeCounter = 0;
+        (s.individuals && s.individuals.length ? s.individuals : [{}]).forEach(ind => addIndividual(ind));
+    }
+
+    function deleteSpecimen(index) {
+        if (!confirm('Delete this sampling session and all its individuals and tubes?')) return;
+        specimens.splice(index, 1);
+        localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
+        lastSpecimen = specimens.length ? specimens[specimens.length - 1] : null;
+        updateLastLocationButton();
+        updateSpecimensList();
+        showToast('Sampling session deleted');
+    }
+
+    /* =================== LIST RENDER =================== */
+    function updateSpecimensList() {
+        const html = specimens.length === 0
+            ? `<div class="empty-state"><div class="empty-state-icon">📭</div><div>No specimens yet</div></div>`
+            : specimens.map((s, i) => {
+                const inds = (s.individuals || []);
+                const tubeCount = inds.reduce((acc, ind) => acc + (ind.tubes ? ind.tubes.length : 0), 0);
+                const count = `${inds.length} individual(s) • ${tubeCount} tube(s)`;
+                return `
+                <div class="specimen-card">
+                    <div class="specimen-info">
+                        <div class="specimen-id">🦋 ${s.baseId || '(no id)'}</div>
+                        <div class="specimen-meta">
+                            ${s.scientificName || ''} • ${count} • ${s.date || ''} • ${s.collectedBy || ''}
                         </div>
-                        <button class="btn-delete" onclick="deleteSample(${index})" title="Delete sample">
-                            🗑️
-                        </button>
                     </div>
-                `}).join('');
-                exportBtn.disabled = false;
+                    <div class="specimen-actions">
+                        <button class="btn-delete" title="Edit" onclick="editSpecimen(${i})">✏️</button>
+                        <button class="btn-delete" title="Delete" onclick="deleteSpecimen(${i})">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+        ['specimens-list', 'picker-specimens-list'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.innerHTML = html;
+        });
+        document.getElementById('specimen-count').textContent = specimens.length;
+        const pc = document.getElementById('picker-specimen-count'); if (pc) pc.textContent = specimens.length;
+        const disabled = specimens.length === 0;
+        document.getElementById('export-btn').disabled = disabled;
+        const pe = document.getElementById('picker-export-btn'); if (pe) pe.disabled = disabled;
+        ['export-bold-btn', 'picker-export-bold-btn'].forEach(id => {
+            const b = document.getElementById(id); if (b) b.disabled = disabled;
+        });
+        document.getElementById('picker-saved-section').style.display = specimens.length ? 'block' : 'none';
+    }
+
+    /* =================== CSV EXPORT =================== */
+    function csvEscape(v) {
+        v = (v === null || v === undefined) ? '' : String(v);
+        if (/[",\n|]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+        return v;
+    }
+
+    /* Resolve a tube's effective purpose (Hi-C → REFERENCE_GENOME) plus any OTHER_INFORMATION note. */
+    function resolvePurpose(tube) {
+        let purpose = tube.purpose || '';
+        let otherInfo = '';
+        if (purpose === HIC_UI_VALUE) { purpose = 'REFERENCE_GENOME'; otherInfo = 'Hi-C'; }
+        return { purpose, otherInfo };
+    }
+
+    /* One manifest row per tube. SPECIMEN_ID/SEX/LIFESTAGE come from the individual;
+       TUBE/COLLECTOR_SAMPLE_ID/ORGANISM_PART/PURPOSE from the tube; taxonomy + collection shared. */
+    /* Users type location levels with a slash (friendlier than the pipe the manifest needs).
+       Accept "/" or "|", trim, drop empties, rejoin with the canonical " | ". */
+    function normalizeLocation(str) {
+        return String(str || '').split(/[\/|]/).map(p => p.trim()).filter(Boolean).join(' | ');
+    }
+
+    /* Auto-fill TaxID (NCBI, via ENA) + ranked lineage (via GBIF) from a scientific name.
+       Online-only; fills only EMPTY fields so manual edits are never clobbered; degrades gracefully. */
+    async function lookupTaxonomy() {
+        const input = document.getElementById('f-scientific-name');
+        const status = document.getElementById('f-tax-status');
+        const name = input.value.trim();
+        if (!name) { status.textContent = ''; return; }
+        if (window.__taxBusy) return;
+        if (name === window.__taxResolved) return;          // already resolved this name
+        if (!navigator.onLine) { status.innerHTML = '📴 Offline — enter TaxID & taxonomy manually.'; return; }
+        window.__taxBusy = true;
+        status.textContent = '🔎 Looking up “' + name + '”…';
+        const enc = encodeURIComponent(name);
+        const gbifP = fetch('https://api.gbif.org/v1/species/match?name=' + enc).then(r => r.ok ? r.json() : null).catch(() => null);
+        const enaP  = fetch('https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/' + enc).then(r => r.ok ? r.json() : null).catch(() => null);
+        try {
+            const [gbif, ena] = await Promise.all([gbifP, enaP]);
+            const setIfEmpty = (id, val) => { if (!val) return; const el = document.getElementById(id); if (el && !el.value.trim()) el.value = val; };
+            const found = [];
+            const enaRec = (Array.isArray(ena) && ena.length) ? ena[0] : null;
+            if (enaRec && enaRec.taxId) { setIfEmpty('f-taxon-id', enaRec.taxId); found.push('NCBI TaxID ' + enaRec.taxId); }
+            if (enaRec && enaRec.commonName) setIfEmpty('f-common-name', enaRec.commonName);
+            let lineage = false;
+            if (gbif && gbif.matchType && gbif.matchType !== 'NONE') {
+                setIfEmpty('f-phylum', gbif.phylum);
+                setIfEmpty('f-class', gbif['class']);
+                setIfEmpty('f-order', gbif.order);
+                setIfEmpty('f-family', gbif.family);
+                setIfEmpty('f-genus', gbif.genus);
+                const chain = [gbif.phylum, gbif['class'], gbif.order, gbif.family, gbif.genus].filter(Boolean);
+                if (chain.length) { found.push(chain.join(' → ')); lineage = true; }
             }
+            if (found.length) {
+                window.__taxResolved = name;
+                status.innerHTML = '✓ ' + found.join(' · ') + ' <span style="color:var(--text-light)">— filled empty fields; edit to override</span>';
+            } else {
+                status.innerHTML = '⚠️ No confident match (or service unreachable) — please enter TaxID & taxonomy manually.';
+            }
+        } catch (e) {
+            status.innerHTML = '⚠️ Lookup failed — enter TaxID & taxonomy manually.';
+        } finally {
+            window.__taxBusy = false;
         }
-        
-        // Delete Sample
-        function deleteSample(index) {
-            if (confirm('Are you sure you want to delete this sample?')) {
-                samples.splice(index, 1);
-                localStorage.setItem('samples', JSON.stringify(samples));
-                updateSamplesList();
-                showToast('Sample deleted', 'success');
-            }
+    }
+
+    function buildRow(s, individual, tube) {
+        const cols = MANIFEST_SCHEMA.columns;
+        const row = {};
+        cols.forEach(c => row[c] = '');  // default empty
+
+        const { purpose, otherInfo } = resolvePurpose(tube);
+
+        // Per-tube
+        row['TUBE_OR_WELL_ID'] = tube.tubeId || '';
+        row['SPECIMEN_ID'] = individual.specimenId || '';
+        row['PURPOSE_OF_SPECIMEN'] = purpose;
+        row['ORGANISM_PART'] = (tube.organismPart || []).join(' | ');
+        row['COLLECTOR_SAMPLE_ID'] = tube.collectorSampleId || '';
+
+        // Taxonomy (shared) + per-individual sex/lifestage
+        row['ORDER_OR_GROUP'] = s.order || '';
+        row['FAMILY'] = s.family || '';
+        row['GENUS'] = s.genus || '';
+        row['TAXON_ID'] = s.taxonId || '';
+        row['SCIENTIFIC_NAME'] = s.scientificName || '';
+        row['COMMON_NAME'] = s.commonName || '';
+        row['LIFESTAGE'] = individual.lifestage || '';
+        row['SEX'] = individual.sex || '';
+        row['SYMBIONT'] = 'TARGET';
+
+        // Collection
+        row['COLLECTED_BY'] = s.collectedBy || '';
+        row['COLLECTOR_AFFILIATION'] = s.collectorAffiliation || '';
+        row['COLLECTOR_ORCID_ID'] = s.collectorOrcid || '';
+        row['DATE_OF_COLLECTION'] = s.date || '';
+        row['TIME_OF_COLLECTION'] = s.time || '';
+        let collLoc = normalizeLocation(s.location);
+        if (s.hasOrigin && s.collectionName) {
+            const cn = normalizeLocation(s.collectionName);
+            collLoc = collLoc ? (collLoc + ' | ' + cn) : cn;
         }
-        
-        // Export to CSV
-        function exportData() {
-            if (samples.length === 0) {
-                showToast('No samples to export', 'error');
-                return;
-            }
-            
-            const headers = [
-                'Sample ID', 'Collector', 'Date', 'Sample Category',
-                // Organism fields
-                'Kingdom', 'Scientific Name', 'NCBI TaxID', 'Common Name', 'Sex', 'Life Stage', 'Tissue Type',
-                // Environmental fields
-                'Env Sample Type', 'Collection Method', 'Sample Quantity', 'Sample Unit', 
-                'Filtration Details', 'Deployment Duration', 'Sample/Core Depth (m)', 
-                'Salinity (ppt)', 'Dissolved Oxygen (mg/L)', 'Turbidity',
-                // Shared location fields
-                'Latitude', 'Longitude', 'GPS Accuracy', 'Altitude (m)', 'Water Depth (m)',
-                'Habitat Type', 'Weather Conditions', 'Temperature (°C)', 'pH', 'Notes', 'Timestamp'
-            ];
-            
-            const rows = samples.map(s => [
-                s.id, s.collector, s.date, s.category,
-                // Organism fields
-                s.kingdom || '', s.species || '', s.taxid || '', s.commonName || '', 
-                s.sex || '', s.lifeStage || '', s.tissueType || '',
-                // Environmental fields
-                s.envSampleType || '', s.collectionMethod || '', s.sampleQuantity || '', s.sampleUnit || '',
-                s.filtrationDetails || '', s.deploymentDuration || '', s.sampleDepth || '',
-                s.salinity || '', s.dissolvedOxygen || '', s.turbidity || '',
-                // Shared location fields
-                s.latitude, s.longitude, s.accuracy, s.altitude || '', s.depth || '',
-                s.habitat || '', s.weather || '', s.temperature || '', s.ph || '', s.notes || '', s.timestamp
-            ]);
-            
-            let csv = headers.join(',') + '\n';
-            rows.forEach(row => {
-                csv += row.map(field => `"${field || ''}"`).join(',') + '\n';
+        row['COLLECTION_LOCATION'] = collLoc;
+        row['DECIMAL_LATITUDE'] = (s.latitude !== undefined && s.latitude !== null) ? s.latitude : '';
+        row['DECIMAL_LONGITUDE'] = (s.longitude !== undefined && s.longitude !== null) ? s.longitude : '';
+        row['HABITAT'] = s.habitat || '';
+        row['DEPTH'] = s.depth || '';
+        row['ELEVATION'] = s.elevation || '';
+        row['DESCRIPTION_OF_COLLECTION_METHOD'] = s.method || '';
+
+        // Transect
+        if (s.transect) {
+            row['LATITUDE_START'] = s.latStart || '';
+            row['LONGITUDE_START'] = s.lonStart || '';
+            row['LATITUDE_END'] = s.latEnd || '';
+            row['LONGITUDE_END'] = s.lonEnd || '';
+        } else {
+            row['LATITUDE_START'] = 'NOT_COLLECTED';
+            row['LONGITUDE_START'] = 'NOT_COLLECTED';
+            row['LATITUDE_END'] = 'NOT_COLLECTED';
+            row['LONGITUDE_END'] = 'NOT_COLLECTED';
+        }
+
+        // Original location
+        if (s.hasOrigin) {
+            row['ORIGINAL_COLLECTION_DATE'] = s.origDate || '';
+            row['ORIGINAL_GEOGRAPHIC_LOCATION'] = normalizeLocation(s.origLocation);
+            row['ORIGINAL_DECIMAL_LATITUDE'] = s.origLat || '';
+            row['ORIGINAL_DECIMAL_LONGITUDE'] = s.origLon || '';
+        }
+
+        row['OTHER_INFORMATION'] = otherInfo;
+        return cols.map(c => row[c]);
+    }
+
+    function downloadCsv(filename, headerCols, rows) {
+        let csv = headerCols.map(csvEscape).join(',') + '\n';
+        rows.forEach(r => { csv += r.map(csvEscape).join(',') + '\n'; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function exportData() {
+        if (specimens.length === 0) { showToast('No specimens to export'); return; }
+        const cols = MANIFEST_SCHEMA.columns;
+        // One row per tube across all individuals across all records; split by purpose-class.
+        const ergaRows = [];   // REFERENCE_GENOME (incl. Hi-C)
+        const popRows = [];    // everything else
+        specimens.forEach(s => {
+            (s.individuals || []).forEach(ind => {
+                (ind.tubes || []).forEach(tube => {
+                    const { purpose } = resolvePurpose(tube);
+                    const row = buildRow(s, ind, tube);
+                    if (purpose === 'REFERENCE_GENOME') ergaRows.push(row);
+                    else popRows.push(row);
+                });
             });
-            
+        });
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        const produced = [];
+        if (ergaRows.length) {
+            downloadCsv(`fieldscribe-ERGA-DToL-manifest-${dateStr}.csv`, cols, ergaRows);
+            produced.push(`ERGA/DToL (${ergaRows.length} row${ergaRows.length === 1 ? '' : 's'})`);
+        }
+        if (popRows.length) {
+            downloadCsv(`fieldscribe-PopGenomics-manifest-${dateStr}.csv`, cols, popRows);
+            produced.push(`PopGenomics (${popRows.length} row${popRows.length === 1 ? '' : 's'})`);
+        }
+        if (produced.length === 0) { showToast('No tubes to export'); return; }
+        showToast('Exported: ' + produced.join(' + ') + ' 📊');
+    }
+
+    /* =================== BOLD / iBOL EXPORT =================== */
+    /* Sheet definitions — column order matches bold-template-3.0.json exactly. */
+    const BOLD_SHEETS = {
+        "Voucher Info": ["Sample ID", "Field ID", "Museum ID", "Collection Code", "Institution Storing"],
+        "Taxonomy": ["Sample ID", "Phylum", "Class", "Order", "Family", "Subfamily", "Genus", "Species", "Identifier", "Identifier Email", "Identifier Institution", "Identification Method", "Tax Notes"],
+        "Specimen Details": ["Sample ID", "Sex", "Reproduction", "Life Stage", "Extra Info", "Notes", "Voucher Status", "Tissue Descriptor", "Associated Taxa", "Associated Specimens", "External URLs"],
+        "Collection Data": ["Sample ID", "Collectors", "Collection Event ID", "Collection Date", "Date Accuracy", "Event Time", "Country/Ocean", "State/Province", "Region", "Sector", "Exact Site", "Site Code", "Habitat", "Sampling Protocol", "Latitude", "Longitude", "Coordinate Accuracy", "Coordinate Source", "Elevation", "Elevation Precision", "Depth", "Depth Precision", "Collection Notes"]
+    };
+
+    const BOLD_MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+    function boldSex(v) {
+        switch (v) {
+            case 'FEMALE': return 'female';
+            case 'MALE': return 'male';
+            case 'HERMAPHRODITE_MONOECIOUS': return 'hermaphrodite';
+            default: return '';
+        }
+    }
+    function boldLifeStage(v) {
+        switch (v) {
+            case 'ADULT': return 'Adult';
+            case 'PUPA': return 'pupa';
+            case 'JUVENILE':
+            case 'LARVA':
+            case 'EMBRYO':
+            case 'EGG':
+            case 'ZYGOTE': return 'Immature';
+            default: return '';
+        }
+    }
+    function boldTissueDescriptor(parts) {
+        return (parts || []).join(', ').toLowerCase().replace(/_/g, ' ');
+    }
+    function boldDate(d) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || '');
+        if (!m) return d || '';
+        const month = BOLD_MONTHS[parseInt(m[2], 10) - 1];
+        if (!month) return d;
+        return `${m[3]}-${month}-${m[1]}`;
+    }
+    function boldLocationParts(loc) {
+        const parts = String(loc || '').split(/[\/|]/).map(p => p.trim());
+        return {
+            country: parts[0] || '',
+            state: parts[1] || '',
+            region: parts[2] || '',
+            sector: parts[3] || '',
+            exactSite: parts.slice(4).filter(Boolean).join(' | ')
+        };
+    }
+
+    /* Build the data row object for one tube within an individual, per field_mapping. */
+    function boldRecord(s, individual, tube) {
+        const lp = boldLocationParts(s.location);
+        const hasCoords = (s.latitude !== undefined && s.latitude !== null && s.latitude !== '' &&
+                           s.longitude !== undefined && s.longitude !== null && s.longitude !== '');
+        const sex = (individual.sex || '').toUpperCase();
+        const lifestage = (individual.lifestage || '').toUpperCase();
+        // Sex/Life Stage vocab in the form is upper or lower depending; normalise via toUpperCase.
+        const rec = {};
+        // Voucher Info
+        rec["Sample ID"] = tube.collectorSampleId || '';
+        rec["Field ID"] = tube.collectorSampleId || '';
+        rec["Museum ID"] = '';
+        rec["Collection Code"] = '';
+        rec["Institution Storing"] = s.institutionStoring || s.collectorAffiliation || '';
+        // Taxonomy
+        rec["Phylum"] = s.phylum || '';
+        rec["Class"] = s.class || '';
+        rec["Order"] = s.order || '';
+        rec["Family"] = s.family || '';
+        rec["Subfamily"] = '';
+        rec["Genus"] = s.genus || '';
+        rec["Species"] = s.scientificName || '';
+        rec["Identifier"] = '';
+        rec["Identifier Email"] = '';
+        rec["Identifier Institution"] = '';
+        rec["Identification Method"] = '';
+        rec["Tax Notes"] = '';
+        // Specimen Details
+        rec["Sex"] = boldSex(sex);
+        rec["Reproduction"] = '';
+        rec["Life Stage"] = boldLifeStage(lifestage);
+        rec["Extra Info"] = '';
+        rec["Notes"] = '';
+        rec["Voucher Status"] = '';
+        rec["Tissue Descriptor"] = boldTissueDescriptor(tube.organismPart);
+        rec["Associated Taxa"] = '';
+        rec["Associated Specimens"] = '';
+        rec["External URLs"] = '';
+        // Collection Data
+        rec["Collectors"] = s.collectedBy || '';
+        rec["Collection Event ID"] = '';
+        rec["Collection Date"] = boldDate(s.date);
+        rec["Date Accuracy"] = '';
+        rec["Event Time"] = s.time || '';
+        rec["Country/Ocean"] = lp.country;
+        rec["State/Province"] = lp.state;
+        rec["Region"] = lp.region;
+        rec["Sector"] = lp.sector;
+        rec["Exact Site"] = lp.exactSite;
+        rec["Site Code"] = '';
+        rec["Habitat"] = s.habitat || '';
+        rec["Sampling Protocol"] = s.method || '';
+        rec["Latitude"] = hasCoords ? s.latitude : '';
+        rec["Longitude"] = hasCoords ? s.longitude : '';
+        rec["Coordinate Accuracy"] = (s.accuracy !== undefined && s.accuracy !== null &&
+                                      s.accuracy !== '' && s.accuracy !== 'manual' && !isNaN(s.accuracy))
+                                      ? s.accuracy : '';
+        rec["Coordinate Source"] = (hasCoords && s.accuracy !== 'manual') ? 'GPS' : (hasCoords ? 'manual entry' : '');
+        rec["Elevation"] = s.elevation || '';
+        rec["Elevation Precision"] = '';
+        rec["Depth"] = s.depth || '';
+        rec["Depth Precision"] = '';
+        rec["Collection Notes"] = '';
+        return rec;
+    }
+
+    /* Build an array-of-rows (header + data) for one sheet from all tubes. */
+    function boldSheetRows(sheetName, records) {
+        const cols = BOLD_SHEETS[sheetName];
+        const rows = [cols.slice()];
+        records.forEach(rec => {
+            rows.push(cols.map(c => {
+                const v = rec[c];
+                return (v === undefined || v === null) ? '' : v;
+            }));
+        });
+        return rows;
+    }
+
+    function exportBOLD() {
+        if (specimens.length === 0) { showToast('No specimens to export'); return; }
+        // one record per tube, across all individuals across all records
+        const records = [];
+        specimens.forEach(s => {
+            (s.individuals || []).forEach(ind => {
+                (ind.tubes || []).forEach(tube => records.push(boldRecord(s, ind, tube)));
+            });
+        });
+        const dateStr = new Date().toISOString().split('T')[0];
+
+        if (!window.__xlsxLibFailed && typeof XLSX !== 'undefined') {
+            const wb = XLSX.utils.book_new();
+            Object.keys(BOLD_SHEETS).forEach(sheetName => {
+                const ws = XLSX.utils.aoa_to_sheet(boldSheetRows(sheetName, records));
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            });
+            XLSX.writeFile(wb, `fieldscribe-BOLD-${dateStr}.xlsx`);
+            showToast('Exported BOLD / iBOL workbook (.xlsx)! 🧬');
+        } else {
+            // Offline fallback: one concatenated CSV, clearly sectioned per sheet.
+            let csv = '';
+            Object.keys(BOLD_SHEETS).forEach(sheetName => {
+                csv += `### ${sheetName} ###\n`;
+                boldSheetRows(sheetName, records).forEach(r => {
+                    csv += r.map(csvEscape).join(',') + '\n';
+                });
+                csv += '\n';
+            });
             const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `fieldscribe-samples-${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `fieldscribe-BOLD-${dateStr}.csv`;
             a.click();
-            
-            showToast('Data exported successfully! 📊', 'success');
+            URL.revokeObjectURL(url);
+            showToast('Offline: BOLD sheets exported as one sectioned CSV. The .xlsx needs a connection. 📶');
         }
-        
-        // Show Toast Notification
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+    }
+
+    /* =================== BARCODE SCANNER =================== */
+    let __scanner = null;
+    let __scanTarget = null;
+
+    function openScanner(targetInput) {
+        if (window.__scannerLibFailed || typeof Html5Qrcode === 'undefined') {
+            showToast('Scanner needs a connection — type the ID for now ✍️');
+            targetInput.focus();
+            return;
         }
+        __scanTarget = targetInput;
+        const overlay = document.getElementById('scanner-overlay');
+        overlay.classList.add('show');
+        __scanner = new Html5Qrcode('reader');
+        __scanner.start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: { width: 250, height: 150 } },
+            (decodedText) => {
+                if (__scanTarget) {
+                    __scanTarget.value = decodedText.trim();
+                    __scanTarget.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                showToast('Scanned: ' + decodedText.trim());
+                closeScanner();
+            },
+            () => {} // ignore per-frame decode errors
+        ).catch(() => {
+            showToast('Could not start camera — check permissions, or type the ID.');
+            closeScanner();
+        });
+    }
+
+    function closeScanner() {
+        const overlay = document.getElementById('scanner-overlay');
+        const done = () => { overlay.classList.remove('show'); document.getElementById('reader').innerHTML = ''; __scanner = null; __scanTarget = null; };
+        if (__scanner) {
+            __scanner.stop().then(done).catch(done);
+        } else {
+            done();
+        }
+    }
+
+    document.getElementById('scanner-cancel').addEventListener('click', closeScanner);
+
+    /* =================== TOAST =================== */
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
     </script>
 </body>
 </html>
