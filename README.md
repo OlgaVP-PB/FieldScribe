@@ -59,19 +59,6 @@ rewrite. Columns and vocabularies are never hardcoded elsewhere.
   `COLLECTOR_SAMPLE_ID` (the key the collector controls; `SPECIMEN_ID`,
   `GAL_SAMPLE_ID` etc. are assigned later by the GAL).
 
-## Where we'd love your feedback, Felix 🙏
-
-1. **Hi-C** — `PURPOSE_OF_SPECIMEN` has no Hi-C term, so the app offers a UI-only
-   "Hi-C" choice that exports as `REFERENCE_GENOME` + a note in
-   `OTHER_INFORMATION`. Would ERGA consider adding a formal Hi-C term?
-2. **COPO ingest** — does a CSV with exactly the v2.5.1 columns drop cleanly into
-   COPO / the manifest wizard, or are there gotchas (encoding, the multi-value
-   `ORGANISM_PART` pipe convention, the new `*_PERMITS_FILENAME` fields)?
-3. **Specimen→tube fan-out** — is one row per tube with a shared
-   `SPECIMEN_ID` the representation you'd expect?
-4. **Field-stage minimal set** — anything field-only we're not capturing that
-   should be caught on site.
-
 ## Roadmap
 
 - eDNA / environmental path (ENA MIxS-style checklist; filter type, pore size,
