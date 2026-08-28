@@ -73,10 +73,11 @@ with many tubes; a population is many individuals with one tube each.
 
 Export is **purpose-routed**, one row per tube:
 
-- Reference-genome tubes (including Hi-C) export to the **ERGA / DToL manifest**
-  CSV, aligned to the canonical **Sample Manifest v2.5.1** (91 columns, in order).
-- All other purposes export to the **BGE-ERGA PopGenomics manifest** CSV
-  (identical 91-column header).
+- Reference-genome tubes (including Hi-C) export to the **ERGA / DToL manifest**,
+  aligned to the canonical **Sample Manifest v2.5.1** (91 columns, in order).
+- All other purposes export to the **BGE-ERGA PopGenomics manifest** (identical
+  91-column header).
+- Both are written as **CSV and Excel (`.xlsx`)**, since COPO ingests xlsx.
 - A **BOLD / iBOL** export (Specimen Template v3.0) is available for barcoding: a
   four-sheet `.xlsx` with vocabulary, date, and location mapping, plus a
   sectioned-CSV fallback offline.

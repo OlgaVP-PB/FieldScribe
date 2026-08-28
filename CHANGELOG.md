@@ -4,6 +4,25 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.3.0] - 2026-08-28
+
+Manifest export now produces Excel alongside CSV, on ERGA maintainer feedback
+(Felix Shaw, COPO): COPO ingests `.xlsx`, so exporting both smooths brokering.
+See `releases/v2.3.0.md`.
+
+### Added
+- **Excel (`.xlsx`) export** of the ERGA/DToL and PopGenomics manifests, produced
+  alongside the existing CSV (one sheet, identical 91-column header, one row per
+  tube). Uses the already-bundled SheetJS. Offline, CSV is still produced and a
+  note explains the Excel needs a connection.
+
+- **Footer install tip**: a short "add to your home screen" note with iPhone and
+  Android steps, so field users discover the app-like install without the README.
+
+### Changed
+- Export button relabelled "ERGA manifest (CSV + Excel)"; export toast reports
+  which formats were written.
+
 ## [2.2.0] - 2026-08-28
 
 Turns FieldScribe into an installable Progressive Web App (PWA) that opens and
@@ -118,6 +137,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.3.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.0
 [2.2.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.2.0
 [2.1.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.1.0
 [2.0.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.0.0
