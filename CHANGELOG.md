@@ -4,6 +4,16 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.3.1] - 2026-08-28
+
+### Fixed
+- **eDNA save no longer requires the desk/lab fields.** Saving in the field was
+  blocked until mandatory "later"-stage fields (Strain, Scientific name, tax_id,
+  Project) were filled. Save now enforces only the on-site mandatory fields; the
+  desk/lab fields are deferred and the save confirmation lists what is still
+  needed before export. Export adds a matching safeguard: it warns (without
+  blocking) if any eDNA sample still misses required fields.
+
 ## [2.3.0] - 2026-08-28
 
 Manifest export now produces Excel alongside CSV, on ERGA maintainer feedback
@@ -22,14 +32,6 @@ See `releases/v2.3.0.md`.
 ### Changed
 - Export button relabelled "ERGA manifest (CSV + Excel)"; export toast reports
   which formats were written.
-
-### Fixed
-- **eDNA save no longer requires the desk/lab fields.** Saving in the field was
-  blocked until mandatory "later"-stage fields (Strain, Scientific name, tax_id,
-  Project) were filled. Save now enforces only the on-site mandatory fields; the
-  desk/lab fields are deferred and the save confirmation lists what is still
-  needed before export. Export adds a matching safeguard: it warns (without
-  blocking) if any eDNA sample still misses required fields.
 
 ## [2.2.0] - 2026-08-28
 
@@ -145,6 +147,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.3.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.1
 [2.3.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.0
 [2.2.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.2.0
 [2.1.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.1.0
