@@ -23,6 +23,14 @@ See `releases/v2.3.0.md`.
 - Export button relabelled "ERGA manifest (CSV + Excel)"; export toast reports
   which formats were written.
 
+### Fixed
+- **eDNA save no longer requires the desk/lab fields.** Saving in the field was
+  blocked until mandatory "later"-stage fields (Strain, Scientific name, tax_id,
+  Project) were filled. Save now enforces only the on-site mandatory fields; the
+  desk/lab fields are deferred and the save confirmation lists what is still
+  needed before export. Export adds a matching safeguard: it warns (without
+  blocking) if any eDNA sample still misses required fields.
+
 ## [2.2.0] - 2026-08-28
 
 Turns FieldScribe into an installable Progressive Web App (PWA) that opens and

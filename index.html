@@ -3958,21 +3958,25 @@
             fields['geographic location (longitude)'] = currentLocation.longitude;
         }
 
-        // validate mandatory fields (lat/lon via GPS)
-        let ok = true; const missing = [];
+        // Field save: require only the ON-SITE mandatory fields. Desk/lab
+        // ("later") mandatory fields - Strain, Scientific name, tax_id, Project,
+        // etc. - can be filled later and are enforced at export, not at save.
+        let ok = true; const missing = []; const laterTodo = [];
         schema.fields.forEach(f => {
             if (f.requirement !== 'mandatory') return;
             const v = fields[f.name];
-            if (v === undefined || v === null || String(v).trim() === '') { ok = false; missing.push(f.label); }
+            const empty = (v === undefined || v === null || String(v).trim() === '');
+            if (f.stage === 'later') { if (empty) laterTodo.push(f.label); return; }
+            if (empty) { ok = false; missing.push(f.label); }
         });
         if (!currentLocation) { showToast('Please capture or enter GPS coordinates'); return; }
-        // highlight empty mandatory inputs
+        // highlight empty on-site mandatory inputs (skip later-stage + GPS)
         schema.fields.forEach(f => {
-            if (f.requirement !== 'mandatory' || EDNA_GPS_FIELDS.indexOf(f.name) !== -1) return;
+            if (f.requirement !== 'mandatory' || f.stage === 'later' || EDNA_GPS_FIELDS.indexOf(f.name) !== -1) return;
             const el = document.getElementById(ednaInputId(f.name));
             if (el) el.style.borderColor = (fields[f.name] && String(fields[f.name]).trim()) ? 'var(--border)' : 'var(--error)';
         });
-        if (!ok) { showToast('Please fill in mandatory fields: ' + missing.join(', ')); return; }
+        if (!ok) { showToast('Please fill in the on-site fields: ' + missing.join(', ')); return; }
 
         const record = {
             pathType: 'edna',
@@ -3987,12 +3991,13 @@
             timestamp: new Date().toISOString()
         };
 
+        const todoNote = laterTodo.length ? ' Still to add before export: ' + laterTodo.join(', ') + '.' : '';
         if (ednaEditingIndex >= 0) {
             specimens[ednaEditingIndex] = record;
-            showToast('eDNA sample updated!');
+            showToast('eDNA sample updated!' + todoNote);
         } else {
             specimens.push(record);
-            showToast('eDNA sample saved! 🎉');
+            showToast((laterTodo.length ? 'Field data saved! 🎉' : 'eDNA sample saved! 🎉') + todoNote);
         }
         localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
         lastSpecimen = record;
@@ -4071,6 +4076,31 @@
     function exportEdna() {
         const ednaRecords = specimens.filter(s => s.pathType === 'edna');
         if (ednaRecords.length === 0) { showToast('No eDNA samples to export'); return; }
+
+        // Completeness check: samples can be saved with desk/lab fields still
+        // empty, so warn (but don't block) if any mandatory field is missing.
+        const incomplete = [];
+        ednaRecords.forEach(s => {
+            const schema = MIXS_SCHEMAS[s.environment];
+            if (!schema) return;
+            const f = s.fields || {};
+            const miss = schema.fields
+                .filter(fld => fld.requirement === 'mandatory')
+                .filter(fld => { const v = f[fld.name]; return v === undefined || v === null || String(v).trim() === ''; })
+                .map(fld => fld.label);
+            if (miss.length) {
+                const alias = (f['sample_alias'] && String(f['sample_alias']).trim()) || '(no Sample ID)';
+                incomplete.push(alias + ': ' + miss.join(', '));
+            }
+        });
+        if (incomplete.length) {
+            const msg = incomplete.length + ' eDNA sample' + (incomplete.length === 1 ? '' : 's') +
+                ' still missing required fields:\n\n' + incomplete.slice(0, 12).join('\n') +
+                (incomplete.length > 12 ? '\n…and more' : '') +
+                '\n\nExport anyway? You can add the missing fields and export again later.';
+            if (!confirm(msg)) { showToast('Export cancelled - complete the samples first.'); return; }
+        }
+
         const dateStr = new Date().toISOString().split('T')[0];
         const produced = [];
 
