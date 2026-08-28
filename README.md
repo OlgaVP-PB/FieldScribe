@@ -1,106 +1,123 @@
-# ✍️ FieldScribe v2.0.0
+# FieldScribe v2.1.0
 
-**Field metadata capture that exports straight into the ERGA sample manifest.**
+**Field sample metadata, made easy.**
 
-A mobile-first, offline-capable web app for recording biological sample
-metadata in the field, built for the SciLifeLab Planetary Biology Capability in
-collaboration with ERGA. FieldScribe v2.0.0 is a single self-contained
-`index.html` — no backend, no build step, no login — whose CSV export is aligned
-to the **ERGA Sample Manifest v2.5.1** so that field sheets merge into the
-manifest with no manual re-mapping.
+FieldScribe is a mobile-first, offline-capable web app for recording biological
+sample metadata in the field and exporting it in the exact shape each downstream
+database expects. It is a single self-contained `index.html`: no backend, no
+build step, no login. Built for the SciLifeLab Planetary Biology Strategic Area
+(Uppsala University) in collaboration with ERGA.
 
-> **Live (v1):** https://olgavp-pb.github.io/FieldScribe/ · **Repo:**
-> https://github.com/OlgaVP-PB/FieldScribe
+> **Live:** https://olgavp-pb.github.io/FieldScribe/ ·
+> **Repo:** https://github.com/OlgaVP-PB/FieldScribe
 
 ---
 
 ## Why this exists
 
-Researchers find the full 91-column manifest intimidating and rarely read the
-SOP. FieldScribe's goal is to *be* the SOP: show only the fields relevant to
-what the user is doing, embed the guidance inline, use controlled-vocabulary
-dropdowns and smart defaults, and emit a CSV that already speaks the manifest's
-language. ENA is the universal endpoint; the ERGA manifest is the broker
-template that feeds it via COPO — so FieldScribe keeps a lean field core and
-exposes ERGA depth only when needed.
+Downstream manifests and checklists are long and intimidating, and few people
+read the SOP in the field. FieldScribe aims to *be* the SOP: it shows only the
+fields relevant to what you are doing, embeds the guidance inline, uses
+controlled-vocabulary lists and smart defaults, and exports a file that already
+speaks the target database's language. ENA is the universal endpoint; FieldScribe
+keeps a lean field core and exposes each standard's depth only when needed.
 
-## What v2.0.0 does (this release)
+## What it does
 
-- **Path picker on launch** — *Single specimen* (reference genome / RNA-seq /
-  resequencing) is active; *eDNA / environmental* and *Pooled / population* are
-  stubbed as "coming soon".
-- **Specimen → tube model** — specimen-level metadata entered once, then 1..N
-  tubes. Toggle between *one specimen per tube* and *one specimen split across
-  several tubes* (e.g. a fish divided into 15 barcoded tubes). On export, one
-  specimen fans out into one manifest **row per tube**: the shared block copied
-  down, per-tube fields varying.
-- **Per-tube fields** — `TUBE_OR_WELL_ID` (camera barcode scanner, with manual
-  fallback offline), auto-numbered `COLLECTOR_SAMPLE_ID` (`<baseID>-01`, `-02`…,
-  editable), multi-select `ORGANISM_PART` (the full 73-term v2.5.1 ontology with
-  definitions on hover), and `PURPOSE_OF_SPECIMEN`.
-- **Progressive disclosure** — transect coordinates and zoo/garden/culture
-  origin blocks stay hidden until toggled on.
-- **Offline** — specimens persist in LocalStorage; export CSV when convenient.
-- **ERGA-aligned export** — header row is exactly the 91 canonical v2.5.1
-  columns, in order; unfilled downstream fields are left blank (or
-  `NOT_PROVIDED`/`NOT_COLLECTED` where the SOP expects it); `SYMBIONT` defaults
-  to `TARGET`.
+FieldScribe opens on a **path picker** with two workflows.
 
-## How the manifest schema is wired in
+### 1. Specimen sampling (organisms)
 
-The canonical schema lives in `schema/manifest-2.5.1.json` (91 columns, 24
-controlled vocabularies, 73 organism-part definitions) and is **embedded inline**
-in the app as a swappable config (`MANIFEST_SCHEMA`, `MANIFEST_VERSION`). Moving
-to a new manifest release (2.5.2+) is a re-extract into that one object, not a
-rewrite. Columns and vocabularies are never hardcoded elsewhere.
+A shared species and collection-event block, then a two-level
+**individuals to tubes** model: 1..N individuals (each with its own specimen ID,
+sex, life stage), and under each, 1..N tubes (tube ID, collector sample ID,
+organism part, purpose). A reference-genome specimen is simply one individual
+with many tubes; a population is many individuals with one tube each.
 
-## Merge model
+Export is **purpose-routed**, one row per tube:
 
-- **Stacking** — pool field CSVs from many collectors: same headers, concatenate
-  rows.
-- **Widening** — add later lab/voucher modules to a sample: join on
-  `COLLECTOR_SAMPLE_ID` (the key the collector controls; `SPECIMEN_ID`,
-  `GAL_SAMPLE_ID` etc. are assigned later by the GAL).
+- Reference-genome tubes (including Hi-C) export to the **ERGA / DToL manifest**
+  CSV, aligned to the canonical **Sample Manifest v2.5.1** (91 columns, in order).
+- All other purposes export to the **BGE-ERGA PopGenomics manifest** CSV
+  (identical 91-column header).
+- A **BOLD / iBOL** export (Specimen Template v3.0) is available for barcoding: a
+  four-sheet `.xlsx` with vocabulary, date, and location mapping, plus a
+  sectioned-CSV fallback offline.
 
-## Where we'd love your feedback, Felix 🙏
+Only non-empty classes download, so you get exactly the files your samples need.
 
-1. **Hi-C** — `PURPOSE_OF_SPECIMEN` has no Hi-C term, so the app offers a UI-only
-   "Hi-C" choice that exports as `REFERENCE_GENOME` + a note in
-   `OTHER_INFORMATION`. Would ERGA consider adding a formal Hi-C term?
-2. **COPO ingest** — does a CSV with exactly the v2.5.1 columns drop cleanly into
-   COPO / the manifest wizard, or are there gotchas (encoding, the multi-value
-   `ORGANISM_PART` pipe convention, the new `*_PERMITS_FILENAME` fields)?
-3. **Specimen→tube fan-out** — is one row per tube with a shared
-   `SPECIMEN_ID` the representation you'd expect?
-4. **Field-stage minimal set** — anything field-only we're not capturing that
-   should be caught on site.
+### 2. eDNA / environmental
 
-## Roadmap
+Captures environmental-sample metadata and exports an **ENA-ready TSV per
+checklist**. Ten environments are supported, each mapped to its live ENA
+checklist with exact labels, units, mandatory flags and controlled vocabularies:
 
-- eDNA / environmental path (ENA MIxS-style checklist; filter type, pore size,
-  volume filtered, buffer).
-- Pooled / population path (lighter ENA-checklist route).
-- Later-stage modules: preservation, wet lab, vouchering, sequencing — filled by
-  different people at different times against the shared sample, with
-  `NOT_PROVIDED` defaults updatable in COPO.
+- GSC MIxS environmental: Water (ERC000024), Soil (ERC000022), Sediment
+  (ERC000021), Air (ERC000012), Microbial biofilm (ERC000019), Plant associated
+  (ERC000020), Wastewater sludge (ERC000023), Miscellaneous environment
+  (ERC000025)
+- Specialised: Marine microalgae (ERC000043), Ancient DNA / sedaDNA (ERC000059)
+
+Every field is tagged **on-site** or **desk/lab**, so the field form shows only
+what must be recorded on site (GPS, date, depth or elevation, the ENVO context
+triple, and the field essentials) and defers the metagenome ID, project, and
+sequencing fields. ENVO fields offer suggestion lists and the metagenome
+`tax_id` has a lookup. The optional on-site measurements are shown as a tappable
+banner with a preview, so nothing gets missed.
+
+## Shared features
+
+- **Offline first**: records persist in the browser (LocalStorage); export when
+  convenient. Nothing is sent to a server.
+- **Camera barcode scanning** on every Sample ID (specimen base ID, eDNA sample
+  alias, and the per-tube barcode), with manual entry as an offline fallback.
+- **Taxonomy auto-lookup** on the specimen path: a scientific name fetches the
+  NCBI taxon ID and common name from ENA and the ranked lineage from GBIF,
+  filling only empty fields.
+- **GPS and date** capture reused across paths; field-friendly slash-separated
+  locations converted to the manifest's pipe convention on export.
+
+## How the schemas are wired in
+
+Every standard is an embedded, swappable config, so a new release of a checklist
+or manifest is a re-extract into one object, not a rewrite:
+
+- `schema/manifest-2.5.1.json` for the canonical ERGA v2.5.1 (91 columns,
+  controlled vocabularies, organism-part definitions), shared by the ERGA/DToL
+  and PopGenomics exports.
+- `schema/bold-template-3.0.json` for the BOLD Specimen Template v3.0 mapping.
+- `schema/mixs-*.json` for the ten ENA environmental checklists, generated from
+  the live ENA definitions.
+
+## Hosting
+
+The app is fully client-side and can be opened straight from a file, served as a
+static site (GitHub Pages), or hosted on **SciLifeLab Serve**. Serve packaging is
+included: `Dockerfile` (nginx-unprivileged, uid 1000, port 8080), `nginx.conf`,
+`start-script.sh`, `.dockerignore`, and `SERVE_DEPLOY.md`. There is no backend,
+so Serve storage is None.
 
 ## Files in this package
 
 | File | What it is |
 |------|------------|
-| `index.html` | The whole app — open in any modern browser. |
-| `schema/manifest-2.5.1.json` | Canonical ERGA v2.5.1 schema the app speaks. |
+| `index.html` | The whole app; open in any modern browser. |
+| `schema/manifest-2.5.1.json` | Canonical ERGA v2.5.1 schema (specimen exports). |
+| `schema/bold-template-3.0.json` | BOLD Specimen Template v3.0 mapping. |
+| `schema/mixs-*.json` | The ten ENA environmental checklists. |
+| `Dockerfile`, `nginx.conf`, `start-script.sh`, `.dockerignore` | SciLifeLab Serve packaging. |
+| `SERVE_DEPLOY.md` | How to deploy on Serve. |
 | `README.md` | This file. |
 | `CHANGELOG.md` | Version history (Keep a Changelog). |
 | `VERSIONING.md` | Versioning scheme and release process. |
-| `releases/v1.0.0.md`, `releases/v2.0.0.md` | Per-release notes / design brief. |
+| `releases/*.md` | Per-release notes and design briefs. |
 
 ## Try it
 
 Open `index.html` in a browser (the camera scanner needs HTTPS or `localhost`
-and camera permission). Pick *Single specimen*, add a specimen, add one or more
-tubes, then **Export CSV** to see the manifest-shaped output.
+plus camera permission). Pick a path, add a record, then export to see the
+database-shaped output.
 
 ---
 *Lead & design: Olga Vinnere Pettersson (SciLifeLab Planetary Biology, Uppsala
-University). Built with AI assistance. Targets ERGA Sample Manifest v2.5.1.*
+University). Built with AI assistance.*
