@@ -1,0 +1,274 @@
+{
+  "standard": "GSC MIxS / ENA environmental checklist (curated for field eDNA)",
+  "environment": "Ancient DNA",
+  "ena_checklist": "ENA ancient DNA checklist",
+  "ena_checklist_id": "ERC000059",
+  "source_note": "Fields, labels, units and mandatory flags taken from the live ENA checklist ERC000059. Optional fields are a curated field-relevant subset of the full package; the long tail is intentionally omitted for a usable field form.",
+  "output_format": {
+    "type": "ENA TSV",
+    "layout": [
+      "Row 1: Checklist <TAB> ERC000059 <TAB> ENA ancient DNA checklist",
+      "Row 2: field names (config order)",
+      "Row 3: #units <TAB> then unit per column (aligned 1:1)",
+      "Row 4+: one row per sample, keyed by sample_alias"
+    ]
+  },
+  "tax_note": "Ancient DNA / sedaDNA: heavily excavation-oriented. tax_id may be an organism or a metagenome depending on the sample.",
+  "fields": [
+    {
+      "name": "sample_alias",
+      "label": "Sample ID (alias)",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Unique ID for this sample; the row key (label on the tube/filter)."
+    },
+    {
+      "name": "collection date",
+      "label": "Collection date",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "date",
+      "help": "ISO date, e.g. 2026-06-18."
+    },
+    {
+      "name": "geographic location (country and/or sea)",
+      "label": "Country",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "insdc_country",
+      "help": "Country (or sea/ocean for marine samples) from the INSDC list; auto from GPS."
+    },
+    {
+      "name": "geographic location (region and locality)",
+      "label": "Location name / locality",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Specific place — e.g. the site or station name, a park, forest, river, lake, farm, or nearest named landmark."
+    },
+    {
+      "name": "geographic location (latitude)",
+      "label": "Latitude",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "Decimal degrees (WGS84); auto from GPS."
+    },
+    {
+      "name": "geographic location (longitude)",
+      "label": "Longitude",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "Decimal degrees (WGS84); auto from GPS."
+    },
+    {
+      "name": "broad-scale environmental context",
+      "label": "Broad-scale environmental context",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Biome (ENVO)."
+    },
+    {
+      "name": "local environmental context",
+      "label": "Local environmental context",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Smaller-grain ENVO entity."
+    },
+    {
+      "name": "environmental medium",
+      "label": "Environmental medium",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Environmental material surrounding the sample (ENVO)."
+    },
+    {
+      "name": "depth",
+      "label": "Depth",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "m",
+      "help": "Depth below surface at sampling."
+    },
+    {
+      "name": "sample age range youngest limit",
+      "label": "Sample age – youngest limit",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Youngest age bound (with unit, e.g. years BP)."
+    },
+    {
+      "name": "sample age range oldest limit",
+      "label": "Sample age – oldest limit",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Oldest age bound."
+    },
+    {
+      "name": "sample age inference method",
+      "label": "Age inference method",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "How the age was determined (e.g. 14C, stratigraphy)."
+    },
+    {
+      "name": "collecting institution",
+      "label": "Collecting institution",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "sample collection device",
+      "label": "Sample collection device",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "e.g. Niskin bottle, corer, filter, net."
+    },
+    {
+      "name": "sample collection method",
+      "label": "Sample collection method",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Method/protocol used."
+    },
+    {
+      "name": "master core sample id",
+      "label": "Master core sample ID",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Parent core this subsample came from."
+    },
+    {
+      "name": "depth inference method",
+      "label": "Depth inference method",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "sample decontamination pretreatment",
+      "label": "Decontamination pretreatment",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "preservational treatment",
+      "label": "Preservational treatment",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "sample material type",
+      "label": "Sample material type",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "e.g. bone, tooth, sediment, subfossil."
+    },
+    {
+      "name": "past broad-scale environmental context",
+      "label": "Past broad-scale env. context",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "envo"
+    },
+    {
+      "name": "past local environmental context",
+      "label": "Past local env. context",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "envo"
+    },
+    {
+      "name": "sample storage conditions",
+      "label": "Sample storage conditions",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "How/for how long the sample was stored before extraction (fresh/frozen/buffer)."
+    },
+    {
+      "name": "collected_by",
+      "label": "Collected by",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "tax_id",
+      "label": "NCBI tax_id",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "metagenome_taxid",
+      "help": "The NCBI taxonomy ID: the organism if the sample is a single individual (e.g. a bone or tooth), or an environmental 'metagenome' ID for sediment / bulk samples. Fills from the name lookup."
+    },
+    {
+      "name": "scientific_name",
+      "label": "Scientific name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "project name",
+      "label": "Project name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sample_title",
+      "label": "Sample title",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "target gene",
+      "label": "Target gene",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sequencing method",
+      "label": "Sequencing method",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    }
+  ],
+  "envo_suggestions": {
+    "broad-scale environmental context": [
+      "terrestrial biome (ENVO:00000446)",
+      "marine benthic biome (ENVO:01000024)"
+    ],
+    "local environmental context": [
+      "cave (ENVO:00000067)",
+      "archaeological site",
+      "lake (ENVO:00000020)"
+    ],
+    "environmental medium": [
+      "sediment (ENVO:00002007)",
+      "soil (ENVO:00001998)",
+      "bone"
+    ]
+  }
+}

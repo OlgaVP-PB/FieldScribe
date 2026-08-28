@@ -1,12 +1,15 @@
 # ✍️ FieldScribe v2.0.0
 
-**Field metadata capture that exports straight into the ERGA/DToL sample manifest.**
+**Field metadata capture that exports straight into the ERGA sample manifest.**
 
-Mobile-first field-metadata capture that exports straight into the ERGA/DToL, BGE-ERGA PopGenomics, and BOLD manifests. Built for SciLifeLab (Planetary Biology Strategic Area) & ERGA/BGE.
-FieldScribe v2.0.0 is a single self-contained `index.html` — no backend, no build step, no login — whose CSV export is aligned
-to the **ERGA Sample Manifest v2.5.1** so that field sheets merge into the manifest with no manual re-mapping.
+A mobile-first, offline-capable web app for recording biological sample
+metadata in the field, built for the SciLifeLab Planetary Biology Capability in
+collaboration with ERGA. FieldScribe v2.0.0 is a single self-contained
+`index.html` — no backend, no build step, no login — whose CSV export is aligned
+to the **ERGA Sample Manifest v2.5.1** so that field sheets merge into the
+manifest with no manual re-mapping.
 
-> **Live (v2):** https://olgavp-pb.github.io/FieldScribe/ · **Repo:**
+> **Live (v1):** https://olgavp-pb.github.io/FieldScribe/ · **Repo:**
 > https://github.com/OlgaVP-PB/FieldScribe
 
 ---
@@ -58,6 +61,19 @@ rewrite. Columns and vocabularies are never hardcoded elsewhere.
 - **Widening** — add later lab/voucher modules to a sample: join on
   `COLLECTOR_SAMPLE_ID` (the key the collector controls; `SPECIMEN_ID`,
   `GAL_SAMPLE_ID` etc. are assigned later by the GAL).
+
+## Where we'd love your feedback, Felix 🙏
+
+1. **Hi-C** — `PURPOSE_OF_SPECIMEN` has no Hi-C term, so the app offers a UI-only
+   "Hi-C" choice that exports as `REFERENCE_GENOME` + a note in
+   `OTHER_INFORMATION`. Would ERGA consider adding a formal Hi-C term?
+2. **COPO ingest** — does a CSV with exactly the v2.5.1 columns drop cleanly into
+   COPO / the manifest wizard, or are there gotchas (encoding, the multi-value
+   `ORGANISM_PART` pipe convention, the new `*_PERMITS_FILENAME` fields)?
+3. **Specimen→tube fan-out** — is one row per tube with a shared
+   `SPECIMEN_ID` the representation you'd expect?
+4. **Field-stage minimal set** — anything field-only we're not capturing that
+   should be caught on site.
 
 ## Roadmap
 

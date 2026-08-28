@@ -1,0 +1,264 @@
+{
+  "standard": "GSC MIxS / ENA environmental checklist (curated for field eDNA)",
+  "environment": "Miscellaneous environment",
+  "ena_checklist": "GSC MIxS miscellaneous natural or artificial environment",
+  "ena_checklist_id": "ERC000025",
+  "source_note": "Fields, labels, units and mandatory flags taken from the live ENA checklist ERC000025. Optional fields are a curated field-relevant subset of the full package; the long tail is intentionally omitted for a usable field form.",
+  "output_format": {
+    "type": "ENA TSV",
+    "layout": [
+      "Row 1: Checklist <TAB> ERC000025 <TAB> GSC MIxS miscellaneous natural or artificial environment",
+      "Row 2: field names (config order)",
+      "Row 3: #units <TAB> then unit per column (aligned 1:1)",
+      "Row 4+: one row per sample, keyed by sample_alias"
+    ]
+  },
+  "tax_note": "tax_id + scientific_name describe a METAGENOME (the sampled environment), not the sequenced organisms — choose from NCBI environmental/metagenome taxa.",
+  "fields": [
+    {
+      "name": "sample_alias",
+      "label": "Sample ID (alias)",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Unique ID for this sample; the row key (label on the tube/filter)."
+    },
+    {
+      "name": "collection date",
+      "label": "Collection date",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "date",
+      "help": "ISO date, e.g. 2026-06-18."
+    },
+    {
+      "name": "geographic location (country and/or sea)",
+      "label": "Country",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "insdc_country",
+      "help": "Country (or sea/ocean for marine samples) from the INSDC list; auto from GPS."
+    },
+    {
+      "name": "geographic location (region and locality)",
+      "label": "Location name / locality",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Specific place — e.g. the site or station name, a park, forest, river, lake, farm, or nearest named landmark."
+    },
+    {
+      "name": "geographic location (latitude)",
+      "label": "Latitude",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "Decimal degrees (WGS84); auto from GPS."
+    },
+    {
+      "name": "geographic location (longitude)",
+      "label": "Longitude",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "Decimal degrees (WGS84); auto from GPS."
+    },
+    {
+      "name": "broad-scale environmental context",
+      "label": "Broad-scale environmental context",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Biome (ENVO)."
+    },
+    {
+      "name": "local environmental context",
+      "label": "Local environmental context",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Smaller-grain ENVO entity."
+    },
+    {
+      "name": "environmental medium",
+      "label": "Environmental medium",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "envo",
+      "help": "Environmental material surrounding the sample (ENVO)."
+    },
+    {
+      "name": "sample collection device",
+      "label": "Sample collection device",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "e.g. Niskin bottle, corer, filter, net."
+    },
+    {
+      "name": "sample collection method",
+      "label": "Sample collection method",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Method/protocol used."
+    },
+    {
+      "name": "amount or size of sample collected",
+      "label": "Amount / size collected",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "g",
+      "help": "Total amount collected (units g / L / kg per ENA)."
+    },
+    {
+      "name": "sample storage temperature",
+      "label": "Sample storage temperature",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "°C",
+      "help": "Storage temp after collection."
+    },
+    {
+      "name": "temperature",
+      "label": "Temperature",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "°C"
+    },
+    {
+      "name": "pH",
+      "label": "pH",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number"
+    },
+    {
+      "name": "dissolved oxygen",
+      "label": "Dissolved oxygen",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "µmol/kg"
+    },
+    {
+      "name": "salinity",
+      "label": "Salinity",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "psu"
+    },
+    {
+      "name": "depth",
+      "label": "Depth",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "m"
+    },
+    {
+      "name": "sample volume or weight for DNA extraction",
+      "label": "Volume/weight for DNA extraction",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "g"
+    },
+    {
+      "name": "tax_id",
+      "label": "Metagenome tax_id",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "metagenome_taxid",
+      "help": "An NCBI ID number that labels this sample as an environmental DNA community (a 'metagenome') rather than a single species — because eDNA captures many organisms at once. e.g. soil metagenome = 410658, freshwater metagenome = 449393. Fills automatically when you look up the metagenome name below."
+    },
+    {
+      "name": "scientific_name",
+      "label": "Metagenome name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text",
+      "help": "Name the sampled environment as a DNA community — e.g. 'soil metagenome', 'freshwater metagenome', 'marine metagenome' — then tap the search button to fetch its tax_id. It is not a single species."
+    },
+    {
+      "name": "project name",
+      "label": "Project name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text",
+      "help": "Name of the sequencing project."
+    },
+    {
+      "name": "sample_title",
+      "label": "Sample title",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sample_description",
+      "label": "Sample description",
+      "requirement": "optional",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "target gene",
+      "label": "Target gene",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text",
+      "help": "e.g. 16S rRNA, 18S rRNA, COI, ITS."
+    },
+    {
+      "name": "target subfragment",
+      "label": "Target subfragment",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text",
+      "help": "e.g. V3-V4, V9, ITS2."
+    },
+    {
+      "name": "pcr primers",
+      "label": "PCR primers",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sequencing method",
+      "label": "Sequencing method",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text",
+      "help": "e.g. Illumina MiSeq."
+    }
+  ],
+  "envo_suggestions": {
+    "broad-scale environmental context": [
+      "terrestrial biome (ENVO:00000446)",
+      "marine biome (ENVO:00000447)",
+      "freshwater biome (ENVO:00000873)",
+      "anthropogenic terrestrial biome (ENVO:01000219)"
+    ],
+    "local environmental context": [
+      "lake (ENVO:00000020)",
+      "river (ENVO:00000022)",
+      "forest (ENVO:01001805)",
+      "agricultural field (ENVO:00000114)"
+    ],
+    "environmental medium": [
+      "soil (ENVO:00001998)",
+      "fresh water (ENVO:00002011)",
+      "sea water (ENVO:00002149)",
+      "air (ENVO:00002005)",
+      "sediment (ENVO:00002007)"
+    ]
+  }
+}

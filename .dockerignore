@@ -1,0 +1,12 @@
+# Only index.html, nginx.conf and start-script.sh are needed to build the image.
+.git
+*.zip
+releases/
+schema/
+CHANGELOG.md
+README.md
+VERSIONING.md
+GIT_GUIDE.md
+DEPLOY_and_share.md
+SERVE_DEPLOY.md
+*.md

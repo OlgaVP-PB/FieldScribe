@@ -33,6 +33,54 @@ Work toward **v2.0.0 — Modular, ENA-native FieldScribe**. See
   export. Added a **collection / institution name** field for zoo/garden/culture
   specimens, appended to `COLLECTION_LOCATION`.
 
+### Branding, wording & field UX (latest)
+- Applied the **SciLifeLab visual identity** (ported from the repo v2.0.0): teal /
+  lime / grape palette, branded header logo, a partner footer (SciLifeLab,
+  Uppsala University, ERGA, BGE+, EU "Co-funded by"), and Lato / Lora fonts.
+- Footer now credits the app as *"an original contribution of the Planetary
+  Biology Strategic Area at SciLifeLab."*
+- Header tagline changed to **"Field sample metadata, made easy"** (no longer
+  Planetary-Biology/ERGA-specific — the app outgrew that).
+- **Camera barcode scanning on the Sample ID** across all paths (specimen Base
+  ID and eDNA sample alias; the tube barcode already scanned).
+- Reliable CSS hover tooltips on info icons (replaced the flaky native `title`);
+  ENVO field tips are now field-specific with an example term.
+
+### Hosting + wording (latest)
+- Renamed the specimen "Save session" button to **"Save specimen"** and added a note
+  clarifying data is stored in the browser on the device (nothing sent to a server);
+  export generates the submission files. (Save ≠ export.)
+- Added **SciLifeLab Serve packaging**: `Dockerfile` (nginx-unprivileged, runs as
+  uid 1000, listens on 8080), `nginx.conf`, `start-script.sh`, `.dockerignore`, and
+  `SERVE_DEPLOY.md`. Static image, no backend; Serve storage = None.
+
+### eDNA — 10 ENA environments (latest)
+- Expanded the eDNA path from 2 to **10 environments**, each mapped to its live
+  ENA checklist with exact field labels, units, mandatory flags and controlled
+  vocabularies (pulled from ENA): **Water** (ERC000024), **Soil** (ERC000022),
+  **Sediment** (ERC000021), **Air** (ERC000012), **Microbial biofilm**
+  (ERC000019), **Plant associated** (ERC000020), **Wastewater sludge**
+  (ERC000023), **Miscellaneous environment** (ERC000025), **Marine microalgae**
+  (ERC000043), **Ancient DNA / sedaDNA** (ERC000059).
+- Environment picker (dropdown, grouped: GSC MIxS environmental + specialised);
+  each field carries an explicit on-site / desk-lab **stage** so the form shows
+  only field-relevant items on site and defers the rest. Configs in
+  `schema/mixs-*.json`.
+- Reconciled the earlier water/soil "curated guesses" to the exact ENA fields —
+  the ENA TSV now validates cleanly, per checklist.
+
+### eDNA / environmental path
+- Activated the **eDNA path** with a **Water / Soil** environment toggle. Form is
+  driven by curated MIxS configs (`schema/mixs-water.json`, `schema/mixs-soil.json`):
+  mandatory + field-only-essential fields under **Capture on site**, sequencing/
+  desk fields under **Add later**, optional measurements collapsed.
+- ENVO context fields use a suggestion datalist; metagenome `tax_id` look-up via
+  ENA; GPS/date reused from the specimen flow. Flat samples (one filter = one
+  record), no specimen→tube nesting.
+- **Export → ENA TSV** per environment (`Checklist` / field-name / `#units` rows
+  then samples), one file per environment present. Specimen ERGA/PopGenomics/BOLD
+  exports unaffected.
+
 ### Planned — Added
 - **Path picker on open**: choose a workflow rather than one flat form.
 - **Specimen → tube data model**: enter specimen-level metadata once, then add

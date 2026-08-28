@@ -1,0 +1,203 @@
+{
+  "standard": "GSC MIxS / ENA environmental checklist (curated for field eDNA)",
+  "environment": "Marine microalgae",
+  "ena_checklist": "ENA Marine Microalgae Checklist",
+  "ena_checklist_id": "ERC000043",
+  "source_note": "Fields, labels, units and mandatory flags taken from the live ENA checklist ERC000043. Optional fields are a curated field-relevant subset of the full package; the long tail is intentionally omitted for a usable field form.",
+  "output_format": {
+    "type": "ENA TSV",
+    "layout": [
+      "Row 1: Checklist <TAB> ERC000043 <TAB> ENA Marine Microalgae Checklist",
+      "Row 2: field names (config order)",
+      "Row 3: #units <TAB> then unit per column (aligned 1:1)",
+      "Row 4+: one row per sample, keyed by sample_alias"
+    ]
+  },
+  "tax_note": "This checklist is for cultured/isolated microalgae: tax_id + scientific_name are the ORGANISM (species), and a strain identifier is mandatory.",
+  "fields": [
+    {
+      "name": "sample_alias",
+      "label": "Sample ID (alias)",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Unique ID; the row key."
+    },
+    {
+      "name": "collection date",
+      "label": "Collection date",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "date"
+    },
+    {
+      "name": "geographic location (country and/or sea)",
+      "label": "Country",
+      "requirement": "mandatory",
+      "stage": "onsite",
+      "type": "insdc_country",
+      "help": "Country (or sea/ocean for marine samples) from the INSDC list; auto from GPS."
+    },
+    {
+      "name": "geographic location (region and locality)",
+      "label": "Location name / locality",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "Specific place — e.g. coastal station, bay, or site name."
+    },
+    {
+      "name": "geographic location (latitude)",
+      "label": "Latitude",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "auto from GPS."
+    },
+    {
+      "name": "geographic location (longitude)",
+      "label": "Longitude",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "DD",
+      "help": "auto from GPS."
+    },
+    {
+      "name": "collected_by",
+      "label": "Collected by",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text"
+    },
+    {
+      "name": "sample collection method",
+      "label": "Sample collection method",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "e.g. net, water sample, filter."
+    },
+    {
+      "name": "depth",
+      "label": "Depth",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "m",
+      "help": "Depth in the water column the sample was taken from (0 for surface)."
+    },
+    {
+      "name": "water temperature",
+      "label": "Water temperature",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "°C"
+    },
+    {
+      "name": "salinity",
+      "label": "Salinity",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "psu"
+    },
+    {
+      "name": "pH",
+      "label": "pH",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number"
+    },
+    {
+      "name": "light intensity",
+      "label": "Light intensity",
+      "requirement": "optional",
+      "stage": "onsite",
+      "type": "number",
+      "unit": "lux"
+    },
+    {
+      "name": "sample storage conditions",
+      "label": "Sample storage conditions",
+      "requirement": "recommended",
+      "stage": "onsite",
+      "type": "text",
+      "help": "How/for how long the sample was stored before extraction (fresh/frozen/buffer)."
+    },
+    {
+      "name": "strain",
+      "label": "Strain",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text",
+      "help": "Strain identifier (mandatory for this checklist)."
+    },
+    {
+      "name": "culture_collection",
+      "label": "Culture collection",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text",
+      "help": "Institution:collection:id if deposited."
+    },
+    {
+      "name": "tax_id",
+      "label": "Species tax_id",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text",
+      "help": "NCBI taxonomy ID of the microalga species itself (the cultured organism) — look it up on the NCBI Taxonomy browser. Unlike other eDNA checklists, this one describes a single isolate, not a metagenome community."
+    },
+    {
+      "name": "scientific_name",
+      "label": "Scientific name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "project name",
+      "label": "Project name",
+      "requirement": "mandatory",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sample_title",
+      "label": "Sample title",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "target gene",
+      "label": "Target gene",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    },
+    {
+      "name": "sequencing method",
+      "label": "Sequencing method",
+      "requirement": "recommended",
+      "stage": "later",
+      "type": "text"
+    }
+  ],
+  "envo_suggestions": {
+    "broad-scale environmental context": [
+      "marine pelagic biome (ENVO:01000023)",
+      "marine biome (ENVO:00000447)"
+    ],
+    "local environmental context": [
+      "marine photic zone (ENVO:00000209)",
+      "coastal water body (ENVO:02000049)"
+    ],
+    "environmental medium": [
+      "sea water (ENVO:00002149)"
+    ]
+  }
+}
