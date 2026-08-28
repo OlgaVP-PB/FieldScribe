@@ -395,6 +395,20 @@
                     </button>
                 </div>
             </div>
+
+            <div class="form-section" id="picker-data-safety" style="display:none;">
+                <div class="section-header">
+                    <span class="section-icon">🛟</span>
+                    <h2 class="section-title">Your data</h2>
+                </div>
+                <div class="help-text" id="backup-notice" style="margin-bottom:0.75rem;"></div>
+                <div class="btn-group" style="margin-top:0;">
+                    <button class="btn btn-primary" onclick="backupData()">⬇️ Back up all data</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('restore-file').click()">⬆️ Restore from backup</button>
+                    <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreData(event)">
+                </div>
+                <div class="help-text" style="margin-top:0.6rem; font-size:0.8rem;">Your records live only on this device until you export or back up. A backup is a single file you can keep, email to yourself, or use to move data to another phone or computer.</div>
+            </div>
         </div>
 
         <!-- ============ SPECIMEN SAMPLING FLOW (individuals → tubes) ============ -->
@@ -824,7 +838,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.3.2";
+    const APP_VERSION = "2.4.0";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -3681,6 +3695,11 @@
     document.getElementById('f-date').valueAsDate = new Date();
 
     if (lastSpecimen) document.getElementById('f-collected-by').value = lastSpecimen.collectedBy || '';
+    ensureIds();
+    // Ask the browser to keep our data (resist automatic eviction, incl. iOS).
+    if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persisted().then(function (p) { if (!p) navigator.storage.persist(); }).catch(function () {});
+    }
     updateLastLocationButton();
     updateSpecimensList();
     showView('picker');
@@ -4136,6 +4155,7 @@
         });
 
         if (produced.length === 0) { showToast('No eDNA samples to export'); return; }
+        markDataSaved();
         showToast('Exported eDNA ENA TSV: ' + produced.join(' + ') + ' 📄');
     }
 
@@ -4646,6 +4666,98 @@
         });
         document.getElementById('picker-saved-section').style.display = specimenCount ? 'block' : 'none';
         updateEdnaList();
+        updateBackupNotice();
+    }
+
+    /* =================== DATA SAFETY / BACKUP =================== */
+    // A stable id per record, so a restored backup merges without duplicating.
+    function genId() {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+        return 'fs-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    }
+    function ensureIds() {
+        let changed = false;
+        specimens.forEach(s => { if (s && !s._id) { s._id = genId(); changed = true; } });
+        if (changed) localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
+    }
+    // Record that data has been taken off the device (backup or export), so the
+    // "not backed up" nudge can clear.
+    function markDataSaved() {
+        localStorage.setItem('fs_v2_last_backup', new Date().toISOString());
+        updateBackupNotice();
+    }
+    function updateBackupNotice() {
+        const el = document.getElementById('backup-notice');
+        const panel = document.getElementById('picker-data-safety');
+        const total = specimens.length;
+        if (panel) panel.style.display = total ? 'block' : 'none';
+        if (!el) return;
+        if (total === 0) { el.innerHTML = ''; return; }
+        const last = localStorage.getItem('fs_v2_last_backup');
+        let unbacked = total;
+        if (last) {
+            const lastT = Date.parse(last);
+            unbacked = specimens.filter(s => {
+                const t = Date.parse((s && s.timestamp) || 0);
+                return isNaN(t) ? true : t > lastT;
+            }).length;
+        }
+        if (unbacked > 0) {
+            el.innerHTML = '⚠️ <strong>' + unbacked + ' of ' + total + ' record' + (total === 1 ? '' : 's') +
+                ' not yet backed up.</strong> Your data is stored only on this device - back up or export to keep it safe.';
+            el.style.color = 'var(--error)';
+        } else {
+            el.innerHTML = '✓ All ' + total + ' record' + (total === 1 ? '' : 's') +
+                ' backed up. Data is stored on this device; back up again after adding more.';
+            el.style.color = 'var(--text-light)';
+        }
+    }
+    function backupData() {
+        if (specimens.length === 0) { showToast('Nothing to back up yet'); return; }
+        ensureIds();
+        const payload = {
+            app: 'FieldScribe', type: 'fieldscribe-backup', version: APP_VERSION,
+            exported: new Date().toISOString(), count: specimens.length, records: specimens
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `fieldscribe-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        markDataSaved();
+        showToast('Backed up ' + specimens.length + ' record' + (specimens.length === 1 ? '' : 's') + ' to a file. Keep it safe! 🛟');
+    }
+    function restoreData(event) {
+        const file = event.target.files && event.target.files[0];
+        event.target.value = '';   // allow re-picking the same file later
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            let data;
+            try { data = JSON.parse(reader.result); }
+            catch (e) { showToast('That file is not a valid FieldScribe backup.'); return; }
+            const incoming = Array.isArray(data) ? data
+                : (data && Array.isArray(data.records) ? data.records : null);
+            if (!incoming) { showToast('That file is not a valid FieldScribe backup.'); return; }
+            const existingIds = new Set(specimens.map(s => s && s._id).filter(Boolean));
+            let added = 0;
+            incoming.forEach(r => {
+                if (!r || typeof r !== 'object') return;
+                if (!r._id) r._id = genId();
+                if (existingIds.has(r._id)) return;   // skip records we already have
+                specimens.push(normalizeRecord(r));
+                existingIds.add(r._id);
+                added++;
+            });
+            localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
+            lastSpecimen = specimens.length ? specimens[specimens.length - 1] : null;
+            updateSpecimensList();
+            showToast(added
+                ? ('Restored ' + added + ' record' + (added === 1 ? '' : 's') + ' from backup.')
+                : 'Backup loaded - all its records were already here.');
+        };
+        reader.readAsText(file);
     }
 
     /* =================== CSV EXPORT =================== */
@@ -4840,6 +4952,7 @@
             produced.push(`PopGenomics (${popRows.length} row${popRows.length === 1 ? '' : 's'})`);
         }
         if (produced.length === 0) { showToast('No tubes to export'); return; }
+        markDataSaved();
         showToast(
             (xlsx ? 'Exported CSV + Excel: ' : 'Exported CSV (offline; Excel needs a connection): ')
             + produced.join(' + ') + ' 📊'
@@ -4997,6 +5110,7 @@
                 XLSX.utils.book_append_sheet(wb, ws, sheetName);
             });
             XLSX.writeFile(wb, `fieldscribe-BOLD-${dateStr}.xlsx`);
+            markDataSaved();
             showToast('Exported BOLD / iBOL workbook (.xlsx)! 🧬');
         } else {
             // Offline fallback: one concatenated CSV, clearly sectioned per sheet.
@@ -5015,6 +5129,7 @@
             a.download = `fieldscribe-BOLD-${dateStr}.csv`;
             a.click();
             URL.revokeObjectURL(url);
+            markDataSaved();
             showToast('Offline: BOLD sheets exported as one sectioned CSV. The .xlsx needs a connection. 📶');
         }
     }

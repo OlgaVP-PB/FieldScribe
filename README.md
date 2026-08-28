@@ -118,6 +118,26 @@ add the desk/lab fields (Strain, Scientific name, `tax_id`, Project) later at th
 bench. The save confirmation lists what is still outstanding, and export warns if
 any sample is still missing required fields before it writes the TSV.
 
+## Keeping your data safe
+
+FieldScribe is backendless by design: your records are stored **on your device**,
+not on a server. That keeps it login-free and offline-capable, but browser
+storage can be cleared, so the app makes the durable copy easy and honest:
+
+- **Back up all data / Restore** on the home screen. One tap downloads a single
+  JSON file with every record - a durable copy you control (keep it, email it to
+  yourself, or move data to another device). Restore merges a backup back in,
+  de-duplicated so re-importing never doubles records.
+- The app **asks the browser to keep its storage** (persistent storage), which
+  resists automatic eviction, including iOS's roughly 7-day clear-out of unused
+  sites.
+- The home screen shows a **"not backed up" reminder** until you back up or
+  export.
+
+There is no central copy without a backend, so the rule is simple: **back up (or
+export) your records when you get a chance**, especially before wiping a browser
+or changing devices.
+
 ## Shared features
 
 - **Offline first**: records persist in the browser (LocalStorage); export when

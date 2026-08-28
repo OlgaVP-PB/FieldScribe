@@ -13,8 +13,13 @@ WORKDIR /app
 # image's default server is not used.
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# The application — a single self-contained file (all schemas are embedded).
+# The application. index.html is self-contained (all schemas are embedded); the
+# PWA also needs the service worker, manifest and icons so it installs and runs
+# offline when hosted here.
 COPY index.html /usr/share/nginx/html/index.html
+COPY sw.js /usr/share/nginx/html/sw.js
+COPY manifest.webmanifest /usr/share/nginx/html/manifest.webmanifest
+COPY assets/ /usr/share/nginx/html/assets/
 
 # Start-up script at WORKDIR.
 COPY start-script.sh /app/start-script.sh

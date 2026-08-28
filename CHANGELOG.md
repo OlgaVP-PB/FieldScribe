@@ -4,6 +4,33 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.4.0] - 2026-08-28
+
+Data safety, on colleague feedback (Arnold Kochari): browser storage alone is not
+a safe home for field data, so records can now be backed up to a file and the app
+asks the browser to keep its storage. See `releases/v2.4.0.md`.
+
+### Added
+- **Back up all data / Restore** on the home screen. One tap downloads a single
+  JSON of every record - a durable file you control (keep it, email it to
+  yourself, or move data to another device). Restore merges a backup back in,
+  de-duplicated by a per-record id, so re-importing never doubles anything.
+- **Persistent storage request** (`navigator.storage.persist()`) so the browser
+  resists automatically evicting FieldScribe's data (notably iOS's roughly 7-day
+  clear-out of unused sites).
+- **"Not backed up" nudge**: the home screen shows how many records still live
+  only on this device and prompts you to back up or export. Exporting any manifest
+  also clears the nudge.
+
+### Changed
+- Honest wording throughout: data is stored on this device until you export or
+  back up; the app no longer implies a permanence it cannot guarantee.
+
+### Fixed
+- Serve `Dockerfile` now also ships the PWA files (`sw.js`,
+  `manifest.webmanifest`, `assets/`), so install and offline work when the app is
+  hosted on SciLifeLab Serve.
+
 ## [2.3.2] - 2026-08-28
 
 ### Changed
@@ -155,6 +182,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.4.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.0
 [2.3.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.2
 [2.3.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.1
 [2.3.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.0
