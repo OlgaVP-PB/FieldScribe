@@ -4,6 +4,14 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.3.2] - 2026-08-28
+
+### Changed
+- Footer install tip and README now spell out the offline rule: open the app once
+  with a connection to enable offline use, after which it works with no signal.
+  (This is normal service-worker behaviour - the app can only cache itself on a
+  load that has a connection.)
+
 ## [2.3.1] - 2026-08-28
 
 ### Fixed
@@ -147,6 +155,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.3.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.2
 [2.3.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.1
 [2.3.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.0
 [2.2.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.2.0

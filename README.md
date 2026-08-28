@@ -1,4 +1,4 @@
-# FieldScribe v2.1.0
+# FieldScribe
 
 **Field sample metadata, made easy.**
 
@@ -9,7 +9,9 @@ build step, no login. Built for the SciLifeLab Planetary Biology Strategic Area
 (Uppsala University) in collaboration with ERGA.
 
 > **Live:** https://olgavp-pb.github.io/FieldScribe/ ·
-> **Repo:** https://github.com/OlgaVP-PB/FieldScribe
+> **Repo:** https://github.com/OlgaVP-PB/FieldScribe ·
+> **Current release:** see [CHANGELOG.md](CHANGELOG.md) and
+> [Releases](https://github.com/OlgaVP-PB/FieldScribe/releases)
 
 ---
 
@@ -27,9 +29,8 @@ Or open the link directly on the phone:
 
 There is no App Store download: FieldScribe runs in the browser and you "install"
 it by adding it to your home screen. This gives you an icon that opens the app
-full-screen. The first time you open it with a connection it saves a copy of
-itself to your phone, so afterwards it launches and works even with no signal in
-the field (your entered records are stored on the device too).
+full-screen and, once set up, works with no signal in the field (your entered
+records are stored on the device too).
 
 **iPhone / iPad (Safari)**
 1. Open the link above in **Safari**.
@@ -43,10 +44,19 @@ the field (your entered records are stored on the device too).
 3. Tap **Add to Home screen** (or **Install app** if offered).
 4. Tap **Add**. The icon appears with your other apps.
 
-**Tip:** once the icon is added, always open FieldScribe from that icon. Your
-saved records live in that app's own storage, so opening it the same way each
-time keeps all your samples together. Grant **camera** permission the first time
-if you want barcode scanning, and **location** permission for GPS capture.
+### The one rule for offline use
+
+**Open the app once with a connection before you rely on it offline.** The app
+can only save a copy of itself to your phone on a load that has internet, so a
+freshly added icon opened straight into airplane mode will not work yet. Open it
+once online (anywhere with wifi or data), let it load, and from then on it opens
+and works with no signal. In practice: install and try it at home or in the lab
+before heading into the field.
+
+**Tip:** always open FieldScribe from the home-screen icon. Your saved records
+live in that app's own storage, so opening it the same way each time keeps all
+your samples together. Grant **camera** permission the first time if you want
+barcode scanning, and **location** permission for GPS capture.
 
 ---
 
@@ -102,6 +112,11 @@ triple, and the field essentials) and defers the metagenome ID, project, and
 sequencing fields. ENVO fields offer suggestion lists and the metagenome
 `tax_id` has a lookup. The optional on-site measurements are shown as a tappable
 banner with a preview, so nothing gets missed.
+
+You can **save a sample in the field with only the on-site fields filled**, and
+add the desk/lab fields (Strain, Scientific name, `tax_id`, Project) later at the
+bench. The save confirmation lists what is still outstanding, and export warns if
+any sample is still missing required fields before it writes the TSV.
 
 ## Shared features
 

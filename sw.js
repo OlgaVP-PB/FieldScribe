@@ -6,7 +6,7 @@
  * automatically discards the old cached app instead of leaving people stuck
  * on a stale copy. Keep VERSION equal to APP_VERSION in index.html.
  */
-const VERSION = '2.3.1';
+const VERSION = '2.3.2';
 const CACHE = 'fieldscribe-v' + VERSION;
 
 // Local app shell - precached on install so the app opens with no network.
