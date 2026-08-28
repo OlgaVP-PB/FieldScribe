@@ -27,7 +27,9 @@ Or open the link directly on the phone:
 
 There is no App Store download: FieldScribe runs in the browser and you "install"
 it by adding it to your home screen. This gives you an icon that opens the app
-full-screen, and it keeps working offline in the field.
+full-screen. The first time you open it with a connection it saves a copy of
+itself to your phone, so afterwards it launches and works even with no signal in
+the field (your entered records are stored on the device too).
 
 **iPhone / iPad (Safari)**
 1. Open the link above in **Safari**.
@@ -137,12 +139,14 @@ so Serve storage is None.
 | File | What it is |
 |------|------------|
 | `index.html` | The whole app; open in any modern browser. |
+| `manifest.webmanifest`, `sw.js` | PWA manifest and service worker (installable, offline). |
 | `schema/manifest-2.5.1.json` | Canonical ERGA v2.5.1 schema (specimen exports). |
 | `schema/bold-template-3.0.json` | BOLD Specimen Template v3.0 mapping. |
 | `schema/mixs-*.json` | The ten ENA environmental checklists. |
 | `Dockerfile`, `nginx.conf`, `start-script.sh`, `.dockerignore` | SciLifeLab Serve packaging. |
 | `SERVE_DEPLOY.md` | How to deploy on Serve. |
 | `assets/fieldscribe-qr.png` | QR code to the live app. |
+| `assets/icon-*.png`, `assets/apple-touch-icon.png` | App icons for install. |
 | `README.md` | This file. |
 | `CHANGELOG.md` | Version history (Keep a Changelog). |
 | `VERSIONING.md` | Versioning scheme and release process. |
@@ -156,4 +160,4 @@ database-shaped output.
 
 ---
 *Lead & design: Olga Vinnere Pettersson (SciLifeLab Planetary Biology, Uppsala
-University). Built with AI assistance.*
+University). Built with AI assistance from Claude (Anthropic).*

@@ -4,6 +4,30 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.2.0] - 2026-08-28
+
+Turns FieldScribe into an installable Progressive Web App (PWA) that opens and
+runs offline in the field. See `releases/v2.2.0.md`.
+
+### Added
+- **Web app manifest** (`manifest.webmanifest`): name, SciLifeLab-teal theme,
+  standalone display and app icons, so "Add to Home Screen" gives a proper
+  branded, full-screen app rather than a plain bookmark.
+- **Service worker** (`sw.js`) with version-aware caching. It precaches the app
+  shell so the app launches with no connection; the cache is named after the
+  version, so each release cleanly replaces the previous cached copy. The app
+  document is served network-first (online users always get the latest), static
+  assets and whitelisted CDN/font hosts cache-first; data lookups (ENA, GBIF)
+  stay online-only and are never cached.
+- **App icons** in `assets/` (192, 512, maskable 512, and a 180 Apple touch
+  icon): teal tile with a white location pin.
+- **iOS/Android install metadata** in `index.html` (`theme-color`,
+  `apple-touch-icon`, apple/mobile web-app tags).
+
+### Changed
+- README install section now promises true offline launch and explains the
+  one-time online load that caches the app.
+
 ## [2.1.0] - 2026-08-28
 
 Environmental sampling arrives, the specimen flow is unified, and the app is
@@ -94,6 +118,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.2.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.2.0
 [2.1.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.1.0
 [2.0.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.0.0
 [1.0.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v1.0.0
