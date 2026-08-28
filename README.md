@@ -13,6 +13,41 @@ build step, no login. Built for the SciLifeLab Planetary Biology Strategic Area
 
 ---
 
+## Get it on your phone
+
+Reading this on a desktop? Scan the code to open FieldScribe on your phone, then
+save it to your home screen so it behaves like a normal app.
+
+<img src="assets/fieldscribe-qr.png" alt="QR code to open FieldScribe" width="220">
+
+Or open the link directly on the phone:
+**https://olgavp-pb.github.io/FieldScribe/**
+
+### Save it like an app (so you do not lose it)
+
+There is no App Store download: FieldScribe runs in the browser and you "install"
+it by adding it to your home screen. This gives you an icon that opens the app
+full-screen, and it keeps working offline in the field.
+
+**iPhone / iPad (Safari)**
+1. Open the link above in **Safari**.
+2. Tap the **Share** button (the square with an arrow pointing up).
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**. A FieldScribe icon now sits on your home screen.
+
+**Android (Chrome)**
+1. Open the link above in **Chrome**.
+2. Tap the **three-dot menu** (top right).
+3. Tap **Add to Home screen** (or **Install app** if offered).
+4. Tap **Add**. The icon appears with your other apps.
+
+**Tip:** once the icon is added, always open FieldScribe from that icon. Your
+saved records live in that app's own storage, so opening it the same way each
+time keeps all your samples together. Grant **camera** permission the first time
+if you want barcode scanning, and **location** permission for GPS capture.
+
+---
+
 ## Why this exists
 
 Downstream manifests and checklists are long and intimidating, and few people
@@ -107,6 +142,7 @@ so Serve storage is None.
 | `schema/mixs-*.json` | The ten ENA environmental checklists. |
 | `Dockerfile`, `nginx.conf`, `start-script.sh`, `.dockerignore` | SciLifeLab Serve packaging. |
 | `SERVE_DEPLOY.md` | How to deploy on Serve. |
+| `assets/fieldscribe-qr.png` | QR code to the live app. |
 | `README.md` | This file. |
 | `CHANGELOG.md` | Version history (Keep a Changelog). |
 | `VERSIONING.md` | Versioning scheme and release process. |
