@@ -69,6 +69,9 @@
         .pf-install strong { color:var(--primary); }
         .pf-install summary { cursor:pointer; color:var(--primary); font-weight:600; margin-top:0.4rem; }
         .pf-install details[open] summary { margin-bottom:0.35rem; }
+        .pf-cite { font-size:0.78rem; color:var(--text-light); line-height:1.55; margin:0.3rem 0 1.2rem; }
+        .pf-cite strong { color:var(--primary-dark); }
+        .pf-cite a { color:var(--primary); word-break:break-all; }
         .pf-row { display:flex; align-items:center; gap:1.7rem; flex-wrap:wrap; margin-bottom:1.2rem; }
         .pf-row img { display:block; width:auto; }
         .pf-eu { margin-top:0.3rem; padding-top:1.1rem; border-top:1px solid var(--border); margin-bottom:0; align-items:center; }
@@ -791,6 +794,7 @@
 
         <div class="partner-footer">
             <div class="pf-origin">An original contribution of the <strong>Planetary Biology Strategic Area</strong> at SciLifeLab.</div>
+            <div class="pf-cite"><strong>Cite this app:</strong> Vinnere Pettersson, O. (2026). FieldScribe: Field sample metadata, made easy. SciLifeLab Serve. <a href="https://doi.org/10.82595/scilifelab.jn54y-gez42" target="_blank" rel="noopener">https://doi.org/10.82595/scilifelab.jn54y-gez42</a></div>
             <div class="pf-install">📲 <strong>Tip:</strong> add FieldScribe to your home screen to use it like an app. Open it once with a connection to enable offline use - after that it works with no signal in the field.
                 <details><summary>How?</summary>
                     <span><strong>iPhone (Safari):</strong> tap Share, then Add to Home Screen, then Add.<br>
@@ -838,7 +842,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.4.0";
+    const APP_VERSION = "2.4.1";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)

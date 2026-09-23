@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use FieldScribe, please cite it using the metadata below."
+title: "FieldScribe: Field sample metadata, made easy"
+abstract: >-
+  A mobile-first, offline-capable web app for capturing biological and
+  environmental sample metadata in the field and exporting it in the format each
+  downstream database expects (ERGA / DToL and BGE PopGenomics manifests, BOLD /
+  iBOL, and ENA GSC MIxS). Built for the SciLifeLab Planetary Biology Strategic
+  Area (Uppsala University) in collaboration with ERGA and BGE/BGE+.
+type: software
+authors:
+  - family-names: "Vinnere Pettersson"
+    given-names: "Olga"
+    affiliation: "SciLifeLab Planetary Biology, Uppsala University"
+version: "2.4.1"
+date-released: "2026-09-23"
+url: "https://fieldscribe.serve.scilifelab.se"
+repository-code: "https://github.com/OlgaVP-PB/FieldScribe"
+doi: "10.82595/scilifelab.jn54y-gez42"
+identifiers:
+  - type: doi
+    value: "10.82595/scilifelab.jn54y-gez42"
+    description: "Concept DOI (resolves to all versions)"
+  - type: doi
+    value: "10.82595/scilifelab.nvjed-dy092"
+    description: "DOI for version 1"

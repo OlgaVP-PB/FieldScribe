@@ -1,0 +1,14 @@
+# Office temp / lock files
+~$*
+.~lock.*
+
+# Working documents that are not part of the app
+*.xlsx
+*.zip
+*.bak
+
+# Stray / experimental folders (extensions live in their own repo)
+voice/
+
+# OS cruft
+.DS_Store

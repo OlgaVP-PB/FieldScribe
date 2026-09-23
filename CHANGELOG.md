@@ -4,6 +4,13 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.4.1] - 2026-09-23
+
+### Added
+- **Citation / DOI** shown in the app footer, and a `CITATION.cff` so GitHub
+  offers a "Cite this repository" button. Concept DOI (all versions):
+  `10.82595/scilifelab.jn54y-gez42`; the app is now deposited on SciLifeLab Serve.
+
 ## [2.4.0] - 2026-08-28
 
 Data safety, on colleague feedback (Arnold Kochari): browser storage alone is not
@@ -182,6 +189,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.4.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.1
 [2.4.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.0
 [2.3.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.2
 [2.3.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.1
