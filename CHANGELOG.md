@@ -4,6 +4,18 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.4.2] - 2026-09-24
+
+### Added
+- **In-app camera help.** When the barcode scanner can't start, it now shows a
+  step-by-step "how to allow the camera" panel (iPhone/Safari and Android/Chrome)
+  with a **Try again** button, instead of a fleeting toast. The scanner also
+  prompts to tap **Allow** every time it opens.
+- **"About & help" panel on the first page** - what the app is, how it works,
+  offline use, the on-device data caveat, camera scanning, and a **feedback link**
+  (email + GitHub Issues). Surfaces the README essentials for Serve users who
+  never see the repo.
+
 ## [2.4.1] - 2026-09-23
 
 ### Added
@@ -189,6 +201,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.4.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.2
 [2.4.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.1
 [2.4.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.0
 [2.3.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.3.2

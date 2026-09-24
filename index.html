@@ -305,6 +305,14 @@
         .scanner-actions button { flex: 1; padding: 0.7rem; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; }
         .scanner-cancel { background: var(--border); color: var(--text); }
         .scanner-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 0.4rem; }
+        .scanner-help { display: none; font-size: 0.85rem; color: var(--text); line-height: 1.5; margin-top: 0.4rem; text-align: left; }
+        .scanner-help.show { display: block; }
+        .scanner-help h4 { font-size: 0.95rem; color: var(--error); margin: 0 0 0.4rem; }
+        .scanner-help p { margin: 0.3rem 0; }
+        .scanner-help strong { color: var(--primary); }
+        .scanner-help ol { margin: 0.2rem 0 0.5rem 1.1rem; padding: 0; }
+        .scanner-help li { margin-bottom: 0.2rem; }
+        .scanner-retry { background: var(--primary); color: #fff; }
 
         /* ---- eDNA environment toggle ---- */
         .env-toggle { display: flex; gap: 0.5rem; }
@@ -353,6 +361,19 @@
 
         <!-- ============ PATH PICKER ============ -->
         <div id="view-picker">
+            <div class="form-section">
+                <details class="std-credits">
+                    <summary>ℹ️ About FieldScribe &amp; help</summary>
+                    <div class="std-body">
+                        <p><strong>What it is.</strong> A phone-first tool to record biological and environmental sample metadata in the field and export the exact file each database wants (ERGA / DToL, BOLD, or ENA). No login, no account, nothing is sent to a server.</p>
+                        <p><strong>How it works.</strong> Pick a path, capture the on-site fields (GPS and date fill in for you), then finish the desk / lab fields later. Tap <strong>Export</strong> to get the ready-to-submit file.</p>
+                        <p><strong>Works offline.</strong> Once you have opened it with a connection, it works with no signal. Add it to your home screen (see the tip at the bottom of this page) to use it like an app.</p>
+                        <p><strong>Your data.</strong> Records are stored on this device only. Use <strong>Back up all data</strong> or Export to keep them safe - clearing your browser can erase them.</p>
+                        <p><strong>Camera scanning.</strong> Tap the 📷 button next to a Sample ID to scan a barcode. Allow camera access when your browser asks; if it is blocked, the scanner shows step-by-step how to turn it back on.</p>
+                        <p><strong>Found a bug or have an idea?</strong> Email <a href="mailto:olga.pettersson@scilifelab.se">olga.pettersson@scilifelab.se</a> or open an issue at <a href="https://github.com/OlgaVP-PB/FieldScribe/issues" target="_blank" rel="noopener">github.com/OlgaVP-PB/FieldScribe/issues</a>. No bug too small.</p>
+                    </div>
+                </details>
+            </div>
             <div class="form-section">
                 <div class="section-header">
                     <span class="section-icon">🧭</span>
@@ -825,10 +846,12 @@
     <!-- Barcode scanner modal -->
     <div id="scanner-overlay" class="scanner-overlay">
         <div class="scanner-box">
-            <h3>Scan tube barcode</h3>
+            <h3>Scan barcode</h3>
             <div id="reader"></div>
-            <div class="scanner-hint">Point the camera at the tube's barcode or QR code.</div>
+            <div class="scanner-hint" id="scanner-hint">Point the camera at the barcode or QR code. Tap <strong>Allow</strong> if your browser asks for the camera.</div>
+            <div class="scanner-help" id="scanner-help"></div>
             <div class="scanner-actions">
+                <button class="scanner-retry" id="scanner-retry" style="display:none;">Try again</button>
                 <button class="scanner-cancel" id="scanner-cancel">Cancel</button>
             </div>
         </div>
@@ -842,7 +865,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.4.1";
+    const APP_VERSION = "2.4.2";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -5149,8 +5172,17 @@
             return;
         }
         __scanTarget = targetInput;
-        const overlay = document.getElementById('scanner-overlay');
-        overlay.classList.add('show');
+        document.getElementById('scanner-overlay').classList.add('show');
+        startScanner();
+    }
+
+    function startScanner() {
+        // (re)set to the camera view
+        document.getElementById('reader').style.display = '';
+        document.getElementById('scanner-hint').style.display = '';
+        document.getElementById('scanner-help').classList.remove('show');
+        document.getElementById('scanner-retry').style.display = 'none';
+        if (__scanner) { try { __scanner.stop().catch(() => {}); } catch (e) {} }
         __scanner = new Html5Qrcode('reader');
         __scanner.start(
             { facingMode: 'environment' },
@@ -5164,10 +5196,40 @@
                 closeScanner();
             },
             () => {} // ignore per-frame decode errors
-        ).catch(() => {
-            showToast('Could not start camera — check permissions, or type the ID.');
-            closeScanner();
-        });
+        ).catch((err) => { showScannerHelp(err); });
+    }
+
+    // When the camera can't start, explain how to turn it on (people never read the README).
+    function showScannerHelp(err) {
+        if (__scanner) { try { __scanner.stop().catch(() => {}); } catch (e) {} __scanner = null; }
+        document.getElementById('reader').style.display = 'none';
+        document.getElementById('scanner-hint').style.display = 'none';
+        const s = ((err && (err.name || err.message)) || String(err || '')).toLowerCase();
+        const noCam = s.indexOf('notfound') !== -1 || s.indexOf('not found') !== -1 || s.indexOf('overconstrained') !== -1;
+        let html;
+        if (noCam) {
+            html = '<h4>No camera available</h4>' +
+                '<p>This device has no camera the browser can use. You can type the ID by hand instead.</p>';
+        } else {
+            html = '<h4>Camera access is off</h4>' +
+                '<p>The browser needs permission to use the camera. To turn it on:</p>' +
+                '<p><strong>iPhone / iPad (Safari)</strong></p>' +
+                '<ol>' +
+                '<li>Tap <strong>aA</strong> at the left of the address bar, then <strong>Website Settings</strong>.</li>' +
+                '<li>Set <strong>Camera</strong> to <strong>Allow</strong>, then tap <strong>Try again</strong> below.</li>' +
+                '<li>No aA menu? Open the <strong>Settings</strong> app → <strong>Safari</strong> → <strong>Camera</strong> → <strong>Allow</strong>.</li>' +
+                '</ol>' +
+                '<p><strong>Android (Chrome)</strong></p>' +
+                '<ol>' +
+                '<li>Tap the <strong>lock</strong> icon at the left of the address bar, then <strong>Permissions</strong>.</li>' +
+                '<li>Set <strong>Camera</strong> to <strong>Allow</strong>, then tap <strong>Try again</strong> below.</li>' +
+                '</ol>' +
+                '<p>Still stuck? Reload the page and try once, or just type the ID by hand.</p>';
+        }
+        const help = document.getElementById('scanner-help');
+        help.innerHTML = html;
+        help.classList.add('show');
+        document.getElementById('scanner-retry').style.display = noCam ? 'none' : '';
     }
 
     function closeScanner() {
@@ -5181,6 +5243,7 @@
     }
 
     document.getElementById('scanner-cancel').addEventListener('click', closeScanner);
+    document.getElementById('scanner-retry').addEventListener('click', startScanner);
 
     /* =================== TOAST =================== */
     function showToast(message) {
