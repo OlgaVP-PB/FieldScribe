@@ -300,14 +300,6 @@
             border-radius: 10px; padding: 0 0.9rem; font-size: 1.2rem; cursor: pointer;
         }
         .btn-scan:active { background: #8fb53c; }
-        /* ---- dictation (browser speech) ---- */
-        .dictate-btn { display:inline-flex; align-items:center; justify-content:center;
-            width:2.3rem; height:2.3rem; margin-left:0.4rem; border:none; border-radius:8px;
-            background:var(--accent); color:var(--primary-dark); font-size:1.05rem; cursor:pointer; vertical-align:middle; }
-        .dictate-btn.rec { background:var(--error); color:#fff; animation:dictpulse 1s infinite; }
-        .dictate-field-row { display:flex; gap:0.4rem; align-items:center; }
-        .dictate-field-row > input, .dictate-field-row > textarea { flex:1; }
-        @keyframes dictpulse { 50% { opacity:0.55; } }
         .scanner-overlay {
             display: none; position: fixed; inset: 0; z-index: 1000;
             background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center;
@@ -543,7 +535,7 @@
                 <div class="input-group">
                     <div class="form-group">
                         <label>Collected by<span class="required">*</span></label>
-                        <input type="text" id="f-collected-by" class="fs-dictate" placeholder="Full name">
+                        <input type="text" id="f-collected-by" placeholder="Full name">
                         <div class="help-text">Name of the person who collected the specimen.</div>
                     </div>
                     <div class="form-group">
@@ -577,7 +569,7 @@
                     </div>
                     <div class="form-group">
                         <label>Collection location<span class="required">*</span></label>
-                        <input type="text" id="f-location" class="fs-dictate" placeholder="Country / region / site">
+                        <input type="text" id="f-location" placeholder="Country / region / site">
                         <div class="help-text">Type levels separated by a slash, e.g. "Sweden / Uppsala / Fyrisån" (most general → most specific). Maps to COLLECTION_LOCATION.</div>
                     </div>
                 </div>
@@ -622,12 +614,12 @@
                 </div>
                 <div class="form-group">
                     <label>Habitat</label>
-                    <input type="text" id="f-habitat" class="fs-dictate" placeholder="e.g. river riffle, boreal forest floor">
+                    <input type="text" id="f-habitat" placeholder="e.g. river riffle, boreal forest floor">
                     <div class="help-text">Free-text habitat description.</div>
                 </div>
                 <div class="form-group">
                     <label>Description of collection method</label>
-                    <textarea id="f-method" class="fs-dictate" placeholder="e.g. electrofishing; hand net; pitfall trap"></textarea>
+                    <textarea id="f-method" placeholder="e.g. electrofishing; hand net; pitfall trap"></textarea>
                     <div class="help-text">How the specimen was obtained. Maps to DESCRIPTION_OF_COLLECTION_METHOD.</div>
                 </div>
 
@@ -893,7 +885,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.6.0";
+    const APP_VERSION = "2.6.1";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -5446,86 +5438,6 @@
 
     document.getElementById('scanner-cancel').addEventListener('click', closeScanner);
     document.getElementById('scanner-retry').addEventListener('click', startScanner);
-
-    /* =================== DICTATION (browser speech) ===================
-       Adds a mic to free-text fields (class fs-dictate). Uses the browser's
-       built-in speech recognition, which sends audio to the browser maker to
-       transcribe and needs a connection - disclosed on first use. Absent where
-       unsupported (e.g. iOS Safari). For fully on-device/offline dictation, see
-       the voice extension. */
-    (function () {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) return;                       // not supported here: no mic buttons
-        const SELECTOR = 'input.fs-dictate, textarea.fs-dictate';
-        let active = null;                      // { rec, field, btn }
-        let disclosed = false;
-
-        function stop() {
-            if (!active) return;
-            try { active.rec.onend = null; active.rec.stop(); } catch (e) {}
-            active.btn.classList.remove('rec'); active.btn.title = 'Dictate (online)';
-            active = null;
-        }
-
-        function start(field, btn) {
-            if (!disclosed) {
-                disclosed = true;
-                showToast("🎤 Dictation uses your browser's speech service - it sends the audio to the browser maker to transcribe and needs a connection.");
-            }
-            const rec = new SR();
-            rec.lang = navigator.language || 'en-US';
-            rec.interimResults = true;
-            rec.continuous = true;
-            let base = field.value || '';
-            rec.onresult = (e) => {
-                let finalTxt = '';
-                for (let i = e.resultIndex; i < e.results.length; i++) {
-                    if (e.results[i].isFinal) finalTxt += e.results[i][0].transcript;
-                }
-                if (finalTxt) {
-                    base = (base ? base.replace(/\s+$/, '') + ' ' : '') + finalTxt.trim();
-                    field.value = base;
-                    field.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-            };
-            rec.onerror = (e) => {
-                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') showToast('Microphone blocked - allow mic access to dictate.');
-                else if (e.error === 'network') showToast('Dictation needs a connection.');
-                stop();
-            };
-            rec.onend = () => { if (active && active.rec === rec) stop(); };
-            try { rec.start(); } catch (err) { showToast('Could not start dictation.'); return; }
-            btn.classList.add('rec'); btn.title = 'Stop dictation';
-            active = { rec, field, btn };
-        }
-
-        function attach(field) {
-            if (field.dataset.fsDictate === '1') return;
-            field.dataset.fsDictate = '1';
-            // wrap field + button in a row so they sit side by side
-            const row = document.createElement('div');
-            row.className = 'dictate-field-row';
-            field.parentNode.insertBefore(row, field);
-            row.appendChild(field);
-            const btn = document.createElement('button');
-            btn.type = 'button'; btn.className = 'dictate-btn'; btn.textContent = '🎤';
-            btn.title = 'Dictate (online)';
-            btn.setAttribute('aria-label', 'Dictate into this field');
-            row.appendChild(btn);
-            btn.addEventListener('click', () => {
-                if (active && active.field === field) { stop(); return; }
-                if (active) stop();
-                start(field, btn);
-            });
-        }
-
-        function scan() { document.querySelectorAll(SELECTOR).forEach(attach); }
-        if (document.readyState !== 'loading') scan();
-        else document.addEventListener('DOMContentLoaded', scan);
-        document.addEventListener('DOMContentLoaded', () => {
-            new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
-        });
-    })();
 
     /* =================== TOAST =================== */
     function showToast(message) {

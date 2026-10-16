@@ -4,6 +4,15 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.6.1] - 2026-10-16
+
+### Removed
+- **Free-text dictation (v2.6.0) removed.** In testing it underwhelmed: browser
+  recognition of open-ended speech was inaccurate, and a mic per field was too
+  much tapping for hands-busy field use. Voice is being redesigned around
+  closed-vocabulary, structured entry with a single trigger - see the roadmap.
+  (No more audio is sent to the browser's cloud.)
+
 ## [2.6.0] - 2026-10-16
 
 ### Added
@@ -243,6 +252,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.6.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.6.1
 [2.6.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.6.0
 [2.5.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.1
 [2.5.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.0
