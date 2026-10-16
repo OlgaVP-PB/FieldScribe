@@ -4,6 +4,17 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.6.0] - 2026-10-16
+
+### Added
+- **Dictation on free-text fields** (specimen path: Collected by, Collection
+  location, Habitat, Collection method). A microphone button lets you speak
+  instead of type, using the browser's built-in speech recognition. It is
+  disclosed on first use that this **sends the audio to the browser maker to
+  transcribe and needs a connection**, and the button is simply absent where the
+  browser doesn't support it (e.g. iOS Safari). For fully on-device, offline
+  dictation, the separate Vosk voice extension remains the route.
+
 ## [2.5.1] - 2026-10-16
 
 ### Changed
@@ -232,6 +243,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.6.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.6.0
 [2.5.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.1
 [2.5.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.0
 [2.4.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.2
