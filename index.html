@@ -885,7 +885,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.5.0";
+    const APP_VERSION = "2.5.1";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -4970,8 +4970,8 @@
 
     function downloadImportTemplate() {
         const cols = ['Specimen ID', 'Scientific name', 'Collected by', 'Date', 'Location', 'Tube ID', 'Collector sample ID', 'Organism part', 'Purpose', 'Sex', 'Lifestage'];
-        const ex1 = ['HERRING-01', 'Clupea harengus', 'Pawel Olszewski', '2026-06-18', 'Sweden / Studsvik', 'HERRING-01-01', 'HERRING-01-01', 'LIVER', 'REFERENCE_GENOME', 'MALE', 'adult'];
-        const ex2 = ['HERRING-01', 'Clupea harengus', 'Pawel Olszewski', '2026-06-18', 'Sweden / Studsvik', 'HERRING-01-02', 'HERRING-01-02', 'GONAD', 'RESEQUENCING', 'MALE', 'adult'];
+        const ex1 = ['SPECIMEN-01', 'Genus species', 'Collector name', '2026-06-18', 'Country / region / site', 'SPECIMEN-01-01', 'SPECIMEN-01-01', 'LIVER', 'REFERENCE_GENOME', '', 'adult'];
+        const ex2 = ['SPECIMEN-01', 'Genus species', 'Collector name', '2026-06-18', 'Country / region / site', 'SPECIMEN-01-02', 'SPECIMEN-01-02', 'MUSCLE', 'RESEQUENCING', '', 'adult'];
         const csv = [cols, ex1, ex2].map(r => r.map(csvEscape).join(',')).join('\n') + '\n';
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);

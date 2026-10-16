@@ -4,6 +4,13 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.5.1] - 2026-10-16
+
+### Changed
+- The downloadable import template now uses neutral placeholder rows
+  (SPECIMEN-01, Genus species, Collector name) instead of a specific tester's
+  example, since the app is shared across users.
+
 ## [2.5.0] - 2026-10-16
 
 Field-usability improvements from tester feedback (Pawel Olszewski, Leif
@@ -225,6 +232,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.5.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.1
 [2.5.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.0
 [2.4.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.2
 [2.4.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.1
