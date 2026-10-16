@@ -4,6 +4,30 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.5.0] - 2026-10-16
+
+Field-usability improvements from tester feedback (Pawel Olszewski, Leif
+Andersson's herring/Clupea group), all aimed at less typing and scrolling.
+
+### Added
+- **Type-to-filter tissue picker.** Each tube's Organism part checklist now has a
+  search box - type "liver", "gill", etc. to filter the 73-term list instead of
+  scrolling. Only the controlled ERGA terms stay selectable (validation-safe);
+  already-ticked items always stay visible.
+- **GPS fills the location.** Capturing GPS now prefills the Collection location
+  (country / region / place) via reverse-geocoding, so collectors don't retype
+  what GPS already knows. Online-only, best-effort, silent offline; never
+  overwrites a value you typed.
+- **Import / preload samples.** A new panel on the first page imports a sample
+  list from **CSV or Excel** (and offers a blank template). Rows become specimen
+  records - same Specimen ID across rows gives one specimen several tubes - ready
+  to complete and export. Perfect for repeat sampling templates. Organism part
+  and purpose are auto-uppercased/underscored to match the controlled terms.
+
+### Changed
+- **Wider-screen tube layout.** On laptop and tablet (>= 720px) the tube fields
+  lay out in two columns, cutting the scrolling when a specimen has many tubes.
+
 ## [2.4.2] - 2026-09-24
 
 ### Added
@@ -201,6 +225,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.5.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.0
 [2.4.2]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.2
 [2.4.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.1
 [2.4.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.4.0

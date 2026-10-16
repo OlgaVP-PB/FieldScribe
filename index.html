@@ -284,6 +284,13 @@
         .op-item:active { background: var(--bg); }
         .op-item input[type=checkbox] { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--primary); }
         .op-item:has(input:checked) { background: rgba(45,134,89,0.10); font-weight: 600; }
+        .op-filter { width: 100%; margin-bottom: 0.4rem; padding: 0.5rem 0.6rem; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.9rem; box-sizing: border-box; }
+        /* Wider screens (laptop/tablet): lay tube fields in two columns to cut scrolling. */
+        @media (min-width: 720px) {
+            .tube-card { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; align-items: start; }
+            .tube-card > .tube-card-head, .tube-card > .op-group { grid-column: 1 / -1; }
+        }
 
         /* ---- barcode scanner ---- */
         .tube-id-row { display: flex; gap: 0.5rem; align-items: stretch; }
@@ -402,6 +409,19 @@
                     </div>
                 </details>
             </div>
+            <div class="form-section">
+                <div class="section-header">
+                    <span class="section-icon">📥</span>
+                    <h2 class="section-title">Import / preload samples</h2>
+                </div>
+                <div class="help-text" style="margin-bottom:0.6rem;">Prepared a sample list in Excel or CSV - e.g. a repeat sampling template? Import it to create the records, then just complete and export. Use the blank template for the column names (put the same Specimen ID on several rows to give one specimen several tubes).</div>
+                <div class="btn-group" style="margin-top:0;">
+                    <button class="btn btn-primary" onclick="document.getElementById('import-file').click()">📥 Import samples (CSV / Excel)</button>
+                    <button class="btn btn-secondary" onclick="downloadImportTemplate()">⬇️ Blank template (CSV)</button>
+                    <input type="file" id="import-file" accept=".csv,.xlsx,.xls,text/csv" style="display:none" onchange="importSamples(event)">
+                </div>
+            </div>
+
             <div class="form-section" id="picker-saved-section" style="display:none;">
                 <div class="section-header">
                     <span class="section-icon">📦</span>
@@ -865,7 +885,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.4.2";
+    const APP_VERSION = "2.5.0";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -3812,6 +3832,7 @@
             displayGPSCoordinates();
             const s = document.getElementById('gps-status'), t = document.getElementById('gps-status-text');
             s.classList.add('active'); t.textContent = 'GPS: Manual';
+            reverseGeocodeFill(lat, lon);
         }
     }
     function toggleEdnaOptional() {
@@ -4208,8 +4229,31 @@
             displayGPSCoordinates();
             const s = document.getElementById('gps-status'), t = document.getElementById('gps-status-text');
             s.classList.add('active'); t.textContent = 'GPS: Manual';
+            reverseGeocodeFill(lat, lon);
         }
     }
+    // After GPS is captured, try to fill the location text from coordinates so the
+    // collector does not re-type what GPS already knows. Online-only; silent if offline.
+    async function reverseGeocodeFill(lat, lon) {
+        if (!navigator.onLine) return;
+        try {
+            const r = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lon + '&localityLanguage=en');
+            if (!r.ok) return;
+            const d = await r.json();
+            const parts = [d.countryName, d.principalSubdivision, (d.city || d.locality)]
+                .map(x => (x || '').trim()).filter(Boolean);
+            if (!parts.length) return;
+            let filled = false;
+            const f = document.getElementById('f-location');
+            if (f && !f.value.trim()) { f.value = parts.join(' / '); f.dispatchEvent(new Event('input', { bubbles: true })); filled = true; }
+            try {
+                const edc = document.getElementById(ednaInputId('geographic location (country and/or sea)'));
+                if (edc && !edc.value.trim() && d.countryName) { edc.value = d.countryName; edc.dispatchEvent(new Event('input', { bubbles: true })); filled = true; }
+            } catch (e) {}
+            if (filled) showToast('📍 Location filled from GPS — edit if needed');
+        } catch (e) { /* offline or blocked — leave manual entry */ }
+    }
+
     function getLocation() {
         if (!navigator.geolocation) { showToast('GPS not supported on this device'); return; }
         const s = document.getElementById('gps-status'), t = document.getElementById('gps-status-text');
@@ -4222,6 +4266,7 @@
                 displayGPSCoordinates();
                 s.classList.add('active'); t.textContent = 'GPS: Active';
                 showToast('GPS location captured!');
+                reverseGeocodeFill(p.coords.latitude, p.coords.longitude);
             },
             (err) => { showToast('GPS error: ' + err.message); t.textContent = 'GPS: Error'; }
         );
@@ -4273,6 +4318,33 @@
         });
         return opHtml;
     }
+
+    // Filter a tube's organism-part checklist as the user types (keeps checked items visible).
+    function filterOpChecklist(inp) {
+        const group = inp.closest('.form-group');
+        const list = group && group.querySelector('.op-checklist');
+        if (!list) return;
+        const q = inp.value.trim().toLowerCase().replace(/[\s_]+/g, '');
+        const kids = Array.from(list.children);
+        kids.forEach(el => {
+            if (!el.classList.contains('op-item')) return;
+            const cb = el.querySelector('input');
+            const v = cb.value.toLowerCase().replace(/[\s_]+/g, '');
+            el.style.display = (!q || v.indexOf(q) !== -1 || cb.checked) ? '' : 'none';
+        });
+        for (let i = 0; i < kids.length; i++) {
+            if (!kids[i].classList.contains('op-group-label')) continue;
+            let any = false;
+            for (let j = i + 1; j < kids.length; j++) {
+                if (kids[j].classList.contains('op-group-label')) break;
+                if (kids[j].classList.contains('op-item') && kids[j].style.display !== 'none') { any = true; break; }
+            }
+            kids[i].style.display = any ? '' : 'none';
+        }
+    }
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.classList && e.target.classList.contains('op-filter')) filterOpChecklist(e.target);
+    });
     function purposeOptionsHtml() {
         const purpose = MANIFEST_SCHEMA.controlled_vocabularies.PURPOSE_OF_SPECIMEN;
         let html = '<option value="">Select…</option>';
@@ -4319,10 +4391,11 @@
                 <input type="text" class="t-collector-sample-id" placeholder="auto">
                 <div class="help-text">Auto-generated from the Specimen ID (-01, -02, …); editable. Maps to COLLECTOR_SAMPLE_ID.</div>
             </div>
-            <div class="form-group">
+            <div class="form-group op-group">
                 <label>Organism part <span class="info-icon" data-tip="Tick one or more tissues. Hover an item for its ERGA definition. Combined with ' | '." aria-label="Tick one or more tissues; combined with a pipe.">i</span></label>
+                <input type="text" class="op-filter" placeholder="🔎 Type to find a tissue (e.g. liver, gill)…">
                 <div class="t-organism-part op-checklist">${orgPartChecklistHtml()}</div>
-                <div class="help-text">Tap to tick one or more tissues. Hover items for definitions. Exported pipe-separated.</div>
+                <div class="help-text">Type above to filter, then tap to tick one or more tissues. Hover for definitions. Exported pipe-separated.</div>
             </div>
             <div class="form-group">
                 <label>Purpose of specimen</label>
@@ -4785,6 +4858,127 @@
                 : 'Backup loaded - all its records were already here.');
         };
         reader.readAsText(file);
+    }
+
+    /* =================== IMPORT / PRELOAD SAMPLES =================== */
+    // Minimal CSV parser (handles quoted fields with commas/newlines). Returns array of arrays.
+    function parseCSV(text) {
+        const out = []; let row = [], field = '', inQ = false;
+        text = String(text).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        for (let i = 0; i < text.length; i++) {
+            const c = text[i];
+            if (inQ) {
+                if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else { inQ = false; } }
+                else { field += c; }
+            } else if (c === '"') { inQ = true; }
+            else if (c === ',') { row.push(field); field = ''; }
+            else if (c === '\n') { row.push(field); out.push(row); row = []; field = ''; }
+            else { field += c; }
+        }
+        if (field.length || row.length) { row.push(field); out.push(row); }
+        return out.filter(r => r.some(c => String(c == null ? '' : c).trim() !== ''));
+    }
+
+    // Map imported rows (array of arrays, first row = headers) to specimen records.
+    function rowsToRecords(rows) {
+        if (!rows || rows.length < 2) return [];
+        const norm = h => String(h == null ? '' : h).toLowerCase().replace(/[^a-z0-9]/g, '');
+        const headers = rows[0].map(norm);
+        const ALIAS = {
+            specimen: ['specimenid', 'specimen', 'baseid'],
+            scientificname: ['scientificname', 'species', 'taxon'],
+            collectedby: ['collectedby', 'collector'],
+            date: ['date', 'dateofcollection', 'collectiondate'],
+            location: ['location', 'collectionlocation'],
+            tubeid: ['tubeid', 'tubeorwellid', 'tubewellid', 'tube', 'well'],
+            collectorsampleid: ['collectorsampleid', 'collectorid'],
+            organismpart: ['organismpart', 'tissue', 'part'],
+            purpose: ['purpose', 'purposeofspecimen'],
+            sex: ['sex'],
+            lifestage: ['lifestage', 'stage']
+        };
+        const colOf = {};
+        Object.keys(ALIAS).forEach(key => {
+            for (let i = 0; i < headers.length; i++) { if (ALIAS[key].indexOf(headers[i]) !== -1) { colOf[key] = i; break; } }
+        });
+        const cell = (row, key) => { const i = colOf[key]; return (i === undefined) ? '' : String(row[i] == null ? '' : row[i]).trim(); };
+        const groups = new Map(); let auto = 0;
+        for (let r = 1; r < rows.length; r++) {
+            const row = rows[r];
+            if (!row || !row.some(c => String(c == null ? '' : c).trim() !== '')) continue;
+            let spec = cell(row, 'specimen'); if (!spec) spec = 'IMPORT-' + String(++auto).padStart(3, '0');
+            if (!groups.has(spec)) groups.set(spec, {
+                pathType: 'specimen', baseId: spec, scientificName: '', collectedBy: '', date: '', location: '',
+                individuals: [{ specimenId: spec, sex: '', lifestage: '', tubes: [] }]
+            });
+            const g = groups.get(spec);
+            g.scientificName = g.scientificName || cell(row, 'scientificname');
+            g.collectedBy = g.collectedBy || cell(row, 'collectedby');
+            g.date = g.date || cell(row, 'date');
+            g.location = g.location || cell(row, 'location');
+            const ind = g.individuals[0];
+            ind.sex = ind.sex || cell(row, 'sex');
+            ind.lifestage = ind.lifestage || cell(row, 'lifestage');
+            const op = cell(row, 'organismpart');
+            ind.tubes.push({
+                tubeId: cell(row, 'tubeid'),
+                collectorSampleId: cell(row, 'collectorsampleid') || (spec + '-' + String(ind.tubes.length + 1).padStart(2, '0')),
+                organismPart: op ? op.split(/[|,;/]/).map(s => s.trim().toUpperCase().replace(/\s+/g, '_')).filter(Boolean) : [],
+                purpose: cell(row, 'purpose').toUpperCase().replace(/\s+/g, '_')
+            });
+        }
+        return Array.from(groups.values());
+    }
+
+    function finishImport(rows) {
+        const recs = rowsToRecords(rows);
+        if (!recs.length) { showToast('No rows found — check the template columns.'); return; }
+        let tubes = 0;
+        recs.forEach(r => {
+            r._id = genId(); r.timestamp = new Date().toISOString();
+            tubes += r.individuals[0].tubes.length;
+            specimens.push(normalizeRecord(r));
+        });
+        localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
+        lastSpecimen = specimens.length ? specimens[specimens.length - 1] : null;
+        updateSpecimensList();
+        showToast('Imported ' + recs.length + ' specimen' + (recs.length === 1 ? '' : 's') +
+            ' (' + tubes + ' tube' + (tubes === 1 ? '' : 's') + '). Open each to complete & export.');
+    }
+
+    function importSamples(event) {
+        const file = event.target.files && event.target.files[0];
+        event.target.value = '';
+        if (!file) return;
+        const name = (file.name || '').toLowerCase();
+        const reader = new FileReader();
+        if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+            reader.onload = () => {
+                if (typeof XLSX === 'undefined' || window.__xlsxLibFailed) { showToast('Excel import needs a connection — or save your file as CSV.'); return; }
+                try {
+                    const wb = XLSX.read(new Uint8Array(reader.result), { type: 'array' });
+                    const ws = wb.Sheets[wb.SheetNames[0]];
+                    finishImport(XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, raw: false }));
+                } catch (e) { showToast('Could not read that Excel file.'); }
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            reader.onload = () => { try { finishImport(parseCSV(reader.result)); } catch (e) { showToast('Could not read that CSV file.'); } };
+            reader.readAsText(file);
+        }
+    }
+
+    function downloadImportTemplate() {
+        const cols = ['Specimen ID', 'Scientific name', 'Collected by', 'Date', 'Location', 'Tube ID', 'Collector sample ID', 'Organism part', 'Purpose', 'Sex', 'Lifestage'];
+        const ex1 = ['HERRING-01', 'Clupea harengus', 'Pawel Olszewski', '2026-06-18', 'Sweden / Studsvik', 'HERRING-01-01', 'HERRING-01-01', 'LIVER', 'REFERENCE_GENOME', 'MALE', 'adult'];
+        const ex2 = ['HERRING-01', 'Clupea harengus', 'Pawel Olszewski', '2026-06-18', 'Sweden / Studsvik', 'HERRING-01-02', 'HERRING-01-02', 'GONAD', 'RESEQUENCING', 'MALE', 'adult'];
+        const csv = [cols, ex1, ex2].map(r => r.map(csvEscape).join(',')).join('\n') + '\n';
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'fieldscribe-import-template.csv'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('Template downloaded — fill it in Excel, then Import. Same Specimen ID on several rows = several tubes.');
     }
 
     /* =================== CSV EXPORT =================== */
