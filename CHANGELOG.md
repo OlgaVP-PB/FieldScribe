@@ -4,6 +4,14 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.7.0] - 2026-10-16
+
+### Added
+- **Remembered collector identity.** Your name, affiliation, ORCID and
+  voucher institution are now saved on the device and pre-filled into every new
+  specimen session, so you enter them once rather than every time. First step of
+  the field-entry redesign (minimise what needs typing); specimen path for now.
+
 ## [2.6.1] - 2026-10-16
 
 ### Removed
@@ -252,6 +260,7 @@ Initial public release. See `releases/v1.0.0.md`.
 - Auto-fill collector and "use last location"; required-versus-optional fields.
 - CSV export for analysis and database import.
 
+[2.7.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.7.0
 [2.6.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.6.1
 [2.6.0]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.6.0
 [2.5.1]: https://github.com/OlgaVP-PB/FieldScribe/releases/tag/v2.5.1

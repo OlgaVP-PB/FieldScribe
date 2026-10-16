@@ -536,7 +536,7 @@
                     <div class="form-group">
                         <label>Collected by<span class="required">*</span></label>
                         <input type="text" id="f-collected-by" placeholder="Full name">
-                        <div class="help-text">Name of the person who collected the specimen.</div>
+                        <div class="help-text">Name of the person who collected the specimen. Your name, affiliation, ORCID and institution are remembered on this device for next time.</div>
                     </div>
                     <div class="form-group">
                         <label>Collector affiliation</label>
@@ -885,7 +885,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.6.1";
+    const APP_VERSION = "2.7.0";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -3741,7 +3741,13 @@
     document.getElementById('manifest-ver').textContent = MANIFEST_VERSION;
     document.getElementById('f-date').valueAsDate = new Date();
 
-    if (lastSpecimen) document.getElementById('f-collected-by').value = lastSpecimen.collectedBy || '';
+    (function () {
+        const pr = getCollectorProfile();
+        if (pr.collectedBy) document.getElementById('f-collected-by').value = pr.collectedBy;
+        if (pr.collectorAffiliation) document.getElementById('f-collector-affiliation').value = pr.collectorAffiliation;
+        if (pr.collectorOrcid) document.getElementById('f-collector-orcid').value = pr.collectorOrcid;
+        if (pr.institutionStoring) document.getElementById('f-institution-storing').value = pr.institutionStoring;
+    })();
     ensureIds();
     // Ask the browser to keep our data (resist automatic eviction, incl. iOS).
     if (navigator.storage && navigator.storage.persist) {
@@ -4637,6 +4643,7 @@
         }
         localStorage.setItem('fs_v2_specimens', JSON.stringify(specimens));
         lastSpecimen = record;
+        saveCollectorProfile();   // remember collector identity on this device
         editingIndex = -1;
         updateLastLocationButton();
         updateSpecimensList();
@@ -4644,9 +4651,27 @@
         backToPicker();
     }
 
+    // Collector identity, remembered on this device so it isn't re-typed each session.
+    function getCollectorProfile() {
+        try { return JSON.parse(localStorage.getItem('fs_v2_collector')) || {}; } catch (e) { return {}; }
+    }
+    function saveCollectorProfile() {
+        const p = {
+            collectedBy: document.getElementById('f-collected-by').value.trim(),
+            collectorAffiliation: document.getElementById('f-collector-affiliation').value.trim(),
+            collectorOrcid: document.getElementById('f-collector-orcid').value.trim(),
+            institutionStoring: document.getElementById('f-institution-storing').value.trim()
+        };
+        if (p.collectedBy || p.collectorAffiliation || p.collectorOrcid || p.institutionStoring)
+            localStorage.setItem('fs_v2_collector', JSON.stringify(p));
+    }
+
     function resetSpecimenForm(keepCommon) {
-        const keepCollector = keepCommon ? document.getElementById('f-collected-by').value : (lastSpecimen ? lastSpecimen.collectedBy : '');
-        const keepAff = keepCommon ? document.getElementById('f-collector-affiliation').value : (lastSpecimen ? lastSpecimen.collectorAffiliation : '');
+        const prof = getCollectorProfile();
+        const keepCollector = keepCommon ? document.getElementById('f-collected-by').value : (prof.collectedBy || '');
+        const keepAff = keepCommon ? document.getElementById('f-collector-affiliation').value : (prof.collectorAffiliation || '');
+        const keepOrcid = keepCommon ? document.getElementById('f-collector-orcid').value : (prof.collectorOrcid || '');
+        const keepInst = keepCommon ? document.getElementById('f-institution-storing').value : (prof.institutionStoring || '');
         ['f-scientific-name','f-phylum','f-class','f-order','f-family','f-genus','f-common-name','f-taxon-id',
          'f-collector-orcid','f-institution-storing','f-location','f-habitat','f-depth','f-elevation','f-method',
          'f-base-id','f-lat-start','f-lon-start','f-lat-end','f-lon-end',
@@ -4656,6 +4681,8 @@
         document.getElementById('f-date').valueAsDate = new Date();
         document.getElementById('f-collected-by').value = keepCollector || '';
         document.getElementById('f-collector-affiliation').value = keepAff || '';
+        document.getElementById('f-collector-orcid').value = keepOrcid || '';
+        document.getElementById('f-institution-storing').value = keepInst || '';
         document.getElementById('transect-toggle').checked = false; toggleTransect();
         document.getElementById('origin-toggle').checked = false; toggleOrigin();
         document.getElementById('individuals-container').innerHTML = '';
