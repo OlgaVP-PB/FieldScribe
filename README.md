@@ -88,9 +88,10 @@ Export is **purpose-routed**, one row per tube:
 - All other purposes export to the **BGE-ERGA PopGenomics manifest** (identical
   91-column header).
 - Both are written as **CSV and Excel (`.xlsx`)**, since COPO ingests xlsx.
-- A **BOLD / iBOL** export (Specimen Template v3.0) is available for barcoding: a
-  four-sheet `.xlsx` with vocabulary, date, and location mapping, plus a
-  sectioned-CSV fallback offline.
+- A **BOLD5 / BCDM** export (Barcode Core Data Model single-sheet template) is
+  available for barcoding: one `Submissions` sheet of 50 columns as `.xlsx`, with
+  vocabulary, ISO-date, and location mapping, plus a CSV fallback offline. This
+  replaces the retired BOLD v3.0 four-sheet template.
 
 Only non-empty classes download, so you get exactly the files your samples need.
 
@@ -158,7 +159,8 @@ or manifest is a re-extract into one object, not a rewrite:
 - `schema/manifest-2.5.1.json` for the canonical ERGA v2.5.1 (91 columns,
   controlled vocabularies, organism-part definitions), shared by the ERGA/DToL
   and PopGenomics exports.
-- `schema/bold-template-3.0.json` for the BOLD Specimen Template v3.0 mapping.
+- `schema/bold-template-bcdm.json` for the BOLD5 / BCDM single-sheet mapping
+  (50 columns, controlled vocabularies). Replaces the retired v3.0 mapping.
 - `schema/mixs-*.json` for the ten ENA environmental checklists, generated from
   the live ENA definitions.
 
@@ -177,7 +179,7 @@ so Serve storage is None.
 | `index.html` | The whole app; open in any modern browser. |
 | `manifest.webmanifest`, `sw.js` | PWA manifest and service worker (installable, offline). |
 | `schema/manifest-2.5.1.json` | Canonical ERGA v2.5.1 schema (specimen exports). |
-| `schema/bold-template-3.0.json` | BOLD Specimen Template v3.0 mapping. |
+| `schema/bold-template-bcdm.json` | BOLD5 / BCDM single-sheet mapping (50 columns). |
 | `schema/mixs-*.json` | The ten ENA environmental checklists. |
 | `Dockerfile`, `nginx.conf`, `start-script.sh`, `.dockerignore` | SciLifeLab Serve packaging. |
 | `SERVE_DEPLOY.md` | How to deploy on Serve. |

@@ -435,7 +435,7 @@
                         📊 ERGA manifest (CSV + Excel)
                     </button>
                     <button class="btn btn-accent" onclick="exportBOLD()" id="picker-export-bold-btn">
-                        🧬 BOLD / iBOL (Excel)
+                        🧬 BOLD5 / BCDM (Excel)
                     </button>
                 </div>
             </div>
@@ -828,7 +828,7 @@
                     📊 ERGA manifest (CSV + Excel)
                 </button>
                 <button class="btn btn-accent" onclick="exportBOLD()" id="export-bold-btn" disabled>
-                    🧬 BOLD / iBOL (Excel)
+                    🧬 BOLD5 / BCDM (Excel)
                 </button>
             </div>
         </div>
@@ -885,7 +885,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.7.0";
+    const APP_VERSION = "2.8.0";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -5207,30 +5207,47 @@
         );
     }
 
-    /* =================== BOLD / iBOL EXPORT =================== */
-    /* Sheet definitions — column order matches bold-template-3.0.json exactly. */
-    const BOLD_SHEETS = {
-        "Voucher Info": ["Sample ID", "Field ID", "Museum ID", "Collection Code", "Institution Storing"],
-        "Taxonomy": ["Sample ID", "Phylum", "Class", "Order", "Family", "Subfamily", "Genus", "Species", "Identifier", "Identifier Email", "Identifier Institution", "Identification Method", "Tax Notes"],
-        "Specimen Details": ["Sample ID", "Sex", "Reproduction", "Life Stage", "Extra Info", "Notes", "Voucher Status", "Tissue Descriptor", "Associated Taxa", "Associated Specimens", "External URLs"],
-        "Collection Data": ["Sample ID", "Collectors", "Collection Event ID", "Collection Date", "Date Accuracy", "Event Time", "Country/Ocean", "State/Province", "Region", "Sector", "Exact Site", "Site Code", "Habitat", "Sampling Protocol", "Latitude", "Longitude", "Coordinate Accuracy", "Coordinate Source", "Elevation", "Elevation Precision", "Depth", "Depth Precision", "Collection Notes"]
-    };
+    /* =================== BOLD / iBOL EXPORT (BCDM single-sheet) =================== */
+    /*
+     * BOLD5 BCDM (Barcode Core Data Model) submission: one "Submissions" sheet,
+     * 50 columns in the exact order BOLD's template uses. Replaces the retired
+     * v3.0 four-sheet template (BOLD retired v3.0 in 2026). Column headers and
+     * controlled vocabularies verified against boldsystems-central/BCDM
+     * (field_definitions.tsv). BOLD fuzzy-matches recommended-vocab values and
+     * keeps the verbatim entry, so near-misses are tolerated; we still map to the
+     * canonical terms where we can.
+     */
+    const BCDM_COLUMNS = [
+        "SAMPLEID", "FIELDID", "MUSEUMID", "COLLECTION_CODE", "INST",
+        "FUNDING_SRC", "PHYLUM", "CLASS", "ORDER", "FAMILY", "SUBFAMILY",
+        "TRIBE", "GENUS", "SPECIES", "SUBSPECIES", "IDENTIFIED_BY",
+        "IDENTIFICATION_METHOD", "TAXONOMY_NOTES", "SEX", "REPRODUCTION",
+        "LIFE_STAGE", "SHORT_NOTE", "NOTES", "VOUCHER_TYPE", "TISSUE_TYPE",
+        "SPECIMEN_LINKOUT", "ASSOCIATED_TAXA", "ASSOCIATED_SPECIMENS", "COLLECTORS",
+        "COLLECTION_DATE_START", "COLLECTION_DATE_END", "COUNTRY/OCEAN",
+        "PROVINCE/STATE", "REGION", "SECTOR", "SITE", "COORD:LAT", "COORD:LON",
+        "ELEV", "DEPTH", "ELEV_ACCURACY", "DEPTH_ACCURACY", "COORD_SOURCE",
+        "COORD_ACCURACY", "COLLECTION_TIME", "HABITAT", "SAMPLING_PROTOCOL",
+        "COLLECTION_NOTES", "SITE_CODE", "COLLECTION_EVENT_ID"
+    ];
 
-    const BOLD_MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-
-    function boldSex(v) {
-        switch (v) {
+    /* Sex: BCDM controlled vocabulary is 'Male','female','hermaphrodite' only
+     * (field_definitions.tsv). No "undetermined" term, so unknowns stay blank. */
+    function bcdmSex(v) {
+        switch ((v || '').toUpperCase()) {
+            case 'MALE': return 'Male';
             case 'FEMALE': return 'female';
-            case 'MALE': return 'male';
             case 'HERMAPHRODITE_MONOECIOUS': return 'hermaphrodite';
             default: return '';
         }
     }
-    function boldLifeStage(v) {
-        switch (v) {
+    /* Life stage: BCDM vocabulary is 'Adult','Immature','Juvenile','Pupa'.
+     * Immature is BOLD's catch-all; ERGA's larva/egg/embryo/zygote map to it. */
+    function bcdmLifeStage(v) {
+        switch ((v || '').toUpperCase()) {
             case 'ADULT': return 'Adult';
-            case 'PUPA': return 'pupa';
-            case 'JUVENILE':
+            case 'JUVENILE': return 'Juvenile';
+            case 'PUPA': return 'Pupa';
             case 'LARVA':
             case 'EMBRYO':
             case 'EGG':
@@ -5238,100 +5255,92 @@
             default: return '';
         }
     }
-    function boldTissueDescriptor(parts) {
+    /* Tissue type is free text in BCDM (no controlled vocabulary). */
+    function bcdmTissueType(parts) {
         return (parts || []).join(', ').toLowerCase().replace(/_/g, ' ');
     }
-    function boldDate(d) {
-        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || '');
-        if (!m) return d || '';
-        const month = BOLD_MONTHS[parseInt(m[2], 10) - 1];
-        if (!month) return d;
-        return `${m[3]}-${month}-${m[1]}`;
+    /* BCDM dates are ISO 8601 (%Y-%m-%d) - which is how we already store them. */
+    function bcdmDate(d) {
+        return /^\d{4}-\d{2}-\d{2}$/.test(d || '') ? d : (d || '');
     }
-    function boldLocationParts(loc) {
+    function bcdmLocationParts(loc) {
         const parts = String(loc || '').split(/[\/|]/).map(p => p.trim());
         return {
             country: parts[0] || '',
             state: parts[1] || '',
             region: parts[2] || '',
             sector: parts[3] || '',
-            exactSite: parts.slice(4).filter(Boolean).join(' | ')
+            site: parts.slice(4).filter(Boolean).join(' | ')
         };
     }
 
-    /* Build the data row object for one tube within an individual, per field_mapping. */
-    function boldRecord(s, individual, tube) {
-        const lp = boldLocationParts(s.location);
+    /* Build one BCDM row (object keyed by column) for one tube. */
+    function bcdmRecord(s, individual, tube) {
+        const lp = bcdmLocationParts(s.location);
         const hasCoords = (s.latitude !== undefined && s.latitude !== null && s.latitude !== '' &&
                            s.longitude !== undefined && s.longitude !== null && s.longitude !== '');
-        const sex = (individual.sex || '').toUpperCase();
-        const lifestage = (individual.lifestage || '').toUpperCase();
-        // Sex/Life Stage vocab in the form is upper or lower depending; normalise via toUpperCase.
+        const coordAccuracy = (s.accuracy !== undefined && s.accuracy !== null &&
+                               s.accuracy !== '' && s.accuracy !== 'manual' && !isNaN(s.accuracy))
+                               ? s.accuracy : '';
         const rec = {};
-        // Voucher Info
-        rec["Sample ID"] = tube.collectorSampleId || '';
-        rec["Field ID"] = tube.collectorSampleId || '';
-        rec["Museum ID"] = '';
-        rec["Collection Code"] = '';
-        rec["Institution Storing"] = s.institutionStoring || s.collectorAffiliation || '';
-        // Taxonomy
-        rec["Phylum"] = s.phylum || '';
-        rec["Class"] = s.class || '';
-        rec["Order"] = s.order || '';
-        rec["Family"] = s.family || '';
-        rec["Subfamily"] = '';
-        rec["Genus"] = s.genus || '';
-        rec["Species"] = s.scientificName || '';
-        rec["Identifier"] = '';
-        rec["Identifier Email"] = '';
-        rec["Identifier Institution"] = '';
-        rec["Identification Method"] = '';
-        rec["Tax Notes"] = '';
-        // Specimen Details
-        rec["Sex"] = boldSex(sex);
-        rec["Reproduction"] = '';
-        rec["Life Stage"] = boldLifeStage(lifestage);
-        rec["Extra Info"] = '';
-        rec["Notes"] = '';
-        rec["Voucher Status"] = '';
-        rec["Tissue Descriptor"] = boldTissueDescriptor(tube.organismPart);
-        rec["Associated Taxa"] = '';
-        rec["Associated Specimens"] = '';
-        rec["External URLs"] = '';
-        // Collection Data
-        rec["Collectors"] = s.collectedBy || '';
-        rec["Collection Event ID"] = '';
-        rec["Collection Date"] = boldDate(s.date);
-        rec["Date Accuracy"] = '';
-        rec["Event Time"] = s.time || '';
-        rec["Country/Ocean"] = lp.country;
-        rec["State/Province"] = lp.state;
-        rec["Region"] = lp.region;
-        rec["Sector"] = lp.sector;
-        rec["Exact Site"] = lp.exactSite;
-        rec["Site Code"] = '';
-        rec["Habitat"] = s.habitat || '';
-        rec["Sampling Protocol"] = s.method || '';
-        rec["Latitude"] = hasCoords ? s.latitude : '';
-        rec["Longitude"] = hasCoords ? s.longitude : '';
-        rec["Coordinate Accuracy"] = (s.accuracy !== undefined && s.accuracy !== null &&
-                                      s.accuracy !== '' && s.accuracy !== 'manual' && !isNaN(s.accuracy))
-                                      ? s.accuracy : '';
-        rec["Coordinate Source"] = (hasCoords && s.accuracy !== 'manual') ? 'GPS' : (hasCoords ? 'manual entry' : '');
-        rec["Elevation"] = s.elevation || '';
-        rec["Elevation Precision"] = '';
-        rec["Depth"] = s.depth || '';
-        rec["Depth Precision"] = '';
-        rec["Collection Notes"] = '';
+        rec["SAMPLEID"] = tube.collectorSampleId || '';
+        rec["FIELDID"] = tube.collectorSampleId || '';
+        rec["MUSEUMID"] = '';
+        rec["COLLECTION_CODE"] = '';
+        rec["INST"] = s.institutionStoring || s.collectorAffiliation || '';
+        rec["FUNDING_SRC"] = '';
+        rec["PHYLUM"] = s.phylum || '';
+        rec["CLASS"] = s.class || '';
+        rec["ORDER"] = s.order || '';
+        rec["FAMILY"] = s.family || '';
+        rec["SUBFAMILY"] = '';
+        rec["TRIBE"] = '';
+        rec["GENUS"] = s.genus || '';
+        rec["SPECIES"] = s.scientificName || '';
+        rec["SUBSPECIES"] = '';
+        rec["IDENTIFIED_BY"] = '';
+        rec["IDENTIFICATION_METHOD"] = '';
+        rec["TAXONOMY_NOTES"] = '';
+        rec["SEX"] = bcdmSex(individual.sex);
+        rec["REPRODUCTION"] = '';
+        rec["LIFE_STAGE"] = bcdmLifeStage(individual.lifestage);
+        rec["SHORT_NOTE"] = '';
+        rec["NOTES"] = '';
+        rec["VOUCHER_TYPE"] = '';
+        rec["TISSUE_TYPE"] = bcdmTissueType(tube.organismPart);
+        rec["SPECIMEN_LINKOUT"] = '';
+        rec["ASSOCIATED_TAXA"] = '';
+        rec["ASSOCIATED_SPECIMENS"] = '';
+        rec["COLLECTORS"] = s.collectedBy || '';
+        rec["COLLECTION_DATE_START"] = bcdmDate(s.date);
+        rec["COLLECTION_DATE_END"] = '';
+        rec["COUNTRY/OCEAN"] = lp.country;
+        rec["PROVINCE/STATE"] = lp.state;
+        rec["REGION"] = lp.region;
+        rec["SECTOR"] = lp.sector;
+        rec["SITE"] = lp.site;
+        rec["COORD:LAT"] = hasCoords ? s.latitude : '';
+        rec["COORD:LON"] = hasCoords ? s.longitude : '';
+        rec["ELEV"] = s.elevation || '';
+        rec["DEPTH"] = s.depth || '';
+        rec["ELEV_ACCURACY"] = '';
+        rec["DEPTH_ACCURACY"] = '';
+        rec["COORD_SOURCE"] = (hasCoords && s.accuracy !== 'manual') ? 'GPS' : (hasCoords ? 'manual entry' : '');
+        rec["COORD_ACCURACY"] = coordAccuracy;
+        rec["COLLECTION_TIME"] = s.time || '';
+        rec["HABITAT"] = s.habitat || '';
+        rec["SAMPLING_PROTOCOL"] = s.method || '';
+        rec["COLLECTION_NOTES"] = '';
+        rec["SITE_CODE"] = '';
+        rec["COLLECTION_EVENT_ID"] = '';
         return rec;
     }
 
-    /* Build an array-of-rows (header + data) for one sheet from all tubes. */
-    function boldSheetRows(sheetName, records) {
-        const cols = BOLD_SHEETS[sheetName];
-        const rows = [cols.slice()];
+    /* Array-of-rows: header row + one data row per record. */
+    function bcdmRows(records) {
+        const rows = [BCDM_COLUMNS.slice()];
         records.forEach(rec => {
-            rows.push(cols.map(c => {
+            rows.push(BCDM_COLUMNS.map(c => {
                 const v = rec[c];
                 return (v === undefined || v === null) ? '' : v;
             }));
@@ -5342,43 +5351,36 @@
     function exportBOLD() {
         const specimenRecords = specimens.filter(s => s.pathType !== 'edna');
         if (specimenRecords.length === 0) { showToast('No specimens to export'); return; }
-        // one record per tube, across all individuals across all records
+        // one row per tube, across all individuals across all specimen records
         const records = [];
         specimenRecords.forEach(s => {
             (s.individuals || []).forEach(ind => {
-                (ind.tubes || []).forEach(tube => records.push(boldRecord(s, ind, tube)));
+                (ind.tubes || []).forEach(tube => records.push(bcdmRecord(s, ind, tube)));
             });
         });
+        if (records.length === 0) { showToast('No tubes to export'); return; }
         const dateStr = new Date().toISOString().split('T')[0];
+        const rows = bcdmRows(records);
 
         if (!window.__xlsxLibFailed && typeof XLSX !== 'undefined') {
             const wb = XLSX.utils.book_new();
-            Object.keys(BOLD_SHEETS).forEach(sheetName => {
-                const ws = XLSX.utils.aoa_to_sheet(boldSheetRows(sheetName, records));
-                XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            });
-            XLSX.writeFile(wb, `fieldscribe-BOLD-${dateStr}.xlsx`);
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+            XLSX.utils.book_append_sheet(wb, ws, 'Submissions');
+            XLSX.writeFile(wb, `fieldscribe-BOLD-BCDM-${dateStr}.xlsx`);
             markDataSaved();
-            showToast('Exported BOLD / iBOL workbook (.xlsx)! 🧬');
+            showToast('Exported BOLD5 / BCDM submission (.xlsx)! 🧬');
         } else {
-            // Offline fallback: one concatenated CSV, clearly sectioned per sheet.
-            let csv = '';
-            Object.keys(BOLD_SHEETS).forEach(sheetName => {
-                csv += `### ${sheetName} ###\n`;
-                boldSheetRows(sheetName, records).forEach(r => {
-                    csv += r.map(csvEscape).join(',') + '\n';
-                });
-                csv += '\n';
-            });
+            // Offline fallback: single CSV, same columns.
+            const csv = rows.map(r => r.map(csvEscape).join(',')).join('\n');
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `fieldscribe-BOLD-${dateStr}.csv`;
+            a.download = `fieldscribe-BOLD-BCDM-${dateStr}.csv`;
             a.click();
             URL.revokeObjectURL(url);
             markDataSaved();
-            showToast('Offline: BOLD sheets exported as one sectioned CSV. The .xlsx needs a connection. 📶');
+            showToast('Offline: BOLD5 / BCDM exported as CSV. The .xlsx needs a connection. 📶');
         }
     }
 

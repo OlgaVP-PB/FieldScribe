@@ -4,6 +4,26 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.8.0] - 2026-11-23
+
+### Changed
+- **BOLD export now follows the BOLD5 / BCDM single-sheet template**, replacing
+  the retired four-sheet v3.0 template (BOLD retired v3.0 in 2026). The export is
+  now one `Submissions` sheet with the 50 BCDM columns in BOLD's order. Column
+  names and controlled vocabularies were verified against the official
+  `boldsystems-central/BCDM` repository (`field_definitions.tsv`).
+  - **Sex** maps to BCDM's `Male` / `female` / `hermaphrodite`; unknowns stay blank.
+  - **Life stage** maps to `Adult` / `Immature` / `Juvenile` / `Pupa`
+    (larva, egg, embryo and zygote fold into `Immature`, BOLD's catch-all).
+  - **Dates** are ISO `YYYY-MM-DD` (BCDM's format), not the old `DD-MMM-YYYY`.
+  - **Tissue type** is free text (BCDM has no controlled vocabulary for it).
+  - BOLD fuzzy-matches recommended-vocabulary values and keeps your verbatim
+    entry, so near-misses are tolerated.
+  - The button is relabelled **BOLD5 / BCDM (Excel)**; files are named
+    `fieldscribe-BOLD-BCDM-<date>.xlsx` (offline CSV fallback unchanged).
+- Added `schema/bold-template-bcdm.json` as the authoritative field reference;
+  retired `schema/bold-template-3.0.json`.
+
 ## [2.7.0] - 2026-10-16
 
 ### Added

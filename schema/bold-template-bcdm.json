@@ -1,0 +1,68 @@
+{
+  "name": "BOLD5 BCDM Specimen Submission (single sheet)",
+  "sheet": "Submissions",
+  "source": "https://github.com/boldsystems-central/BCDM (field_definitions.tsv); column order from BOLD5_BCDM_Specimen_Submission_SinglePage.xlsx",
+  "note": "Replaces the retired BOLD v3.0 four-sheet template (BOLD retired v3.0 in 2026). BCDM is a flat single-sheet model. BOLD fuzzy-matches recommended-vocabulary values and retains the verbatim entry, so near-misses are tolerated.",
+  "column_count": 50,
+  "columns": [
+    "SAMPLEID", "FIELDID", "MUSEUMID", "COLLECTION_CODE", "INST", "FUNDING_SRC",
+    "PHYLUM", "CLASS", "ORDER", "FAMILY", "SUBFAMILY", "TRIBE", "GENUS", "SPECIES",
+    "SUBSPECIES", "IDENTIFIED_BY", "IDENTIFICATION_METHOD", "TAXONOMY_NOTES",
+    "SEX", "REPRODUCTION", "LIFE_STAGE", "SHORT_NOTE", "NOTES", "VOUCHER_TYPE",
+    "TISSUE_TYPE", "SPECIMEN_LINKOUT", "ASSOCIATED_TAXA", "ASSOCIATED_SPECIMENS",
+    "COLLECTORS", "COLLECTION_DATE_START", "COLLECTION_DATE_END", "COUNTRY/OCEAN",
+    "PROVINCE/STATE", "REGION", "SECTOR", "SITE", "COORD:LAT", "COORD:LON",
+    "ELEV", "DEPTH", "ELEV_ACCURACY", "DEPTH_ACCURACY", "COORD_SOURCE",
+    "COORD_ACCURACY", "COLLECTION_TIME", "HABITAT", "SAMPLING_PROTOCOL",
+    "COLLECTION_NOTES", "SITE_CODE", "COLLECTION_EVENT_ID"
+  ],
+  "date_format": "%Y-%m-%d",
+  "controlled_vocabularies": {
+    "SEX": ["Male", "female", "hermaphrodite"],
+    "REPRODUCTION": ["Sexual", "asexual", "cyclic parthenogen"],
+    "LIFE_STAGE": ["Adult", "Immature", "Juvenile", "Pupa"],
+    "VOUCHER_TYPE": [
+      "Museum Vouchered:Type", "Museum Vouchered:Type Series",
+      "Vouchered:Registered Collection", "To Be Vouchered:Holdup/Private",
+      "E-Vouchered:DNA/Tissue+Photo", "Dna/Tissue Vouchered Only", "No Specimen"
+    ]
+  },
+  "field_mapping": {
+    "SAMPLEID": "tube.collectorSampleId",
+    "FIELDID": "tube.collectorSampleId",
+    "INST": "specimen.institutionStoring || specimen.collectorAffiliation",
+    "PHYLUM": "specimen.phylum",
+    "CLASS": "specimen.class",
+    "ORDER": "specimen.order",
+    "FAMILY": "specimen.family",
+    "GENUS": "specimen.genus",
+    "SPECIES": "specimen.scientificName",
+    "SEX": "individual.sex -> Male/female/hermaphrodite",
+    "LIFE_STAGE": "individual.lifestage -> Adult/Immature/Juvenile/Pupa (larva/egg/embryo/zygote -> Immature)",
+    "TISSUE_TYPE": "tube.organismPart (free text, comma-joined, lowercased)",
+    "COLLECTORS": "specimen.collectedBy",
+    "COLLECTION_DATE_START": "specimen.date (ISO yyyy-mm-dd)",
+    "COUNTRY/OCEAN": "specimen.location field 1 (split on / or |)",
+    "PROVINCE/STATE": "specimen.location field 2",
+    "REGION": "specimen.location field 3",
+    "SECTOR": "specimen.location field 4",
+    "SITE": "specimen.location fields 5+",
+    "COORD:LAT": "specimen.latitude",
+    "COORD:LON": "specimen.longitude",
+    "ELEV": "specimen.elevation",
+    "DEPTH": "specimen.depth",
+    "COORD_SOURCE": "GPS or manual entry",
+    "COORD_ACCURACY": "specimen.accuracy (metres, DD)",
+    "COLLECTION_TIME": "specimen.time",
+    "HABITAT": "specimen.habitat",
+    "SAMPLING_PROTOCOL": "specimen.method"
+  },
+  "not_captured_in_fieldscribe": [
+    "MUSEUMID", "COLLECTION_CODE", "FUNDING_SRC", "SUBFAMILY", "TRIBE",
+    "SUBSPECIES", "IDENTIFIED_BY", "IDENTIFICATION_METHOD", "TAXONOMY_NOTES",
+    "REPRODUCTION", "SHORT_NOTE", "NOTES", "VOUCHER_TYPE", "SPECIMEN_LINKOUT",
+    "ASSOCIATED_TAXA", "ASSOCIATED_SPECIMENS", "COLLECTION_DATE_END",
+    "ELEV_ACCURACY", "DEPTH_ACCURACY", "COLLECTION_NOTES", "SITE_CODE",
+    "COLLECTION_EVENT_ID"
+  ]
+}
