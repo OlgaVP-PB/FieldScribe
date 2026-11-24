@@ -37,6 +37,9 @@
     "FAMILY": "specimen.family",
     "GENUS": "specimen.genus",
     "SPECIES": "specimen.scientificName",
+    "SUBSPECIES": "specimen.subspecies",
+    "IDENTIFIED_BY": "specimen.identifiedBy",
+    "SITE_CODE": "specimen.siteCode",
     "SEX": "individual.sex -> Male/female/hermaphrodite",
     "LIFE_STAGE": "individual.lifestage -> Adult/Immature/Juvenile/Pupa (larva/egg/embryo/zygote -> Immature)",
     "TISSUE_TYPE": "tube.organismPart (free text, comma-joined, lowercased)",
@@ -59,10 +62,9 @@
   },
   "not_captured_in_fieldscribe": [
     "MUSEUMID", "COLLECTION_CODE", "FUNDING_SRC", "SUBFAMILY", "TRIBE",
-    "SUBSPECIES", "IDENTIFIED_BY", "IDENTIFICATION_METHOD", "TAXONOMY_NOTES",
-    "REPRODUCTION", "SHORT_NOTE", "NOTES", "VOUCHER_TYPE", "SPECIMEN_LINKOUT",
-    "ASSOCIATED_TAXA", "ASSOCIATED_SPECIMENS", "COLLECTION_DATE_END",
-    "ELEV_ACCURACY", "DEPTH_ACCURACY", "COLLECTION_NOTES", "SITE_CODE",
-    "COLLECTION_EVENT_ID"
+    "IDENTIFICATION_METHOD", "TAXONOMY_NOTES", "REPRODUCTION", "SHORT_NOTE",
+    "NOTES", "VOUCHER_TYPE", "SPECIMEN_LINKOUT", "ASSOCIATED_TAXA",
+    "ASSOCIATED_SPECIMENS", "COLLECTION_DATE_END", "ELEV_ACCURACY",
+    "DEPTH_ACCURACY", "COLLECTION_NOTES", "COLLECTION_EVENT_ID"
   ]
 }

@@ -4,6 +4,15 @@ All notable changes to **FieldScribe** are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/);
 versioning follows [SemVer](https://semver.org/) (see `VERSIONING.md`).
 
+## [2.9.0] - 2026-11-24
+
+### Added
+- **Three optional BCDM fields now captured in the field**, on Ben Price's
+  (NHMUK) recommendation: **Subspecies** and **Identified by** (taxonomy section)
+  and **Site code** (collection section). All optional; they flow straight into
+  the BOLD5 / BCDM export's `SUBSPECIES`, `IDENTIFIED_BY` and `SITE_CODE` columns,
+  which were previously exported blank.
+
 ## [2.8.0] - 2026-11-23
 
 ### Changed

@@ -523,6 +523,18 @@
                     <input type="text" id="f-taxon-id" placeholder="e.g. 8030">
                     <div class="help-text">Look up on NCBI later if unknown — leave blank if uncertain.</div>
                 </div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label>Subspecies</label>
+                        <input type="text" id="f-subspecies" placeholder="e.g. trutta">
+                        <div class="help-text">Optional. Maps to BOLD5 / BCDM SUBSPECIES.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Identified by</label>
+                        <input type="text" id="f-identified-by" placeholder="Full name">
+                        <div class="help-text">Optional. Who identified the specimen. Maps to BOLD5 / BCDM IDENTIFIED_BY.</div>
+                    </div>
+                </div>
                 <div class="help-text">Sex and life stage are set per individual on the cards below.</div>
             </div>
 
@@ -572,6 +584,11 @@
                         <input type="text" id="f-location" placeholder="Country / region / site">
                         <div class="help-text">Type levels separated by a slash, e.g. "Sweden / Uppsala / Fyrisån" (most general → most specific). Maps to COLLECTION_LOCATION.</div>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Site code</label>
+                    <input type="text" id="f-site-code" placeholder="Short code for this location">
+                    <div class="help-text">Optional. A short string representing the sampling location. Maps to BOLD5 / BCDM SITE_CODE.</div>
                 </div>
 
                 <div class="form-group">
@@ -885,7 +902,7 @@
 
     <script>
     /* =================== EMBEDDED SCHEMA =================== */
-    const APP_VERSION = "2.8.0";
+    const APP_VERSION = "2.9.0";
 
     // Register the service worker so the app opens offline once loaded online.
     // (Keep the VERSION in sw.js equal to APP_VERSION above on each release.)
@@ -4598,8 +4615,10 @@
             order: document.getElementById('f-order').value.trim(),
             family: document.getElementById('f-family').value.trim(),
             genus: document.getElementById('f-genus').value.trim(),
+            subspecies: document.getElementById('f-subspecies').value.trim(),
             commonName: document.getElementById('f-common-name').value.trim(),
             taxonId: document.getElementById('f-taxon-id').value.trim(),
+            identifiedBy: document.getElementById('f-identified-by').value.trim(),
             // collection (shared)
             collectedBy: collectedBy,
             collectorAffiliation: document.getElementById('f-collector-affiliation').value.trim(),
@@ -4608,6 +4627,7 @@
             date: date,
             time: document.getElementById('f-time').value,
             location: location,
+            siteCode: document.getElementById('f-site-code').value.trim(),
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude,
             accuracy: currentLocation.accuracy,
@@ -4672,8 +4692,8 @@
         const keepAff = keepCommon ? document.getElementById('f-collector-affiliation').value : (prof.collectorAffiliation || '');
         const keepOrcid = keepCommon ? document.getElementById('f-collector-orcid').value : (prof.collectorOrcid || '');
         const keepInst = keepCommon ? document.getElementById('f-institution-storing').value : (prof.institutionStoring || '');
-        ['f-scientific-name','f-phylum','f-class','f-order','f-family','f-genus','f-common-name','f-taxon-id',
-         'f-collector-orcid','f-institution-storing','f-location','f-habitat','f-depth','f-elevation','f-method',
+        ['f-scientific-name','f-phylum','f-class','f-order','f-family','f-genus','f-subspecies','f-common-name','f-taxon-id',
+         'f-identified-by','f-collector-orcid','f-institution-storing','f-location','f-site-code','f-habitat','f-depth','f-elevation','f-method',
          'f-base-id','f-lat-start','f-lon-start','f-lat-end','f-lon-end',
          'f-orig-collection','f-orig-location','f-orig-lat','f-orig-lon'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('f-time').value = '';
@@ -4709,8 +4729,10 @@
         document.getElementById('f-order').value = s.order || '';
         document.getElementById('f-family').value = s.family || '';
         document.getElementById('f-genus').value = s.genus || '';
+        document.getElementById('f-subspecies').value = s.subspecies || '';
         document.getElementById('f-common-name').value = s.commonName || '';
         document.getElementById('f-taxon-id').value = s.taxonId || '';
+        document.getElementById('f-identified-by').value = s.identifiedBy || '';
         document.getElementById('f-collected-by').value = s.collectedBy || '';
         document.getElementById('f-collector-affiliation').value = s.collectorAffiliation || '';
         document.getElementById('f-collector-orcid').value = s.collectorOrcid || '';
@@ -4718,6 +4740,7 @@
         document.getElementById('f-date').value = s.date || '';
         document.getElementById('f-time').value = s.time || '';
         document.getElementById('f-location').value = s.location || '';
+        document.getElementById('f-site-code').value = s.siteCode || '';
         document.getElementById('f-habitat').value = s.habitat || '';
         document.getElementById('f-depth').value = s.depth || '';
         document.getElementById('f-elevation').value = s.elevation || '';
@@ -5297,8 +5320,8 @@
         rec["TRIBE"] = '';
         rec["GENUS"] = s.genus || '';
         rec["SPECIES"] = s.scientificName || '';
-        rec["SUBSPECIES"] = '';
-        rec["IDENTIFIED_BY"] = '';
+        rec["SUBSPECIES"] = s.subspecies || '';
+        rec["IDENTIFIED_BY"] = s.identifiedBy || '';
         rec["IDENTIFICATION_METHOD"] = '';
         rec["TAXONOMY_NOTES"] = '';
         rec["SEX"] = bcdmSex(individual.sex);
@@ -5331,7 +5354,7 @@
         rec["HABITAT"] = s.habitat || '';
         rec["SAMPLING_PROTOCOL"] = s.method || '';
         rec["COLLECTION_NOTES"] = '';
-        rec["SITE_CODE"] = '';
+        rec["SITE_CODE"] = s.siteCode || '';
         rec["COLLECTION_EVENT_ID"] = '';
         return rec;
     }
